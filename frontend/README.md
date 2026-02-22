@@ -1,0 +1,63 @@
+# Frontend — TG Mini App
+
+Telegram Mini App на React 18, TypeScript и Vite. Подключается к API и WebSocket по относительным путям при работе за nginx или по явным URL при локальном запуске.
+
+## Стек
+
+- React 18, TypeScript
+- Vite 6
+- [@telegram-apps/sdk-react](https://github.com/Telegram-Mini-Apps/sdk) — SDK для Mini App
+
+## Скрипты
+
+Из папки **frontend**:
+
+| Команда | Описание |
+|---------|----------|
+| `npm run dev` | Dev-сервер Vite (порт 5173). |
+| `npm run build` | Сборка в `dist/` (TypeScript + Vite). |
+| `npm run preview` | Просмотр собранной статики. |
+| `npm run lint` | ESLint. |
+
+Из **корня** репозитория: `npm run dev` (frontend), `npm run build:frontend`.
+
+## Переменные окружения (Vite)
+
+Подставляются при **сборке** (префикс `VITE_`):
+
+| Переменная | Описание |
+|------------|----------|
+| `VITE_APP_URL` | Публичный URL приложения (опционально). |
+| `VITE_API_URL` | Базовый URL API. Пусто = тот же хост, запросы на `/api/`. |
+| `VITE_STATS_WS_URL` | URL WebSocket статистики. Пусто = тот же хост, путь `/ws` (для https — `wss://host:443/ws`). |
+
+На **localhost:5173** (Vite без nginx) API и WS подставляются как `http://localhost:3000` и `ws://localhost:3001` (см. `src/config.ts`).
+
+## Docker
+
+- **Dockerfile** — production: сборка статики и nginx (образ только для frontend). Конфиг nginx — `frontend/nginx.prod.conf` (прокси `/api/`, `/ws`).
+- **Dockerfile.dev** — dev: Node + Vite, только содержимое папки frontend.
+
+Сборка из корня через compose (context задаётся в compose). Отдельная сборка образа:
+
+```bash
+docker build -f frontend/Dockerfile frontend/
+docker build -f frontend/Dockerfile.dev frontend/
+```
+
+## Структура
+
+```
+frontend/
+├── src/
+│   ├── App.tsx       # Основной экран (проверка API/WS и т.п.)
+│   ├── config.ts     # apiBase, wsUrl из env и location
+│   ├── main.tsx      # Точка входа, SDKProvider
+│   └── ...
+├── index.html
+├── vite.config.ts
+├── Dockerfile        # Prod: build + nginx
+├── Dockerfile.dev    # Dev: Vite
+├── nginx.prod.conf   # Конфиг nginx для образа prod
+└── package.json
+```
