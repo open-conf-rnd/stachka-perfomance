@@ -18,7 +18,7 @@ function getDomain(): string {
 function showHttpsUrl() {
   return {
     name: 'show-https-url',
-    configureServer(server) {
+    configureServer(server: { httpServer?: { once: (e: string, fn: () => void) => void } }) {
       server.httpServer?.once('listening', () => {
         const domain = getDomain()
         console.log(`  ➜  HTTPS (nginx): https://${domain}/`)
@@ -31,14 +31,13 @@ export default defineConfig({
   plugins: [react(), showHttpsUrl()],
   resolve: {
     alias: {
-      '@': '/src',
+      '@': resolve(__dirname, 'src'),
     },
   },
   server: {
     host: '0.0.0.0',
     port: 5173,
     strictPort: true,
-    // Разрешить запросы с кастомного домена (например udwgrosh.local), когда nginx проксирует по HTTPS
     allowedHosts: true,
   },
   build: {

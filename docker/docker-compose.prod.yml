@@ -1,10 +1,60 @@
-# Production: одна служба — nginx со статикой (сборка внутри образа)
-# Запуск из корня: docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up --build -d
+# Prod: сервисы собираются по отдельности (context = своя папка), запуск в одной сети
+# Запуск из корня: docker compose -f docker/docker-compose.prod.yml up --build -d
+# Опционально в .env: VITE_APP_URL, VITE_STATS_WS_URL, API_PORT, STATS_WS_PORT
 services:
-  web:
+  api:
+    image: stachka-perfomance-api:latest
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: ../api
+      dockerfile: Dockerfile
+    env_file: ../.env
+    environment:
+      - NODE_ENV=production
+      - API_PORT=3000
+    networks:
+      - app
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  ws:
+    image: stachka-perfomance-ws:latest
+    build:
+      context: ../ws
+      dockerfile: Dockerfile
+    env_file: ../.env
+    environment:
+      - NODE_ENV=production
+      - STATS_WS_PORT=3001
+    networks:
+      - app
+    expose:
+      - "3001"
+    restart: unless-stopped
+
+  web:
+    image: stachka-perfomance-web:latest
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_APP_URL: ${VITE_APP_URL:-}
+        VITE_STATS_WS_URL: ${VITE_STATS_WS_URL:-}
     ports:
       - "80:80"
+    networks:
+      - app
+    depends_on:
+      - api
+      - ws
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+networks:
+  app:
+    driver: bridge

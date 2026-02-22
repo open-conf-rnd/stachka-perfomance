@@ -1,0 +1,14 @@
+# Dev: только api — tsx watch
+# Сборка: context = api/ (docker build -f api/Dockerfile.dev api/)
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY package.json ./
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]

@@ -5,7 +5,6 @@ import { SDKProvider } from '@telegram-apps/sdk-react'
 import App from './App.tsx'
 import './index.css'
 
-// При открытии в браузере (вне Telegram) подменяем окружение для разработки
 declare global {
   interface Window {
     Telegram?: {
@@ -29,7 +28,6 @@ if (!isInsideTelegram) {
   })
 }
 
-// Убираем бесконечный загрузчик: скрипт telegram-web-app.js ждёт ready()
 window.Telegram?.WebApp?.ready?.()
 
 createRoot(document.getElementById('root')!).render(
