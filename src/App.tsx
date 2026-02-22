@@ -12,7 +12,7 @@ function App() {
         color: themeParams?.textColor ?? '#ffffff',
       }}
     >
-      <h1>TG Mini App</h1>
+      <h1>TG Mini App TG Mini App TG Mini App </h1>
       <p>Локальная разработка: React + TypeScript + Vite</p>
     </div>
   )
