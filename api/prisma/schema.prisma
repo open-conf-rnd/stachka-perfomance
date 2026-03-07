@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id          String            @id
+  username    String?
+  firstName   String
+  lastName    String?
+  photoUrl    String?
+  tapCount    Int               @default(0)
+  completions BingoCompletion[]
+  votes       Vote[]
+  reactionTaps ReactionTap[]
+  payments    Payment[]
+  createdAt   DateTime          @default(now())
+}
+
+model Poll {
+  id        String   @id @default(cuid())
+  question  String
+  options   Option[]
+  votes     Vote[]
+  createdAt DateTime @default(now())
+}
+
+model Option {
+  id     String @id @default(cuid())
+  pollId String
+  poll   Poll   @relation(fields: [pollId], references: [id])
+  label  String
+  votes  Vote[]
+}
+
+model Vote {
+  id       String @id @default(cuid())
+  pollId   String
+  optionId String
+  userId   String
+  poll     Poll   @relation(fields: [pollId], references: [id])
+  option   Option @relation(fields: [optionId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
+
+  @@unique([pollId, userId])
+}
+
+model BingoTask {
+  id          String            @id @default(cuid())
+  title       String
+  description String?
+  order       Int               @default(0)
+  completions BingoCompletion[]
+  qrCodes     QrCode[]
+  createdAt   DateTime          @default(now())
+}
+
+model BingoCompletion {
+  id        String    @id @default(cuid())
+  taskId    String
+  userId    String
+  task      BingoTask @relation(fields: [taskId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  createdAt DateTime  @default(now())
+
+  @@unique([taskId, userId])
+}
+
+model QrCode {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  taskId    String
+  task      BingoTask @relation(fields: [taskId], references: [id])
+  createdAt DateTime  @default(now())
+}
+
+model ReactionRound {
+  id        String         @id @default(cuid())
+  status    ReactionStatus @default(PENDING)
+  taps      ReactionTap[]
+  createdAt DateTime       @default(now())
+}
+
+enum ReactionStatus {
+  PENDING
+  ACTIVE
+  FINISHED
+}
+
+model ReactionTap {
+  id      String        @id @default(cuid())
+  roundId String
+  userId  String
+  round   ReactionRound @relation(fields: [roundId], references: [id])
+  user    User          @relation(fields: [userId], references: [id])
+  tapTime DateTime      @default(now())
+
+  @@unique([roundId, userId])
+}
+
+model Payment {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  telegramChargeId String   @unique
+  amount           Int
+  currency         String   @default("XTR")
+  createdAt        DateTime @default(now())
+}
