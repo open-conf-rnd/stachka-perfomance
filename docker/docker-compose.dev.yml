@@ -47,6 +47,7 @@ services:
       - NODE_ENV=development
       - API_PORT=3000
       - DATABASE_URL=postgresql://${POSTGRES_USER:-stachka}:${POSTGRES_PASSWORD:-stachka}@postgres:5432/${POSTGRES_DB:-stachka}
+      - WS_INTERNAL_URL=http://ws:3001
     volumes:
       - ../api:/app
       - /app/node_modules
