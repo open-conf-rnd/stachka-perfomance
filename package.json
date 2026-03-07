@@ -15,6 +15,8 @@
     "build": "npm run build --workspaces --if-present",
     "build:frontend": "npm run build --workspace=frontend",
     "build:api": "npm run build --workspace=api",
-    "build:ws": "npm run build --workspace=ws"
+    "build:ws": "npm run build --workspace=ws",
+    "test:smoke": "npm run test:smoke --workspace=api",
+    "test:smoke:watch": "npm run test:smoke:watch --workspace=api"
   }
 }

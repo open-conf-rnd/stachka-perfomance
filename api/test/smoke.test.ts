@@ -2,13 +2,40 @@ import { config } from 'dotenv'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { createApp } from '../src/app.js'
 import { prisma } from '../src/lib/prisma.js'
+import crypto from 'node:crypto'
 
 config({ path: new URL('../../.env', import.meta.url).pathname })
 
 describe('API smoke', () => {
   let app: Awaited<ReturnType<typeof createApp>>
+  const botToken = process.env.TG_BOT_API || 'test-bot-token'
+
+  function buildInitData(user: { id: number; first_name: string; username?: string }) {
+    const authDate = Math.floor(Date.now() / 1000).toString()
+    const userJson = JSON.stringify(user)
+    const pairs = [
+      ['auth_date', authDate],
+      ['user', userJson],
+    ] as const
+
+    const dataCheckString = [...pairs]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([k, v]) => `${k}=${v}`)
+      .join('\n')
+
+    const secretKey = crypto.createHmac('sha256', 'WebAppData').update(botToken).digest()
+    const hash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex')
+
+    const params = new URLSearchParams()
+    for (const [k, v] of pairs) {
+      params.set(k, v)
+    }
+    params.set('hash', hash)
+    return params.toString()
+  }
 
   beforeAll(async () => {
+    process.env.TG_BOT_API = botToken
     app = await createApp()
     await app.ready()
   })
@@ -23,6 +50,7 @@ describe('API smoke', () => {
     await prisma.bingoCompletion.deleteMany()
     await prisma.bingoTask.deleteMany()
     await prisma.payment.deleteMany()
+    await prisma.user.deleteMany()
   })
 
   afterAll(async () => {
@@ -107,5 +135,81 @@ describe('API smoke', () => {
     const payload = response.json() as { supporters: unknown[]; totalPayments: number }
     expect(Array.isArray(payload.supporters)).toBe(true)
     expect(payload.totalPayments).toBe(0)
+  })
+
+  it('auth register flow works with signed initData', async () => {
+    const initData = buildInitData({
+      id: 1001,
+      first_name: 'Dima',
+      username: 'dima',
+    })
+
+    const meBefore = await app.inject({
+      method: 'GET',
+      url: '/api/me',
+      headers: { 'x-telegram-init-data': initData },
+    })
+    expect(meBefore.statusCode).toBe(200)
+    expect(meBefore.json()).toMatchObject({ registered: false })
+
+    const register = await app.inject({
+      method: 'POST',
+      url: '/api/register',
+      headers: { 'x-telegram-init-data': initData },
+    })
+    expect(register.statusCode).toBe(200)
+    expect(register.json()).toMatchObject({ registered: true, isNew: true })
+
+    const meAfter = await app.inject({
+      method: 'GET',
+      url: '/api/me',
+      headers: { 'x-telegram-init-data': initData },
+    })
+    expect(meAfter.statusCode).toBe(200)
+    expect(meAfter.json()).toMatchObject({ registered: true })
+  })
+
+  it('tap and reaction tap endpoints work for registered user', async () => {
+    const initData = buildInitData({
+      id: 2002,
+      first_name: 'Alex',
+      username: 'alex',
+    })
+
+    const register = await app.inject({
+      method: 'POST',
+      url: '/api/register',
+      headers: { 'x-telegram-init-data': initData },
+    })
+    expect(register.statusCode).toBe(200)
+
+    const tap = await app.inject({
+      method: 'POST',
+      url: '/api/tap',
+      headers: { 'x-telegram-init-data': initData },
+    })
+    expect(tap.statusCode).toBe(200)
+    expect(tap.json()).toMatchObject({ success: true, userCount: 1 })
+
+    const started = await app.inject({
+      method: 'POST',
+      url: '/api/reaction/start',
+    })
+    expect(started.statusCode).toBe(200)
+    const roundId = (started.json() as { roundId: string }).roundId
+    expect(roundId).toBeTruthy()
+
+    await prisma.reactionRound.updateMany({
+      where: { id: roundId },
+      data: { status: 'ACTIVE' },
+    })
+
+    const reactionTap = await app.inject({
+      method: 'POST',
+      url: '/api/reaction/tap',
+      headers: { 'x-telegram-init-data': initData },
+    })
+    expect(reactionTap.statusCode).toBe(200)
+    expect(reactionTap.json()).toMatchObject({ success: true, alreadyTapped: false, roundId })
   })
 })

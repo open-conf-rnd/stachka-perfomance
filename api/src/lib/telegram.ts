@@ -1,7 +1,5 @@
 import crypto from 'node:crypto'
 
-const BOT_TOKEN = process.env.TG_BOT_API ?? ''
-
 export interface TelegramUser {
   id: number
   first_name: string
@@ -11,7 +9,8 @@ export interface TelegramUser {
 }
 
 export function validateInitData(initData: string): TelegramUser | null {
-  if (!BOT_TOKEN || !initData) return null
+  const botToken = process.env.TG_BOT_API ?? ''
+  if (!botToken || !initData) return null
 
   const params = new URLSearchParams(initData)
   const hash = params.get('hash')
@@ -23,7 +22,7 @@ export function validateInitData(initData: string): TelegramUser | null {
 
   const secretKey = crypto
     .createHmac('sha256', 'WebAppData')
-    .update(BOT_TOKEN)
+    .update(botToken)
     .digest()
 
   const computedHash = crypto

@@ -88,6 +88,16 @@ npm run build:api          # только api
 npm run build:ws           # только ws
 ```
 
+### 5. Smoke tests (API)
+
+```bash
+# разовый прогон smoke-тестов API (из корня)
+npm run test:smoke
+
+# watch-режим smoke-тестов API
+npm run test:smoke:watch
+```
+
 ---
 
 Переменные окружения — см. **`.env.example`**.
