@@ -11,6 +11,31 @@ declare global {
       WebApp?: {
         initData?: string
         ready?: () => void
+        openInvoice?: (
+          url: string,
+          callback?: (status: 'paid' | 'cancelled' | 'failed' | 'pending') => void
+        ) => void
+        openTelegramLink?: (url: string) => void
+        shareToStory?: (
+          mediaUrl: string,
+          params?: {
+            text?: string
+            widget_link?: {
+              url: string
+              name?: string
+            }
+          }
+        ) => void
+        HapticFeedback?: {
+          impactOccurred?: (style: 'light' | 'medium' | 'heavy' | 'rigid' | 'soft') => void
+          notificationOccurred?: (type: 'success' | 'warning' | 'error') => void
+        }
+        BackButton?: {
+          show?: () => void
+          hide?: () => void
+          onClick?: (handler: () => void) => void
+          offClick?: (handler: () => void) => void
+        }
       }
     }
   }

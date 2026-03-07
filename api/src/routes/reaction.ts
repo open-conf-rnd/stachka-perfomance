@@ -29,6 +29,12 @@ async function getCurrentRound() {
 }
 
 async function finishRoundAndBroadcastLeaderboard(roundId: string) {
+  const round = await prisma.reactionRound.findUnique({
+    where: { id: roundId },
+    select: { id: true },
+  })
+  if (!round) return
+
   const taps = await prisma.reactionTap.findMany({
     where: { roundId },
     include: {
@@ -45,7 +51,7 @@ async function finishRoundAndBroadcastLeaderboard(roundId: string) {
     tapTime: tap.tapTime.toISOString(),
   }))
 
-  await prisma.reactionRound.update({
+  await prisma.reactionRound.updateMany({
     where: { id: roundId },
     data: { status: 'FINISHED' },
   })
@@ -80,15 +86,25 @@ export async function reactionRoutes(app: FastifyInstance) {
     })
 
     const activateTimer = setTimeout(async () => {
-      await prisma.reactionRound.update({
-        where: { id: round.id },
-        data: { status: 'ACTIVE' },
-      })
-      await wsBroadcast('reaction:go', { roundId: round.id })
+      try {
+        const updated = await prisma.reactionRound.updateMany({
+          where: { id: round.id },
+          data: { status: 'ACTIVE' },
+        })
+        if (updated.count > 0) {
+          await wsBroadcast('reaction:go', { roundId: round.id })
+        }
+      } catch {
+        // ignore timer errors when round is already cleaned up
+      }
     }, COUNTDOWN_SECONDS * 1000)
 
     const leaderboardTimer = setTimeout(async () => {
-      await finishRoundAndBroadcastLeaderboard(round.id)
+      try {
+        await finishRoundAndBroadcastLeaderboard(round.id)
+      } catch {
+        // ignore timer errors when round is already cleaned up
+      }
     }, (COUNTDOWN_SECONDS + LEADERBOARD_DELAY_SECONDS) * 1000)
 
     roundTimers.push(activateTimer, leaderboardTimer)
