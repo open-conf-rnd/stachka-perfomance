@@ -1,12 +1,19 @@
 .app {
   min-height: 100vh;
+  height: 100%;
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .page {
   width: 100%;
   max-width: 720px;
   margin: 0 auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .page__title {
@@ -21,9 +28,14 @@
 }
 
 .page__card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   border-radius: 12px;
-  padding: 0.95rem;
-  background: rgba(255, 255, 255, 0.07);
+  padding: 1.25rem;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  box-shadow: 0 2px 8px color-mix(in srgb, currentColor 8%, transparent);
 }
 
 .grid {
@@ -34,7 +46,8 @@
 
 .grid__item {
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
   color: inherit;
   text-decoration: none;
   padding: 0.9rem;
@@ -42,6 +55,13 @@
   flex-direction: column;
   gap: 0.35rem;
   min-height: 96px;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.grid__item:hover {
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  border-color: color-mix(in srgb, currentColor 35%, transparent);
+  transform: translateY(-1px);
 }
 
 .grid__item-title {
@@ -82,4 +102,139 @@
 
 .btn:disabled {
   opacity: 0.7;
+}
+
+.btn--primary {
+  width: 100%;
+  padding: 0.9rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+.btn--primary:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+.register__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex: 1;
+  text-align: center;
+}
+
+.register__illustration {
+  font-size: 5.5rem;
+  line-height: 1;
+  opacity: 0.95;
+  filter: drop-shadow(0 4px 16px color-mix(in srgb, currentColor 20%, transparent));
+  animation: register-pulse 2s ease-in-out infinite;
+}
+
+@keyframes register-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.95; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+.register__text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.register__loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 0;
+  opacity: 0.9;
+}
+
+.register__loading p {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.register__spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid color-mix(in srgb, currentColor 20%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: register-spin 0.8s linear infinite;
+}
+
+@keyframes register-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btn--register {
+  padding: 1.5rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 4px 16px color-mix(in srgb, #3b82f6 35%, transparent);
+}
+
+.btn--register:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+.btn__icon {
+  font-size: 1.5em;
+}
+
+.welcome__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex: 1;
+  text-align: center;
+}
+
+.welcome__illustration {
+  font-size: 5.5rem;
+  line-height: 1;
+  opacity: 0.95;
+  filter: drop-shadow(0 4px 16px color-mix(in srgb, currentColor 20%, transparent));
+  animation: welcome-pulse 2s ease-in-out infinite;
+}
+
+@keyframes welcome-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.95; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+.welcome__text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.btn--welcome {
+  padding: 1.5rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 4px 16px color-mix(in srgb, #3b82f6 35%, transparent);
+}
+
+.btn--welcome:hover {
+  filter: brightness(1.08);
 }
