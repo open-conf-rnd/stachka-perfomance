@@ -11,4 +11,5 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+# Apply migrations then start dev server (DATABASE_URL from env at runtime)
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run dev"]

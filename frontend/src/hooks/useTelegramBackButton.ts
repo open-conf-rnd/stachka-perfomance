@@ -1,21 +1,21 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useBackButton } from '@telegram-apps/sdk-react'
 
 export function useTelegramBackButton(enabled = true) {
   const navigate = useNavigate()
+  const backButton = useBackButton()
 
   useEffect(() => {
-    if (!enabled) return
-    const backButton = window.Telegram?.WebApp?.BackButton
-    if (!backButton) return
+    if (!enabled || !backButton) return
 
     const onBack = () => navigate('/')
-    backButton.show?.()
-    backButton.onClick?.(onBack)
+    backButton.show()
+    backButton.on('click', onBack)
 
     return () => {
-      backButton.offClick?.(onBack)
-      backButton.hide?.()
+      backButton.off('click', onBack)
+      backButton.hide()
     }
-  }, [enabled, navigate])
+  }, [enabled, navigate, backButton])
 }

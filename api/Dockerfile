@@ -14,4 +14,5 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["node", "dist/index.js"]
+# Apply pending migrations then start the app (requires DATABASE_URL at runtime)
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]

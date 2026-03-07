@@ -12,13 +12,17 @@ export async function apiRequest<T>(
   body?: unknown
 ): Promise<T> {
   const url = apiBase ? `${apiBase}${path}` : path
+  const hasBody = method !== 'GET' && body !== undefined
+  const bodySerialized =
+    method === 'GET' ? undefined : hasBody ? JSON.stringify(body) : '{}'
+
   const response = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
       'x-telegram-init-data': getInitData(),
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: bodySerialized,
   })
 
   if (!response.ok) {
