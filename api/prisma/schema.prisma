@@ -16,9 +16,20 @@ model User {
   tapCount    Int               @default(0)
   completions BingoCompletion[]
   votes       Vote[]
-  reactionTaps ReactionTap[]
-  payments    Payment[]
+  reactionTaps   ReactionTap[]
+  hapticTriggers HapticTrigger[]
+  payments       Payment[]
   createdAt   DateTime          @default(now())
+}
+
+model HapticTrigger {
+  id         String   @id @default(cuid())
+  userId     String
+  triggerKey String
+  user       User     @relation(fields: [userId], references: [id])
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, triggerKey])
 }
 
 model Poll {
