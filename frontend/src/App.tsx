@@ -13,6 +13,13 @@ import { ReactionRoundsPage } from './pages/ReactionRoundsPage'
 import { ReactionRoundDetailPage } from './pages/ReactionRoundDetailPage'
 import { HapticPage } from './pages/HapticPage'
 import { SupportPage } from './pages/SupportPage'
+import { AdminLayout } from './components/AdminLayout'
+import { AdminParticipantsPage } from './pages/admin/AdminParticipantsPage'
+import { AdminReactionPage } from './pages/admin/AdminReactionPage'
+import { AdminPollsPage } from './pages/admin/AdminPollsPage'
+import { AdminHapticPage } from './pages/admin/AdminHapticPage'
+import { AdminBingoPage } from './pages/admin/AdminBingoPage'
+import { WsUserHapticListener } from './components/WsUserHapticListener'
 
 function App() {
   const themeParams = useThemeParams()
@@ -25,6 +32,7 @@ function App() {
         color: themeParams?.textColor ?? '#ffffff',
       }}
     >
+      <WsUserHapticListener />
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -39,6 +47,14 @@ function App() {
           <Route path="/reaction/rounds/:id" element={<ReactionRoundDetailPage />} />
           <Route path="/haptic" element={<HapticPage />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Navigate to="/admin/participants" replace />} />
+            <Route path="participants" element={<AdminParticipantsPage />} />
+            <Route path="reaction" element={<AdminReactionPage />} />
+            <Route path="polls" element={<AdminPollsPage />} />
+            <Route path="haptic" element={<AdminHapticPage />} />
+            <Route path="bingo" element={<AdminBingoPage />} />
+          </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>

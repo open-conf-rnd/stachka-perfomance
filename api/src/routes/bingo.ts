@@ -1,7 +1,11 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
 import { validateInitData } from '../lib/telegram.js'
+import { requireAdmin } from '../lib/admin.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
+
+const BINGO_SHARE_STORIES_TASK_ID = process.env.BINGO_SHARE_STORIES_TASK_ID
+const BINGO_SHARE_CHAT_TASK_ID = process.env.BINGO_SHARE_CHAT_TASK_ID
 
 function getInitData(headerValue: unknown): string | null {
   return typeof headerValue === 'string' && headerValue.length > 0 ? headerValue : null
@@ -11,6 +15,11 @@ export async function bingoRoutes(app: FastifyInstance) {
   app.post<{
     Body: { title: string; description?: string; order?: number }
   }>('/api/bingo/tasks', async (req, reply) => {
+    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    if (!auth.ok) {
+      return reply.status(auth.status).send(auth.body)
+    }
+
     const { title, description, order } = req.body ?? ({} as never)
     if (!title || title.trim().length === 0) {
       return reply.status(400).send({ error: 'title is required' })
@@ -26,6 +35,39 @@ export async function bingoRoutes(app: FastifyInstance) {
 
     return task
   })
+
+  app.post<{
+    Body: { tasks: Array<{ title: string; description?: string; order?: number }> }
+  }>('/api/bingo/tasks/bulk', async (req, reply) => {
+    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    if (!auth.ok) {
+      return reply.status(auth.status).send(auth.body)
+    }
+
+    const { tasks } = req.body ?? {}
+    if (!Array.isArray(tasks) || tasks.length === 0) {
+      return reply.status(400).send({ error: 'tasks array is required' })
+    }
+
+    const created = await prisma.$transaction(
+      tasks.map((t, i) =>
+        prisma.bingoTask.create({
+          data: {
+            title: String(t?.title ?? '').trim() || `Задание ${i + 1}`,
+            description: typeof t?.description === 'string' ? t.description.trim() || null : null,
+            order: Number.isInteger(t?.order) ? (t.order as number) : i,
+          },
+        })
+      )
+    )
+
+    return { created: created.length, tasks: created }
+  })
+
+  app.get('/api/bingo/config', async () => ({
+    shareStoriesTaskId: BINGO_SHARE_STORIES_TASK_ID || null,
+    shareChatTaskId: BINGO_SHARE_CHAT_TASK_ID || null,
+  }))
 
   app.get('/api/bingo/tasks', async (req, reply) => {
     const initData = getInitData(req.headers['x-telegram-init-data'])

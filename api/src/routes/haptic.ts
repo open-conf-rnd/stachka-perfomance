@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
 import { validateInitData } from '../lib/telegram.js'
+import { requireAdmin } from '../lib/admin.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
@@ -103,16 +104,24 @@ export async function hapticRoutes(app: FastifyInstance) {
     }
   )
 
-  app.post('/api/haptic/trigger', async (req, reply) => {
-    const payload = normalizePayload(req.body)
-    if (!payload) {
-      return reply.status(400).send({
-        error:
-          'Invalid payload. Use { type: "impact", style: "light|medium|heavy|rigid|soft" } or { type: "notification", notificationType: "success|warning|error" }',
-      })
-    }
+  app.post<{ Body: { type: string; style?: string; notificationType?: string } }>(
+    '/api/haptic/trigger',
+    async (req, reply) => {
+      const auth = requireAdmin(req.headers['x-telegram-init-data'])
+      if (!auth.ok) {
+        return reply.status(auth.status).send(auth.body)
+      }
 
-    await wsBroadcast('haptic:trigger', payload)
-    return { success: true, payload }
-  })
+      const payload = normalizePayload(req.body)
+      if (!payload) {
+        return reply.status(400).send({
+          error:
+            'Invalid payload. Use { type: "impact", style: "light|medium|heavy|rigid|soft" } or { type: "notification", notificationType: "success|warning|error" }',
+        })
+      }
+
+      await wsBroadcast('haptic:trigger', payload)
+      return { success: true, payload }
+    }
+  )
 }

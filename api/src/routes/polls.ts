@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
 import { validateInitData } from '../lib/telegram.js'
+import { requireAdmin } from '../lib/admin.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
@@ -34,6 +35,11 @@ export async function pollRoutes(app: FastifyInstance) {
   app.post<{
     Body: { question: string; options: string[] }
   }>('/api/polls', async (req, reply) => {
+    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    if (!auth.ok) {
+      return reply.status(auth.status).send(auth.body)
+    }
+
     const { question, options } = req.body ?? ({} as any)
     if (!question || !Array.isArray(options) || options.length < 2) {
       return reply.status(400).send({ error: 'question and at least 2 options required' })

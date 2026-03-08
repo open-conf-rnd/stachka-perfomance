@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
 import { validateInitData } from '../lib/telegram.js'
+import { requireAdmin } from '../lib/admin.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
@@ -151,7 +152,12 @@ export async function reactionRoutes(app: FastifyInstance) {
     }
   })
 
-  app.post('/api/reaction/start', async () => {
+  app.post('/api/reaction/start', async (req, reply) => {
+    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    if (!auth.ok) {
+      return reply.status(auth.status).send(auth.body)
+    }
+
     clearRoundTimers()
 
     await prisma.reactionRound.updateMany({

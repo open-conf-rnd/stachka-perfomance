@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { PageLayout } from '../components/PageLayout'
 import { apiRequest, type MeResponse } from '../lib/api'
 
-const menu = [
+const mainMenu = [
   { path: '/bingo', title: 'Бинго', desc: 'Карточка заданий' },
   { path: '/qr', title: 'Сканировать QR', desc: 'Отметить задание по QR-коду' },
   { path: '/polls', title: 'Опросы', desc: 'Голосования доклада' },
@@ -13,9 +13,12 @@ const menu = [
   { path: '/support', title: 'Поддержать', desc: 'Telegram Stars' },
 ]
 
+const adminItem = { path: '/admin', title: 'Админка', desc: 'Панель управления' }
+
 export function HomePage() {
   const navigate = useNavigate()
   const [checking, setChecking] = useState(true)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -28,6 +31,8 @@ export function HomePage() {
           navigate('/register', { replace: true })
           return
         }
+        const adminCheck = await apiRequest<{ admin: boolean }>('/api/admin/check').catch(() => ({ admin: false }))
+        if (active) setIsAdmin(adminCheck.admin)
       } catch (err) {
         if (!active) return
         setError(err instanceof Error ? err.message : 'Не удалось проверить пользователя')
@@ -40,6 +45,8 @@ export function HomePage() {
       active = false
     }
   }, [navigate])
+
+  const menu = isAdmin ? [adminItem, ...mainMenu] : mainMenu
 
   return (
     <PageLayout title="Stachka TMA" subtitle="Главная: все активности" enableBackButton={false}>

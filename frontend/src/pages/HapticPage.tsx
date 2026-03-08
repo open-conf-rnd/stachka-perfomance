@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../components/PageLayout'
 import { apiRequest } from '../lib/api'
+import { triggerHaptic } from '../lib/haptic'
 import { wsUrl } from '../config'
 
 type ImpactStyle = 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'
@@ -12,19 +13,6 @@ interface HapticTriggerMessage {
   notificationType?: NotificationType
 }
 
-function triggerHaptic(payload: HapticTriggerMessage) {
-  const haptic = window.Telegram?.WebApp?.HapticFeedback
-  if (!haptic) return false
-
-  if (payload.type === 'impact') {
-    haptic.impactOccurred?.(payload.style ?? 'medium')
-    return true
-  }
-
-  haptic.notificationOccurred?.(payload.notificationType ?? 'success')
-  return true
-}
-
 export function HapticPage() {
   const [status, setStatus] = useState<string>('Готово')
 
@@ -34,7 +22,7 @@ export function HapticPage() {
       try {
         const msg = JSON.parse(event.data) as { type: string; payload?: HapticTriggerMessage }
         if (msg.type !== 'haptic:trigger' || !msg.payload) return
-        const ok = triggerHaptic(msg.payload)
+        const ok = triggerHaptic(msg.payload as HapticTriggerMessage)
         setStatus(ok ? 'Получена массовая вибрация' : 'Haptic недоступен в текущей среде')
       } catch {
         // ignore malformed ws messages

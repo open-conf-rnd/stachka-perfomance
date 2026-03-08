@@ -16,6 +16,10 @@ export function BingoPage() {
   const [error, setError] = useState<string | null>(null)
   const [status, setStatus] = useState<string>('Готово')
   const [tooltipTask, setTooltipTask] = useState<BingoTask | null>(null)
+  const [shareTaskIds, setShareTaskIds] = useState<{
+    shareStoriesTaskId: string | null
+    shareChatTaskId: string | null
+  }>({ shareStoriesTaskId: null, shareChatTaskId: null })
 
   const completedCount = useMemo(
     () => tasks.filter((task) => Boolean(task.completed)).length,
@@ -44,6 +48,14 @@ export function BingoPage() {
   }, [tooltipTask])
 
   useEffect(() => {
+    void apiRequest<{ shareStoriesTaskId: string | null; shareChatTaskId: string | null }>(
+      '/api/bingo/config'
+    )
+      .then(setShareTaskIds)
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
     loadTasks()
     const ws = new WebSocket(wsUrl)
     ws.onmessage = (event) => {
@@ -59,18 +71,16 @@ export function BingoPage() {
     return () => ws.close()
   }, [])
 
-  const completeFirstMatchingTask = async (matcher: RegExp) => {
-    const target = tasks.find((task) => !task.completed && matcher.test(task.title.toLowerCase()))
-    if (!target) return
+  const completeTaskById = async (taskId: string) => {
     setError(null)
     try {
       await apiRequest<{ success: boolean; alreadyCompleted: boolean }>(
-        `/api/bingo/tasks/${target.id}/complete`,
+        `/api/bingo/tasks/${taskId}/complete`,
         'POST'
       )
       await loadTasks()
     } catch {
-      // ignore - task will be completed by backend when action is done
+      // ignore
     }
   }
 
@@ -86,7 +96,9 @@ export function BingoPage() {
       widget_link: { url: window.location.href, name: 'Открыть TMA' },
     })
     setStatus('Открыли share to story')
-    await completeFirstMatchingTask(/share|истори|story/)
+    if (shareTaskIds.shareStoriesTaskId) {
+      await completeTaskById(shareTaskIds.shareStoriesTaskId)
+    }
   }
 
   const shareInChat = async () => {
@@ -100,7 +112,9 @@ export function BingoPage() {
       window.open(shareUrl, '_blank', 'noopener,noreferrer')
     }
     setStatus('Открыли share в чат')
-    await completeFirstMatchingTask(/share|подел|чат/)
+    if (shareTaskIds.shareChatTaskId) {
+      await completeTaskById(shareTaskIds.shareChatTaskId)
+    }
   }
 
   return (
