@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { PageLayout } from '../components/PageLayout'
 import { apiRequest } from '../lib/api'
 import { wsUrl } from '../config'
@@ -8,6 +9,7 @@ type RoundStatus = 'PENDING' | 'ACTIVE' | 'FINISHED'
 interface CurrentRoundResponse {
   round: {
     id: string
+    roundNumber?: number
     status: RoundStatus
   } | null
   tapsCount?: number
@@ -24,7 +26,7 @@ interface LeaderboardItem {
 }
 
 export function ReactionPage() {
-  const [roundId, setRoundId] = useState<string | null>(null)
+  const [roundNumber, setRoundNumber] = useState<number | null>(null)
   const [status, setStatus] = useState<RoundStatus | 'IDLE'>('IDLE')
   const [countdown, setCountdown] = useState<number | null>(null)
   const [podium, setPodium] = useState<LeaderboardItem[]>([])
@@ -43,9 +45,10 @@ export function ReactionPage() {
         const data = await apiRequest<CurrentRoundResponse>('/api/reaction/current')
         if (!active) return
         if (data.round) {
-          setRoundId(data.round.id)
+          setRoundNumber(data.round.roundNumber ?? null)
           setStatus(data.round.status)
         } else {
+          setRoundNumber(null)
           setStatus('IDLE')
         }
       } catch (err) {
@@ -60,13 +63,13 @@ export function ReactionPage() {
     ws.onmessage = (event) => {
       try {
         const msg = JSON.parse(event.data) as
-          | { type: 'reaction:countdown'; payload?: { roundId: string; seconds: number } }
-          | { type: 'reaction:go'; payload?: { roundId: string } }
+          | { type: 'reaction:countdown'; payload?: { roundId: string; roundNumber?: number; seconds: number } }
+          | { type: 'reaction:go'; payload?: { roundId: string; roundNumber?: number } }
           | { type: 'reaction:podium'; payload?: { roundId: string; place: number; user: LeaderboardItem['user'] } }
-          | { type: 'reaction:leaderboard'; payload?: { roundId: string; results: LeaderboardItem[] } }
+          | { type: 'reaction:leaderboard'; payload?: { roundId: string; roundNumber?: number; results: LeaderboardItem[] } }
 
         if (msg.type === 'reaction:countdown' && msg.payload) {
-          setRoundId(msg.payload.roundId)
+          setRoundNumber(msg.payload.roundNumber ?? null)
           setStatus('PENDING')
           setCountdown(msg.payload.seconds)
           setPodium([])
@@ -75,7 +78,7 @@ export function ReactionPage() {
         }
 
         if (msg.type === 'reaction:go' && msg.payload) {
-          setRoundId(msg.payload.roundId)
+          setRoundNumber(msg.payload.roundNumber ?? null)
           setStatus('ACTIVE')
           setCountdown(null)
         }
@@ -95,6 +98,7 @@ export function ReactionPage() {
 
         if (msg.type === 'reaction:leaderboard' && msg.payload) {
           setStatus('FINISHED')
+          setRoundNumber(msg.payload.roundNumber ?? null)
           setLeaderboard(msg.payload.results)
           setCountdown(null)
         }
@@ -124,7 +128,6 @@ export function ReactionPage() {
         'POST'
       )
       setAlreadyTapped(Boolean(data.alreadyTapped))
-      setRoundId(data.roundId)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось отправить реакцию')
     } finally {
@@ -137,8 +140,11 @@ export function ReactionPage() {
       {loading ? <p className="page__loading">Загружаем состояние раунда...</p> : null}
       {error ? <p className="page__error">Ошибка: {error}</p> : null}
       <p style={{ margin: '0 0 0.75rem' }}>
-        Раунд: {roundId ?? 'нет'} · статус: {status}
+        {roundNumber != null ? `Раунд №${roundNumber}` : 'Раунда нет'} · статус: {status}
       </p>
+      <Link to="/reaction/rounds" className="btn" style={{ display: 'inline-block', marginBottom: '0.75rem' }}>
+        Посмотреть все раунды
+      </Link>
       {countdown !== null && status === 'PENDING' ? (
         <p style={{ margin: '0 0 0.75rem', fontSize: '1.2rem', fontWeight: 700 }}>Старт через: {countdown}</p>
       ) : null}

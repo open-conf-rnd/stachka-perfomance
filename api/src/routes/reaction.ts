@@ -2,6 +2,9 @@ import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
 import { validateInitData } from '../lib/telegram.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
+import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
+
+const BINGO_REACTION_TOP3_TASK_ID = process.env.BINGO_REACTION_TOP3_TASK_ID || 'cmmgveu7f00056po34mmt5zk6'
 
 const COUNTDOWN_SECONDS = Number(process.env.REACTION_COUNTDOWN_SECONDS || 3)
 const LEADERBOARD_DELAY_SECONDS = Number(process.env.REACTION_LEADERBOARD_DELAY_SECONDS || 5)
@@ -28,12 +31,33 @@ async function getCurrentRound() {
   })
 }
 
+async function getRoundNumberById(roundId: string): Promise<number> {
+  const allOrdered = await prisma.reactionRound.findMany({
+    orderBy: { createdAt: 'asc' },
+    select: { id: true },
+  })
+  const index = allOrdered.findIndex((r) => r.id === roundId)
+  return index >= 0 ? index + 1 : 0
+}
+
+async function getRoundNumberMap(): Promise<Map<string, number>> {
+  const allOrdered = await prisma.reactionRound.findMany({
+    orderBy: { createdAt: 'asc' },
+    select: { id: true },
+  })
+  const map = new Map<string, number>()
+  allOrdered.forEach((r, i) => map.set(r.id, i + 1))
+  return map
+}
+
 async function finishRoundAndBroadcastLeaderboard(roundId: string) {
   const round = await prisma.reactionRound.findUnique({
     where: { id: roundId },
     select: { id: true },
   })
   if (!round) return
+
+  const roundNumber = await getRoundNumberById(roundId)
 
   const taps = await prisma.reactionTap.findMany({
     where: { roundId },
@@ -56,7 +80,7 @@ async function finishRoundAndBroadcastLeaderboard(roundId: string) {
     data: { status: 'FINISHED' },
   })
 
-  await wsBroadcast('reaction:leaderboard', { roundId, results })
+  await wsBroadcast('reaction:leaderboard', { roundId, roundNumber, results })
 }
 
 export async function reactionRoutes(app: FastifyInstance) {
@@ -65,7 +89,66 @@ export async function reactionRoutes(app: FastifyInstance) {
     if (!round) return { round: null }
 
     const tapsCount = await prisma.reactionTap.count({ where: { roundId: round.id } })
-    return { round, tapsCount }
+    const roundNumber = await getRoundNumberById(round.id)
+    return {
+      round: {
+        id: round.id,
+        roundNumber,
+        status: round.status,
+        createdAt: round.createdAt,
+      },
+      tapsCount,
+    }
+  })
+
+  app.get('/api/reaction/rounds', async () => {
+    const rounds = await prisma.reactionRound.findMany({
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        _count: { select: { taps: true } },
+      },
+    })
+    const numberMap = await getRoundNumberMap()
+    return rounds.map((r) => ({
+      id: r.id,
+      roundNumber: numberMap.get(r.id) ?? 0,
+      status: r.status,
+      createdAt: r.createdAt,
+      participantsCount: r._count.taps,
+    }))
+  })
+
+  app.get<{ Params: { id: string } }>('/api/reaction/rounds/:id', async (req, reply) => {
+    const round = await prisma.reactionRound.findUnique({
+      where: { id: req.params.id },
+      include: {
+        taps: {
+          include: {
+            user: { select: { id: true, firstName: true, username: true } },
+          },
+          orderBy: { tapTime: 'asc' },
+        },
+      },
+    })
+    if (!round) {
+      return reply.status(404).send({ error: 'Round not found' })
+    }
+    const results = round.taps.map((tap, index) => ({
+      place: index + 1,
+      user: tap.user,
+      tapTime: tap.tapTime.toISOString(),
+    }))
+    const roundNumber = await getRoundNumberById(round.id)
+    return {
+      id: round.id,
+      roundNumber,
+      status: round.status,
+      createdAt: round.createdAt,
+      results,
+    }
   })
 
   app.post('/api/reaction/start', async () => {
@@ -80,8 +163,11 @@ export async function reactionRoutes(app: FastifyInstance) {
       data: { status: 'PENDING' },
     })
 
+    const roundNumber = await getRoundNumberById(round.id)
+
     await wsBroadcast('reaction:countdown', {
       roundId: round.id,
+      roundNumber,
       seconds: COUNTDOWN_SECONDS,
     })
 
@@ -92,7 +178,7 @@ export async function reactionRoutes(app: FastifyInstance) {
           data: { status: 'ACTIVE' },
         })
         if (updated.count > 0) {
-          await wsBroadcast('reaction:go', { roundId: round.id })
+          await wsBroadcast('reaction:go', { roundId: round.id, roundNumber })
         }
       } catch {
         // ignore timer errors when round is already cleaned up
@@ -171,6 +257,9 @@ export async function reactionRoutes(app: FastifyInstance) {
         place,
         user,
       })
+      if (BINGO_REACTION_TOP3_TASK_ID) {
+        await completeBingoTaskForUser(BINGO_REACTION_TOP3_TASK_ID, userId)
+      }
     }
 
     return {

@@ -9,6 +9,8 @@ import { QrVerifyPage } from './pages/QrVerifyPage'
 import { PollsPage } from './pages/PollsPage'
 import { TapPage } from './pages/TapPage'
 import { ReactionPage } from './pages/ReactionPage'
+import { ReactionRoundsPage } from './pages/ReactionRoundsPage'
+import { ReactionRoundDetailPage } from './pages/ReactionRoundDetailPage'
 import { HapticPage } from './pages/HapticPage'
 import { SupportPage } from './pages/SupportPage'
 
@@ -33,6 +35,8 @@ function App() {
           <Route path="/polls" element={<PollsPage />} />
           <Route path="/tap" element={<TapPage />} />
           <Route path="/reaction" element={<ReactionPage />} />
+          <Route path="/reaction/rounds" element={<ReactionRoundsPage />} />
+          <Route path="/reaction/rounds/:id" element={<ReactionRoundDetailPage />} />
           <Route path="/haptic" element={<HapticPage />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
