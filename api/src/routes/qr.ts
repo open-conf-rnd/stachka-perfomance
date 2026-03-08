@@ -5,6 +5,8 @@ import { validateInitData } from '../lib/telegram.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 
+const BINGO_QR_TASK_ID = process.env.BINGO_QR_TASK_ID
+
 function getInitData(headerValue: unknown): string | null {
   return typeof headerValue === 'string' && headerValue.length > 0 ? headerValue : null
 }
@@ -74,6 +76,10 @@ export async function qrRoutes(app: FastifyInstance) {
     const completion = await completeBingoTaskForUser(qrCode.taskId, userId)
     if (!completion.ok) {
       return reply.status(500).send({ error: 'Cannot complete QR task' })
+    }
+
+    if (BINGO_QR_TASK_ID && BINGO_QR_TASK_ID !== qrCode.taskId) {
+      await completeBingoTaskForUser(BINGO_QR_TASK_ID, userId)
     }
 
     await wsBroadcast('qr:verified', {

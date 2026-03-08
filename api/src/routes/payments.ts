@@ -2,9 +2,11 @@ import crypto from 'node:crypto'
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
 import { validateInitData } from '../lib/telegram.js'
+import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 
 const BOT_TOKEN = process.env.TG_BOT_API || ''
+const BINGO_STARS_TASK_ID = process.env.BINGO_STARS_TASK_ID
 const STARS_AMOUNT = Number(process.env.TG_STARS_SUPPORT_AMOUNT || 1)
 const WEBHOOK_SECRET = process.env.TG_WEBHOOK_SECRET || ''
 
@@ -158,6 +160,10 @@ export async function paymentRoutes(app: FastifyInstance) {
         currency: successfulPayment.currency || 'XTR',
       },
     })
+
+    if (BINGO_STARS_TASK_ID) {
+      await completeBingoTaskForUser(BINGO_STARS_TASK_ID, user.id)
+    }
 
     await wsBroadcast('payment:success', {
       user: {
