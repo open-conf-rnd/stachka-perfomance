@@ -2,6 +2,9 @@ import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
 import { validateInitData } from '../lib/telegram.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
+import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
+
+const BINGO_POLLS_TASK_ID = process.env.BINGO_POLLS_TASK_ID;
 
 async function buildPollStats(pollId: string) {
   const poll = await prisma.poll.findUnique({
@@ -118,6 +121,12 @@ export async function pollRoutes(app: FastifyInstance) {
     await prisma.vote.create({
       data: { pollId, optionId, userId },
     })
+
+    const pollCount = await prisma.poll.count()
+    const userVoteCount = await prisma.vote.count({ where: { userId } })
+    if (BINGO_POLLS_TASK_ID && pollCount > 0 && userVoteCount >= pollCount) {
+      await completeBingoTaskForUser(BINGO_POLLS_TASK_ID, userId)
+    }
 
     const stats = await buildPollStats(pollId)
     if (stats) {

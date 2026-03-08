@@ -41,3 +41,38 @@ export function validateInitData(initData: string): TelegramUser | null {
     return null
   }
 }
+
+/**
+ * Sends a Telegram message to a user. Fire-and-forget; errors are logged but not thrown.
+ * @param chatId - Telegram user id (from User.id)
+ * @param text - Message text
+ */
+export async function sendTelegramMessage(
+  chatId: string,
+  text: string
+): Promise<void> {
+  const botToken = process.env.TG_BOT_API ?? ''
+  if (!botToken) return
+
+  try {
+    const res = await fetch(
+      `https://api.telegram.org/bot${botToken}/sendMessage`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text,
+          parse_mode: 'HTML',
+          disable_web_page_preview: true,
+        }),
+      }
+    )
+    if (!res.ok) {
+      const err = (await res.json()) as { description?: string }
+      console.warn('[telegram] sendMessage failed:', res.status, err.description)
+    }
+  } catch (err) {
+    console.warn('[telegram] sendMessage error:', err)
+  }
+}

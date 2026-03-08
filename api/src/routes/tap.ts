@@ -4,8 +4,8 @@ import { validateInitData } from '../lib/telegram.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
-const TAP_GOAL = Number(process.env.TAP_GOAL || 100)
-const BINGO_TAP10_TASK_ID = process.env.BINGO_TAP10_TASK_ID || ''
+const TAP_GOAL = Number(process.env.TAP_GOAL || 100) || 100
+const BINGO_TAP10_TASK_ID = process.env.BINGO_TAP10_TASK_ID || 'cmmgvekeb00036po386wfmw90'
 
 function getInitData(headerValue: unknown): string | null {
   return typeof headerValue === 'string' && headerValue.length > 0 ? headerValue : null
@@ -102,7 +102,10 @@ export async function tapRoutes(app: FastifyInstance) {
     }
 
     if (BINGO_TAP10_TASK_ID && totals.userCount >= 10) {
-      await completeBingoTaskForUser(BINGO_TAP10_TASK_ID, userId)
+      const result = await completeBingoTaskForUser(BINGO_TAP10_TASK_ID, userId)
+      if (!result.ok) {
+        req.log.warn({ taskId: BINGO_TAP10_TASK_ID, userId, error: result.error }, 'bingo tap10 task not completed')
+      }
     }
 
     return {

@@ -72,7 +72,13 @@ export function PollsPage() {
       {loading ? <p className="page__loading">Загружаем опросы...</p> : null}
       {error ? <p className="page__error">Ошибка: {error}</p> : null}
       {!loading && !error && polls.length === 0 ? (
-        <p>Опросов пока нет. Добавь их через Postman в `POST /api/polls`.</p>
+        <p>
+          Опросов пока нет. Добавь через Postman: <code>POST /api/polls</code>
+          <br />
+          <small style={{ opacity: 0.85 }}>
+            Пример тела: {`{ "question": "Какой трек?", "options": ["React", "Node.js", "DevOps"] }`}
+          </small>
+        </p>
       ) : null}
       {!loading && polls.length > 0 ? (
         <>

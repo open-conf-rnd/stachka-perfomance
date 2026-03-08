@@ -1,5 +1,6 @@
 import { prisma } from './prisma.js'
 import { wsBroadcast } from './ws-broadcast.js'
+import { sendTelegramMessage } from './telegram.js'
 
 export async function completeBingoTaskForUser(taskId: string, userId: string) {
   const [user, task] = await Promise.all([
@@ -46,6 +47,12 @@ export async function completeBingoTaskForUser(taskId: string, userId: string) {
     },
   })
 
+  const escapedTitle = task.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  void sendTelegramMessage(
+    user.id,
+    `✅ Задание выполнено: <b>${escapedTitle}</b>\nПрогресс: ${completedCount}/${totalTasks}`
+  )
+
   if (totalTasks > 0 && completedCount === totalTasks) {
     await wsBroadcast('bingo:winner', {
       user: {
@@ -54,6 +61,10 @@ export async function completeBingoTaskForUser(taskId: string, userId: string) {
         username: user.username,
       },
     })
+    void sendTelegramMessage(
+      user.id,
+      '🎉 <b>Поздравляем!</b> Ты выполнил все задания бинго!'
+    )
   }
 
   return { ok: true as const, alreadyCompleted: false as const, completedCount, totalTasks }

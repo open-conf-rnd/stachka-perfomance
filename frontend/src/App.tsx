@@ -5,6 +5,7 @@ import { HomePage } from './pages/HomePage'
 import { RegisterPage } from './pages/RegisterPage'
 import { WelcomePage } from './pages/WelcomePage'
 import { BingoPage } from './pages/BingoPage'
+import { QrVerifyPage } from './pages/QrVerifyPage'
 import { PollsPage } from './pages/PollsPage'
 import { TapPage } from './pages/TapPage'
 import { ReactionPage } from './pages/ReactionPage'
@@ -28,6 +29,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/welcome" element={<WelcomePage />} />
           <Route path="/bingo" element={<BingoPage />} />
+          <Route path="/qr" element={<QrVerifyPage />} />
           <Route path="/polls" element={<PollsPage />} />
           <Route path="/tap" element={<TapPage />} />
           <Route path="/reaction" element={<ReactionPage />} />

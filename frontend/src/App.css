@@ -238,3 +238,121 @@
 .btn--welcome:hover {
   filter: brightness(1.08);
 }
+
+.bingo__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.bingo__card {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  background: color-mix(in srgb, currentColor 6%, transparent);
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.bingo__card--completed {
+  background: color-mix(in srgb, #22c55e 18%, transparent);
+  border-color: color-mix(in srgb, #22c55e 35%, transparent);
+}
+
+.bingo__card--clickable {
+  cursor: pointer;
+}
+
+.bingo__card-title {
+  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  text-align: center;
+}
+
+.bingo__tooltip-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+}
+
+.bingo__tooltip {
+  background: var(--page-bg, #1a1a1a);
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  padding: 1rem;
+  max-width: 20rem;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.bingo__tooltip-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.bingo__tooltip-desc {
+  font-size: 0.85rem;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.bingo__tooltip-close {
+  align-self: flex-start;
+}
+
+.qr-verify__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex: 1;
+  text-align: center;
+}
+
+.qr-verify__illustration {
+  font-size: 5rem;
+  line-height: 1;
+  opacity: 0.95;
+}
+
+.qr-verify__text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.qr-verify__btn {
+  padding: 1.5rem 2rem;
+  font-size: 1.2rem;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 4px 16px color-mix(in srgb, #3b82f6 35%, transparent);
+}
+
+.qr-verify__btn:not(:disabled):hover {
+  filter: brightness(1.08);
+}

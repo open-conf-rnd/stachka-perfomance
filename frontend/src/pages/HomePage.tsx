@@ -5,12 +5,12 @@ import { apiRequest, type MeResponse } from '../lib/api'
 
 const menu = [
   { path: '/bingo', title: 'Бинго', desc: 'Карточка заданий' },
+  { path: '/qr', title: 'Сканировать QR', desc: 'Отметить задание по QR-коду' },
   { path: '/polls', title: 'Опросы', desc: 'Голосования доклада' },
   { path: '/tap', title: 'Тапалка', desc: 'Большая кнопка и счетчик' },
   { path: '/reaction', title: 'Реакция', desc: 'Кто нажмет быстрее' },
   { path: '/haptic', title: 'Вибрации', desc: 'Демо Telegram Haptic' },
   { path: '/support', title: 'Поддержать', desc: 'Telegram Stars' },
-  { path: '/welcome', title: 'Welcome', desc: 'После регистрации' },
 ]
 
 export function HomePage() {
