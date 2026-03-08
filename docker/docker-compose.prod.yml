@@ -1,6 +1,6 @@
 # Prod: сервисы собираются по отдельности (context = своя папка), запуск в одной сети
 # Запуск из корня: docker compose -f docker/docker-compose.prod.yml up --build -d
-# Опционально в .env: VITE_APP_URL, VITE_STATS_WS_URL, API_PORT, STATS_WS_PORT
+# Все переменные берутся из .env
 services:
   api:
     image: stachka-perfomance-api:latest
@@ -10,7 +10,25 @@ services:
     env_file: ../.env
     environment:
       - NODE_ENV=production
-      - API_PORT=3000
+      - API_PORT=${API_PORT:-3000}
+      - DATABASE_URL=${DATABASE_URL}
+      - WS_INTERNAL_URL=http://ws:3001
+      - TG_BOT_API=${TG_BOT_API}
+      - ADMIN_USER_IDS=${ADMIN_USER_IDS:-}
+      - TAP_GOAL=${TAP_GOAL:-100}
+      - BINGO_POLLS_TASK_ID=${BINGO_POLLS_TASK_ID:-}
+      - BINGO_TAP10_TASK_ID=${BINGO_TAP10_TASK_ID:-}
+      - BINGO_REACTION_TOP3_TASK_ID=${BINGO_REACTION_TOP3_TASK_ID:-}
+      - BINGO_LINE_TASK_ID=${BINGO_LINE_TASK_ID:-}
+      - BINGO_HAPTIC_TASK_ID=${BINGO_HAPTIC_TASK_ID:-}
+      - BINGO_SHARE_STORIES_TASK_ID=${BINGO_SHARE_STORIES_TASK_ID:-}
+      - BINGO_SHARE_CHAT_TASK_ID=${BINGO_SHARE_CHAT_TASK_ID:-}
+      - BINGO_QR_TASK_ID=${BINGO_QR_TASK_ID:-}
+      - BINGO_STARS_TASK_ID=${BINGO_STARS_TASK_ID:-}
+      - REACTION_COUNTDOWN_SECONDS=${REACTION_COUNTDOWN_SECONDS:-3}
+      - REACTION_LEADERBOARD_DELAY_SECONDS=${REACTION_LEADERBOARD_DELAY_SECONDS:-5}
+      - TG_STARS_SUPPORT_AMOUNT=${TG_STARS_SUPPORT_AMOUNT:-1}
+      - TG_WEBHOOK_SECRET=${TG_WEBHOOK_SECRET:-}
     networks:
       - app
     expose:
@@ -25,7 +43,7 @@ services:
     env_file: ../.env
     environment:
       - NODE_ENV=production
-      - STATS_WS_PORT=3001
+      - STATS_WS_PORT=${STATS_WS_PORT:-3001}
     networks:
       - app
     expose:
