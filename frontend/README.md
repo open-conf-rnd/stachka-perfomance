@@ -35,13 +35,13 @@ Telegram Mini App на React 18, TypeScript и Vite. Подключается к
 
 ## Docker
 
-- **Dockerfile** — production: сборка статики и nginx (образ только для frontend). Конфиг nginx — `frontend/nginx.prod.conf` (прокси `/api/`, `/ws`).
+- **Dockerfile** — production: сборка статики и nginx (образ только для frontend). Конфиг nginx — `docker/nginx/nginx.prod.conf` (прокси `/api/`, `/ws`).
 - **Dockerfile.dev** — dev: Node + Vite, только содержимое папки frontend.
 
 Сборка из корня через compose (context задаётся в compose). Отдельная сборка образа:
 
 ```bash
-docker build -f frontend/Dockerfile frontend/
+docker build -f frontend/Dockerfile .
 docker build -f frontend/Dockerfile.dev frontend/
 ```
 
@@ -56,8 +56,7 @@ frontend/
 │   └── ...
 ├── index.html
 ├── vite.config.ts
-├── Dockerfile        # Prod: build + nginx
+├── Dockerfile        # Prod: build + nginx (конфиг в docker/nginx/)
 ├── Dockerfile.dev    # Dev: Vite
-├── nginx.prod.conf   # Конфиг nginx для образа prod
 └── package.json
 ```

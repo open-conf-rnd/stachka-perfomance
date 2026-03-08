@@ -12,7 +12,7 @@
 | **nginx/nginx.prod.conf** | Конфиг nginx для prod: статика из образа web + прокси `/api/`, `/ws`. |
 | **nginx/ssl/** | Сертификаты для HTTPS в dev. Генерация: `./scripts/gen-ssl.sh` (из корня). |
 
-Образы frontend, api и ws собираются из **своих** папок (свой Dockerfile и context), без общих Dockerfile в `docker/`.
+Образы api и ws собираются из своих папок. Образ web (frontend) — из корня репозитория (context `.`), чтобы использовать `docker/nginx/nginx.prod.conf`.
 
 ## Запуск
 

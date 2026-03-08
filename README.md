@@ -98,6 +98,11 @@ npm run test:smoke
 npm run test:smoke:watch
 ```
 
+### 6. CI/CD (Production)
+
+GitHub Actions: при push в `main` — сборка, smoke-тесты, deploy по SSH.  
+Настройка: см. **`.github/DEPLOY.md`**.
+
 ---
 
 Переменные окружения — см. **`.env.example`**.
