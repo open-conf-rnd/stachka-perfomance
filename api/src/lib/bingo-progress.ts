@@ -2,6 +2,17 @@ import { prisma } from './prisma.js'
 import { wsBroadcast } from './ws-broadcast.js'
 import { sendTelegramMessage } from './telegram.js'
 
+const BINGO_LINE_TASK_ID = process.env.BINGO_LINE_TASK_ID;
+
+function hasBingoLine(orders: number[]): boolean {
+  const set = new Set(orders)
+  for (const o of set) {
+    const end = o + 2
+    if (end % 3 === 0 && set.has(o + 1) && set.has(end)) return true
+  }
+  return false
+}
+
 export async function completeBingoTaskForUser(taskId: string, userId: string) {
   const [user, task] = await Promise.all([
     prisma.user.findUnique({ where: { id: userId } }),
@@ -65,6 +76,23 @@ export async function completeBingoTaskForUser(taskId: string, userId: string) {
       user.id,
       '🎉 <b>Поздравляем!</b> Ты выполнил все задания бинго!'
     )
+  }
+
+  if (
+    BINGO_LINE_TASK_ID &&
+    taskId !== BINGO_LINE_TASK_ID &&
+    !(await prisma.bingoCompletion.findUnique({
+      where: { taskId_userId: { taskId: BINGO_LINE_TASK_ID, userId } },
+    }))
+  ) {
+    const completions = await prisma.bingoCompletion.findMany({
+      where: { userId },
+      include: { task: { select: { order: true } } },
+    })
+    const orders = completions.map((c) => c.task.order)
+    if (hasBingoLine(orders)) {
+      await completeBingoTaskForUser(BINGO_LINE_TASK_ID, userId)
+    }
   }
 
   return { ok: true as const, alreadyCompleted: false as const, completedCount, totalTasks }
