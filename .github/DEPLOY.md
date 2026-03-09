@@ -14,7 +14,7 @@
 
 | Secret | Описание |
 |--------|----------|
-| `SSH_PRIVATE_KEY` | Приватный ключ SSH для доступа к VPS (без passphrase) |
+| `VPS_SSH_KEY` | Приватный ключ SSH для доступа к VPS (без passphrase) |
 | `VPS_HOST` | IP или hostname сервера |
 | `VPS_USERNAME` | Пользователь SSH на VPS |
 | `PROD_ENV` | Полное содержимое `.env` для production (скопировать из `.env.example` и заполнить) |
