@@ -1,0 +1,5 @@
+# Production: HTTPS via Let's Encrypt, reverse proxy to web
+# DOMAIN задаётся в .env (например open-conf-rnd.pro)
+{env.DOMAIN} {
+    reverse_proxy web:80
+}

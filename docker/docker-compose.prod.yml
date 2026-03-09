@@ -1,7 +1,26 @@
 # Prod: локально — build из исходников; CI — образы из GHCR
 # Локально: docker compose -f docker/docker-compose.prod.yml up --build -d
 # CI: IMAGE_TAG, REGISTRY, GITHUB_REPOSITORY задаются в workflow
+#
+# SSL: Caddy автоматически получает и обновляет сертификаты Let's Encrypt.
+# DOMAIN задаётся в .env (workflow добавляет из GitHub Secret DOMAIN).
 services:
+  caddy:
+    image: caddy:2-alpine
+    env_file: ../.env
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    networks:
+      - app
+    depends_on:
+      - web
+    restart: unless-stopped
+
   api:
     image: ${API_IMAGE:-stachka-perfomance-api:latest}
     build:
@@ -53,8 +72,8 @@ services:
     build:
       context: ..
       dockerfile: frontend/Dockerfile
-    ports:
-      - "80:80"
+    expose:
+      - "80"
     networks:
       - app
     depends_on:
@@ -71,3 +90,6 @@ services:
 networks:
   app:
     driver: bridge
+
+volumes:
+  caddy_data:

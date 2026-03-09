@@ -18,11 +18,13 @@
 | `VPS_HOST` | IP или hostname сервера |
 | `VPS_USERNAME` | Пользователь SSH на VPS |
 | `PROD_ENV` | Полное содержимое `.env` для production |
+| `DOMAIN` | Домен для HTTPS (например `open-conf-rnd.pro`) — используется Caddy для Let's Encrypt |
 
 ### 3. Подготовка VPS
 - Установить Docker и Docker Compose v2
 - Настроить доступ к GHCR (на VPS выполнить `docker login ghcr.io` с PAT, чтобы daemon мог пуллить образы)
 - Добавить публичный ключ SSH в `~/.ssh/authorized_keys` для `VPS_USERNAME`
+- **DNS**: домен (например `open-conf-rnd.pro`) должен указывать A‑записью на IP VPS — иначе Let's Encrypt не выдаст сертификат
 
 ### 4. Ручной запуск
 **Actions → Deploy Production → Run workflow**
