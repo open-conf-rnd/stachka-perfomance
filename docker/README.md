@@ -16,14 +16,14 @@
 
 ## Запуск
 
-Команды выполняются **из корня репозитория**:
+Команды выполняются **из корня репозитория** (`.env` в корне):
 
 ```bash
 # Разработка (все сервисы + nginx)
-docker compose -f docker/docker-compose.dev.yml up --build
+docker compose --env-file .env -f docker/docker-compose.dev.yml up --build
 
 # Production (фоновый режим)
-docker compose -f docker/docker-compose.prod.yml up --build -d
+docker compose --env-file .env -f docker/docker-compose.prod.yml up --build -d
 ```
 
 ## Dev

@@ -12,7 +12,7 @@ if [ -f "$ENV_FILE" ]; then
   set +a
 fi
 
-DOMAIN="${1:-${DOMAIN:-localhost}}"
+DOMAIN="${1:-${DOMAIN}}"
 mkdir -p "$SSL_DIR"
 
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \

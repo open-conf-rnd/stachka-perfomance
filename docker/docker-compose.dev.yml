@@ -8,7 +8,6 @@ services:
     env_file: ../.env
     environment:
       - NODE_ENV=development
-      - DOMAIN=${DOMAIN:-localhost}
     volumes:
       - ../frontend:/app
       - /app/node_modules
@@ -22,9 +21,9 @@ services:
     image: postgres:16-alpine
     env_file: ../.env
     environment:
-      - POSTGRES_USER=${POSTGRES_USER:-stachka}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-stachka}
-      - POSTGRES_DB=${POSTGRES_DB:-stachka}
+      - POSTGRES_USER=stachka
+      - POSTGRES_PASSWORD=stachka
+      - POSTGRES_DB=stachka
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -33,7 +32,7 @@ services:
       - "5432:5432"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-stachka}"]
+      test: ["CMD-SHELL", "pg_isready -U stachka"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -45,9 +44,8 @@ services:
     env_file: ../.env
     environment:
       - NODE_ENV=development
-      - API_PORT=3000
-      - DATABASE_URL=postgresql://${POSTGRES_USER:-stachka}:${POSTGRES_PASSWORD:-stachka}@postgres:5432/${POSTGRES_DB:-stachka}
-      - WS_INTERNAL_URL=http://ws:3001
+      - API_PORT=${API_PORT}
+      - DATABASE_URL=postgresql://stachka:stachka@postgres:5432/stachka
     volumes:
       - ../api:/app
       - /app/node_modules
@@ -67,7 +65,7 @@ services:
     env_file: ../.env
     environment:
       - NODE_ENV=development
-      - STATS_WS_PORT=3001
+      - STATS_WS_PORT=${STATS_WS_PORT}
     volumes:
       - ../ws:/app
       - /app/node_modules
@@ -80,8 +78,6 @@ services:
   nginx:
     image: nginx:alpine
     env_file: ../.env
-    environment:
-      - DOMAIN=${DOMAIN:-localhost}
     ports:
       - "443:443"
       - "80:80"
