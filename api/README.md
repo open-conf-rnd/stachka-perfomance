@@ -26,7 +26,7 @@ npm run test:smoke:watch
 ```
 
 Примечания:
-- тесты используют `DATABASE_URL` (если не задана, используется `postgresql://stachka:stachka@localhost:5432/stachka`);
+- тесты используют `POSTGRES_*` из `.env` (по умолчанию stachka/stachka@localhost:5432/stachka);
 - таймеры reaction в smoke принудительно обнулены через env, чтобы тесты выполнялись быстро и стабильно.
 
 ## База данных и миграции
@@ -34,6 +34,7 @@ npm run test:smoke:watch
 - При запуске через **Docker** миграции применяются автоматически перед стартом приложения (`prisma migrate deploy`).
 - Локально или если таблицы ещё не созданы, выполните из папки `api`:
   ```bash
-  DATABASE_URL="postgresql://..." npx prisma migrate deploy
+  npx prisma migrate deploy
   ```
+  (используются `POSTGRES_*` из `.env`)
 - Проверить статус миграций: `npx prisma migrate status`

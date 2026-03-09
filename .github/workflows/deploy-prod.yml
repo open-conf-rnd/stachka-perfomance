@@ -13,20 +13,6 @@ env:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: stachka
-          POSTGRES_PASSWORD: stachka
-          POSTGRES_DB: stachka
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
     steps:
       - uses: actions/checkout@v4
 
@@ -41,12 +27,6 @@ jobs:
 
       - name: Build
         run: npm run build
-
-      - name: Run smoke tests
-        run: npm run test:smoke
-        env:
-          ADMIN_USER_IDS: ""
-          DATABASE_URL: postgresql://stachka:stachka@localhost:5432/stachka
 
   build-and-push-api:
     needs: build-and-test

@@ -7,8 +7,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "prisma generate && tsc",
     "start": "node dist/index.js",
-    "test:smoke": "ADMIN_USER_IDS= DATABASE_URL=${DATABASE_URL:-postgresql://stachka:stachka@localhost:5432/stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest run test/smoke.test.ts",
-    "test:smoke:watch": "DATABASE_URL=${DATABASE_URL:-postgresql://stachka:stachka@localhost:5432/stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest test/smoke.test.ts"
+    "test:smoke": "ADMIN_USER_IDS= POSTGRES_USER=${POSTGRES_USER:-stachka} POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-stachka} POSTGRES_HOST=${POSTGRES_HOST:-localhost} POSTGRES_PORT=${POSTGRES_PORT:-5432} POSTGRES_DB=${POSTGRES_DB:-stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest run test/smoke.test.ts",
+    "test:smoke:watch": "POSTGRES_USER=${POSTGRES_USER:-stachka} POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-stachka} POSTGRES_HOST=${POSTGRES_HOST:-localhost} POSTGRES_PORT=${POSTGRES_PORT:-5432} POSTGRES_DB=${POSTGRES_DB:-stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest test/smoke.test.ts"
   },
   "dependencies": {
     "@fastify/cors": "^11.2.0",
