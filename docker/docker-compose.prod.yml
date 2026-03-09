@@ -6,14 +6,16 @@
 # DOMAIN задаётся в .env (workflow добавляет из GitHub Secret DOMAIN).
 services:
   caddy:
-    image: caddy:2-alpine
+    image: ${CADDY_IMAGE:-stachka-perfomance-caddy:latest}
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
     env_file: ../.env
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
     networks:
       - app
