@@ -18,7 +18,6 @@
 | `VPS_HOST` | IP или hostname сервера |
 | `VPS_USERNAME` | Пользователь SSH на VPS |
 | `PROD_ENV` | Полное содержимое `.env` для production |
-| `DOMAIN` | Домен для HTTPS (например `open-conf-rnd.pro`) — используется Caddy для Let's Encrypt |
 
 ### 3. Подготовка VPS
 - Установить Docker и Docker Compose v2

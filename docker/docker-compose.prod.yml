@@ -3,7 +3,7 @@
 # CI: IMAGE_TAG, REGISTRY, GITHUB_REPOSITORY задаются в workflow
 #
 # SSL: Caddy автоматически получает и обновляет сертификаты Let's Encrypt.
-# DOMAIN задаётся в .env (workflow добавляет из GitHub Secret DOMAIN).
+# .env формируется из PROD_ENV.
 services:
   caddy:
     image: ${CADDY_IMAGE:-stachka-perfomance-caddy:latest}

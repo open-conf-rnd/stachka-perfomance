@@ -179,10 +179,8 @@ jobs:
       - name: Create .env from secrets
         env:
           PROD_ENV: ${{ secrets.PROD_ENV }}
-          DOMAIN: ${{ secrets.DOMAIN }}
         run: |
           printf '%s' "$PROD_ENV" > .env
-          echo "DOMAIN=$DOMAIN" >> .env
 
       - name: Deploy compose config
         env:
