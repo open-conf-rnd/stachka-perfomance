@@ -58,8 +58,19 @@ async function createInvoiceLink(params: {
 
   const data = (await res.json()) as { ok: boolean; result?: string; description?: string }
   if (!data.ok || !data.result) {
+    console.error('[payments] createInvoiceLink failed', {
+      status: res.status,
+      description: data.description,
+      payload: params.payload,
+      amount: params.amount,
+    })
     throw new Error(data.description || 'Cannot create invoice link')
   }
+  console.info('[payments] createInvoiceLink ok', {
+    payload: params.payload,
+    amount: params.amount,
+    invoiceUrl: data.result,
+  })
   return data.result
 }
 
@@ -93,6 +104,7 @@ export async function paymentRoutes(app: FastifyInstance) {
     }
 
     const payload = `support:${userId}:${crypto.randomUUID()}`
+    console.info('[payments] invoice request', { userId, payload, amount: STARS_AMOUNT })
     const invoiceUrl = await createInvoiceLink({
       title: 'Поддержать доклад',
       description: 'Спасибо за поддержку доклада в Telegram Stars',
@@ -117,6 +129,7 @@ export async function paymentRoutes(app: FastifyInstance) {
 
     const successfulPayment = req.body?.message?.successful_payment
     if (!successfulPayment) {
+      console.info('[payments] webhook update without successful_payment')
       return { ok: true }
     }
 
@@ -128,12 +141,21 @@ export async function paymentRoutes(app: FastifyInstance) {
 
     const userId = getUserIdFromPayload(successfulPayment.invoice_payload, fallbackUserId)
     const telegramChargeId = successfulPayment.telegram_payment_charge_id
+    console.info('[payments] successful_payment received', {
+      userId,
+      fallbackUserId,
+      telegramChargeId,
+      payload: successfulPayment.invoice_payload,
+      amount: successfulPayment.total_amount,
+      currency: successfulPayment.currency,
+    })
 
     const existing = await prisma.payment.findUnique({
       where: { telegramChargeId },
       select: { id: true },
     })
     if (existing) {
+      console.info('[payments] duplicate successful_payment ignored', { telegramChargeId })
       return { ok: true, duplicate: true }
     }
 
@@ -171,6 +193,12 @@ export async function paymentRoutes(app: FastifyInstance) {
         firstName: user.firstName,
         username: user.username,
       },
+      amount: successfulPayment.total_amount,
+      currency: successfulPayment.currency || 'XTR',
+    })
+    console.info('[payments] payment persisted and broadcasted', {
+      userId: user.id,
+      telegramChargeId,
       amount: successfulPayment.total_amount,
       currency: successfulPayment.currency || 'XTR',
     })

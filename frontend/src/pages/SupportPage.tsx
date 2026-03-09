@@ -65,6 +65,7 @@ export function SupportPage() {
     setPaying(true)
     setError(null)
     try {
+      console.info('[payments] creating invoice...')
       const invoice = await apiRequestWithNotifications<InvoiceResponse>(
         '/api/payments/invoice',
         'POST',
@@ -74,21 +75,37 @@ export function SupportPage() {
           errorMessage: 'Не удалось создать инвойс',
         }
       )
+      console.info('[payments] invoice created', {
+        invoiceUrl: invoice.invoiceUrl,
+        amount: invoice.amount,
+        currency: invoice.currency,
+      })
       const openInvoice = window.Telegram?.WebApp?.openInvoice
       if (!openInvoice) {
         setStatus('OpenInvoice недоступен, открой TMA в Telegram')
+        console.warn('[payments] openInvoice unavailable')
         return
       }
 
       openInvoice(invoice.invoiceUrl, (paymentStatus) => {
+        console.info('[payments] invoice callback', { paymentStatus, invoiceUrl: invoice.invoiceUrl })
         setStatus(`Статус оплаты: ${paymentStatus}`)
         if (paymentStatus === 'paid') {
           notifyTelegramResult('success', 'Оплата прошла, бинго-задание поддержки засчитано', 'Бинго')
           loadSupporters()
+          return
+        }
+        if (paymentStatus === 'failed') {
+          notifyTelegramResult('error', 'Оплата не прошла. Проверьте баланс Stars и повторите попытку.')
+          return
+        }
+        if (paymentStatus === 'cancelled') {
+          notifyTelegramResult('warning', 'Оплата отменена')
         }
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось создать инвойс')
+      console.error('[payments] invoice flow failed', err)
     } finally {
       setPaying(false)
     }
