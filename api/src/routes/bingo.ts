@@ -36,34 +36,6 @@ export async function bingoRoutes(app: FastifyInstance) {
     return task
   })
 
-  app.post<{
-    Body: { tasks: Array<{ title: string; description?: string; order?: number }> }
-  }>('/api/bingo/tasks/bulk', async (req, reply) => {
-    const auth = requireAdmin(req.headers['x-telegram-init-data'])
-    if (!auth.ok) {
-      return reply.status(auth.status).send(auth.body)
-    }
-
-    const { tasks } = req.body ?? {}
-    if (!Array.isArray(tasks) || tasks.length === 0) {
-      return reply.status(400).send({ error: 'tasks array is required' })
-    }
-
-    const created = await prisma.$transaction(
-      tasks.map((t, i) =>
-        prisma.bingoTask.create({
-          data: {
-            title: String(t?.title ?? '').trim() || `Задание ${i + 1}`,
-            description: typeof t?.description === 'string' ? t.description.trim() || null : null,
-            order: Number.isInteger(t?.order) ? (t.order as number) : i,
-          },
-        })
-      )
-    )
-
-    return { created: created.length, tasks: created }
-  })
-
   app.get('/api/bingo/config', async () => ({
     shareStoriesTaskId: BINGO_SHARE_STORIES_TASK_ID || null,
     shareChatTaskId: BINGO_SHARE_CHAT_TASK_ID || null,

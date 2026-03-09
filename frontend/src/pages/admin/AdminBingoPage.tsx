@@ -61,32 +61,6 @@ export function AdminBingoPage() {
     }
   }
 
-  const bulkAdd = async () => {
-    const raw = prompt(
-      'Введите задания (каждое с новой строки). Формат: заголовок или заголовок|описание'
-    )
-    if (!raw?.trim()) return
-
-    const lines = raw.split('\n').map((s) => s.trim()).filter(Boolean)
-    const items = lines.map((line, i) => {
-      const [title, description] = line.includes('|') ? line.split('|').map((s) => s.trim()) : [line, '']
-      return { title: title || `Задание ${i + 1}`, description: description || undefined, order: i }
-    })
-
-    setCreating(true)
-    setResult(null)
-    setError(null)
-    try {
-      const data = await apiRequest<{ created: number }>('/api/bingo/tasks/bulk', 'POST', { tasks: items })
-      setResult(`Добавлено заданий: ${data.created}`)
-      void loadTasks()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Не удалось добавить')
-    } finally {
-      setCreating(false)
-    }
-  }
-
   return (
     <div className="admin-section">
       <h2 style={{ margin: '0 0 0.75rem', fontSize: '1.1rem' }}>Задания бинго</h2>
@@ -154,14 +128,6 @@ export function AdminBingoPage() {
                 onClick={() => void addTask()}
               >
                 {creating ? '...' : 'Добавить'}
-              </button>
-              <button
-                type="button"
-                className="btn"
-                disabled={creating}
-                onClick={() => void bulkAdd()}
-              >
-                Массово
               </button>
             </div>
           </div>
