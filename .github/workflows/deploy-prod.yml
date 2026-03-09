@@ -157,6 +157,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: production
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -190,9 +191,27 @@ jobs:
           CADDY_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-caddy:${{ github.sha }}
           DOCKER_HOST: ssh://${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}
         run: |
-          docker compose --env-file .env --file docker/docker-compose.prod.yml down --remove-orphans || true
-          docker image prune -af || true
-          docker builder prune -af || true
-          docker compose --env-file .env --file docker/docker-compose.prod.yml pull
-          docker compose --env-file .env --file docker/docker-compose.prod.yml up --detach --wait --remove-orphans
-          docker image prune -f
+          set -euo pipefail
+
+          compose_cmd="docker compose --env-file .env --file docker/docker-compose.prod.yml"
+
+          retry() {
+            local max_attempts="$1"
+            shift
+            local attempt=1
+            until "$@"; do
+              if [ "$attempt" -ge "$max_attempts" ]; then
+                echo "Command failed after ${attempt} attempts: $*"
+                return 1
+              fi
+              echo "Attempt ${attempt}/${max_attempts} failed, retrying in 15s: $*"
+              attempt=$((attempt + 1))
+              sleep 15
+            done
+          }
+
+          $compose_cmd down --remove-orphans || true
+          retry 3 timeout 900 $compose_cmd pull
+          retry 2 timeout 600 $compose_cmd up --detach --wait --remove-orphans
+          $compose_cmd ps
+          docker image prune -f || true

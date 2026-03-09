@@ -3,7 +3,7 @@
 При каждом push в `main` запускается workflow **Deploy Production**:
 1. **build-and-test** — npm ci, build, smoke-тесты
 2. **build-and-push** — сборка образов api, ws, web и push в GitHub Container Registry (ghcr.io)
-3. **deploy** — запуск `docker compose` на VPS через DOCKER_HOST=ssh://
+3. **deploy** — запуск `docker compose` на VPS через DOCKER_HOST=ssh:// с `timeout` и `retry` для pull/up
 
 ## Настройка GitHub
 
