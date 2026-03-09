@@ -41,8 +41,6 @@ docker compose -f docker/docker-compose.prod.yml up --build -d
 - **web** — образ из `frontend/Dockerfile` (сборка frontend + nginx со статикой и прокси).
 - Сеть **app**: только внутренние порты, наружу открыт 80 (контейнер web).
 
-В `.env` при сборке можно задать `VITE_APP_URL`, `VITE_STATS_WS_URL` для frontend.
-
 ## SSL (dev)
 
 Сертификаты лежат в `docker/nginx/ssl/` (файлы в `.gitignore`). Скрипт `./scripts/gen-ssl.sh` читает `DOMAIN` из `.env` и генерирует `cert.pem`, `key.pem`. Подробнее — в `nginx/ssl/README.md`.

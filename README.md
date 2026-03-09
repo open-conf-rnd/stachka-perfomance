@@ -77,8 +77,6 @@ docker compose -f docker/docker-compose.prod.yml up --build -d
 - Вход: **http://&lt;хост&gt;:80**
 - Nginx раздаёт статику frontend и проксирует `/api/` и `/ws/` на api и ws.
 
-Опционально в `.env`: `VITE_APP_URL`, `VITE_STATS_WS_URL` — подставляются при сборке frontend.
-
 ### 4. Сборка (без Docker)
 
 ```bash

@@ -126,9 +126,6 @@ jobs:
           context: .
           file: ./frontend/Dockerfile
           push: ${{ github.ref == 'refs/heads/main' }}
-          build-args: |
-            VITE_APP_URL=${{ vars.VITE_APP_URL || '' }}
-            VITE_STATS_WS_URL=${{ vars.VITE_STATS_WS_URL || '' }}
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository }}-web:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ github.repository }}-web:latest

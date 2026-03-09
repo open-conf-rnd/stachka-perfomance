@@ -17,19 +17,12 @@
 | `VPS_SSH_KEY` | Приватный ключ SSH для доступа к VPS (без passphrase) |
 | `VPS_HOST` | IP или hostname сервера |
 | `VPS_USERNAME` | Пользователь SSH на VPS |
-| `PROD_ENV` | Полное содержимое `.env` для production (скопировать из `.env.example` и заполнить) |
+| `PROD_ENV` | Полное содержимое `.env` для production |
 
-### 3. Variables (опционально, для сборки frontend)
-
-| Variable | Описание |
-|----------|----------|
-| `VITE_APP_URL` | Публичный URL приложения (например `https://example.com/`) |
-| `VITE_STATS_WS_URL` | WebSocket URL (например `wss://example.com/ws`) |
-
-### 4. Подготовка VPS
+### 3. Подготовка VPS
 - Установить Docker и Docker Compose v2
 - Настроить доступ к GHCR (на VPS выполнить `docker login ghcr.io` с PAT, чтобы daemon мог пуллить образы)
 - Добавить публичный ключ SSH в `~/.ssh/authorized_keys` для `VPS_USERNAME`
 
-### 5. Ручной запуск
+### 4. Ручной запуск
 **Actions → Deploy Production → Run workflow**

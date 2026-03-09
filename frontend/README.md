@@ -21,17 +21,9 @@ Telegram Mini App на React 18, TypeScript и Vite. Подключается к
 
 Из **корня** репозитория: `npm run dev` (frontend), `npm run build:frontend`.
 
-## Переменные окружения (Vite)
+## API и WebSocket
 
-Подставляются при **сборке** (префикс `VITE_`):
-
-| Переменная | Описание |
-|------------|----------|
-| `VITE_APP_URL` | Публичный URL приложения (опционально). |
-| `VITE_API_URL` | Базовый URL API. Пусто = тот же хост, запросы на `/api/`. |
-| `VITE_STATS_WS_URL` | URL WebSocket статистики. Пусто = тот же хост, путь `/ws` (для https — `wss://host:443/ws`). |
-
-На **localhost:5173** (Vite без nginx) API и WS подставляются как `http://localhost:3000` и `ws://localhost:3001` (см. `src/config.ts`).
+Берутся из текущего location: тот же хост, пути `/api/` и `/ws`. На **localhost:5173** (Vite) — `http://localhost:3000` и `ws://localhost:3001` (см. `src/config.ts`).
 
 ## Docker
 
@@ -51,7 +43,7 @@ docker build -f frontend/Dockerfile.dev frontend/
 frontend/
 ├── src/
 │   ├── App.tsx       # Основной экран (проверка API/WS и т.п.)
-│   ├── config.ts     # apiBase, wsUrl из env и location
+│   ├── config.ts     # apiBase, wsUrl из location
 │   ├── main.tsx      # Точка входа, SDKProvider
 │   └── ...
 ├── index.html
