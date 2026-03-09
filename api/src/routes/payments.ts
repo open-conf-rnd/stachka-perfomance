@@ -17,7 +17,16 @@ interface TelegramSuccessfulPayment {
   currency: string
 }
 
+interface TelegramPreCheckoutQuery {
+  id: string
+  from: { id: number }
+  currency: string
+  total_amount: number
+  invoice_payload: string
+}
+
 interface TelegramUpdate {
+  pre_checkout_query?: TelegramPreCheckoutQuery
   message?: {
     from?: {
       id: number
@@ -125,6 +134,27 @@ export async function paymentRoutes(app: FastifyInstance) {
       if (secret !== WEBHOOK_SECRET) {
         return reply.status(401).send({ error: 'Invalid webhook secret' })
       }
+    }
+
+    const preCheckout = req.body?.pre_checkout_query
+    if (preCheckout) {
+      console.info('[payments] pre_checkout_query received', {
+        id: preCheckout.id,
+        userId: preCheckout.from.id,
+        amount: preCheckout.total_amount,
+        currency: preCheckout.currency,
+        payload: preCheckout.invoice_payload,
+      })
+      const answer = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/answerPreCheckoutQuery`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pre_checkout_query_id: preCheckout.id, ok: true }),
+      })
+      const answerData = (await answer.json()) as { ok: boolean; description?: string }
+      if (!answerData.ok) {
+        console.error('[payments] answerPreCheckoutQuery failed', answerData)
+      }
+      return { ok: true }
     }
 
     const successfulPayment = req.body?.message?.successful_payment
