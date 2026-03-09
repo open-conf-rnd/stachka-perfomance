@@ -145,16 +145,16 @@ jobs:
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.1
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
 
       - name: Add VPS to known_hosts
         run: |
           ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Login to Container Registry
+      - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
@@ -164,12 +164,14 @@ jobs:
         run: |
           printf '%s' "$PROD_ENV" > .env
 
-      - name: Deploy to VPS
+      - name: Deploy compose config
         env:
           API_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-api:${{ github.sha }}
           WS_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-ws:${{ github.sha }}
           WEB_IMAGE: ${{ env.REGISTRY }}/${{ github.repository }}-web:${{ github.sha }}
           DOCKER_HOST: ssh://${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}
         run: |
+          docker compose --env-file .env --file docker/docker-compose.prod.yml down --remove-orphans || true
           docker compose --env-file .env --file docker/docker-compose.prod.yml pull
           docker compose --env-file .env --file docker/docker-compose.prod.yml up --detach --wait --remove-orphans
+          docker image prune -f
