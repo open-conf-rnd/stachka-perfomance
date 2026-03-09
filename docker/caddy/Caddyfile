@@ -1,5 +1,11 @@
-# Production: HTTPS via Let's Encrypt, reverse proxy to web
+# Production: HTTP и HTTPS, reverse proxy to web
 # DOMAIN задаётся в .env (например open-conf-rnd.pro)
-{env.DOMAIN} {
+# HTTP — всегда доступен (в т.ч. для ACME challenge)
+http://{env.DOMAIN} {
+    reverse_proxy web:80
+}
+
+# HTTPS — Let's Encrypt, автообновление
+https://{env.DOMAIN} {
     reverse_proxy web:80
 }
