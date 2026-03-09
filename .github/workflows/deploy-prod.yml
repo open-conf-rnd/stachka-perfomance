@@ -191,6 +191,8 @@ jobs:
           DOCKER_HOST: ssh://${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }}
         run: |
           docker compose --env-file .env --file docker/docker-compose.prod.yml down --remove-orphans || true
+          docker image prune -af || true
+          docker builder prune -af || true
           docker compose --env-file .env --file docker/docker-compose.prod.yml pull
           docker compose --env-file .env --file docker/docker-compose.prod.yml up --detach --wait --remove-orphans
           docker image prune -f
