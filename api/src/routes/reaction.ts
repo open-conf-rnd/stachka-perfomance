@@ -37,7 +37,7 @@ async function getRoundNumberById(roundId: string): Promise<number> {
     orderBy: { createdAt: 'asc' },
     select: { id: true },
   })
-  const index = allOrdered.findIndex((r) => r.id === roundId)
+  const index = allOrdered.findIndex((r: { id: string }) => r.id === roundId)
   return index >= 0 ? index + 1 : 0
 }
 
@@ -47,7 +47,7 @@ async function getRoundNumberMap(): Promise<Map<string, number>> {
     select: { id: true },
   })
   const map = new Map<string, number>()
-  allOrdered.forEach((r, i) => map.set(r.id, i + 1))
+  allOrdered.forEach((r: { id: string }, i: number) => map.set(r.id, i + 1))
   return map
 }
 
@@ -70,7 +70,7 @@ async function finishRoundAndBroadcastLeaderboard(roundId: string) {
     orderBy: { tapTime: 'asc' },
   })
 
-  const results = taps.map((tap, index) => ({
+  const results = taps.map((tap: { user: { id: string; firstName: string; username: string | null }; tapTime: Date }, index: number) => ({
     place: index + 1,
     user: tap.user,
     tapTime: tap.tapTime.toISOString(),
@@ -113,7 +113,7 @@ export async function reactionRoutes(app: FastifyInstance) {
       },
     })
     const numberMap = await getRoundNumberMap()
-    return rounds.map((r) => ({
+    return rounds.map((r: { id: string; status: string; createdAt: Date; _count: { taps: number } }) => ({
       id: r.id,
       roundNumber: numberMap.get(r.id) ?? 0,
       status: r.status,
@@ -137,7 +137,7 @@ export async function reactionRoutes(app: FastifyInstance) {
     if (!round) {
       return reply.status(404).send({ error: 'Round not found' })
     }
-    const results = round.taps.map((tap, index) => ({
+    const results = round.taps.map((tap: { user: { id: string; firstName: string; username: string | null }; tapTime: Date }, index: number) => ({
       place: index + 1,
       user: tap.user,
       tapTime: tap.tapTime.toISOString(),
@@ -256,7 +256,7 @@ export async function reactionRoutes(app: FastifyInstance) {
       take: 3,
     })
 
-    const place = top3.findIndex((item) => item.user.id === userId) + 1
+    const place = top3.findIndex((item: { user: { id: string } }) => item.user.id === userId) + 1
     if (place > 0 && place <= 3) {
       await wsBroadcast('reaction:podium', {
         roundId: round.id,

@@ -89,7 +89,7 @@ export async function completeBingoTaskForUser(taskId: string, userId: string) {
       where: { userId },
       include: { task: { select: { order: true } } },
     })
-    const orders = completions.map((c) => c.task.order)
+    const orders = completions.map((c: { task: { order: number } }) => c.task.order)
     if (hasBingoLine(orders)) {
       await completeBingoTaskForUser(BINGO_LINE_TASK_ID, userId)
     }

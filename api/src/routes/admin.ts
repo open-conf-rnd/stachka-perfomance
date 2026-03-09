@@ -43,7 +43,7 @@ export async function adminRoutes(app: FastifyInstance) {
       orderBy: { completions: { _count: 'desc' } },
     })
 
-    return users.map((u) => ({
+    return users.map((u: { id: string; firstName: string; lastName: string | null; username: string | null; _count: { completions: number } }) => ({
       id: u.id,
       firstName: u.firstName,
       lastName: u.lastName ?? null,

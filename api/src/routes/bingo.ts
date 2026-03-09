@@ -89,9 +89,9 @@ export async function bingoRoutes(app: FastifyInstance) {
       where: { userId },
       select: { taskId: true },
     })
-    const completed = new Set(completions.map((c) => c.taskId))
+    const completed = new Set(completions.map((c: { taskId: string }) => c.taskId))
 
-    return tasks.map((task) => ({
+    return tasks.map((task: { id: string; [key: string]: unknown }) => ({
       ...task,
       completed: completed.has(task.id),
     }))

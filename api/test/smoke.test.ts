@@ -34,6 +34,8 @@ describe('API smoke', () => {
     return params.toString()
   }
 
+  const adminInitData = () => buildInitData({ id: 999, first_name: 'Admin', username: 'admin' })
+
   beforeAll(async () => {
     process.env.TG_BOT_API = botToken
     app = await createApp()
@@ -50,6 +52,7 @@ describe('API smoke', () => {
     await prisma.bingoCompletion.deleteMany()
     await prisma.bingoTask.deleteMany()
     await prisma.payment.deleteMany()
+    await prisma.hapticTrigger.deleteMany()
     await prisma.user.deleteMany()
   })
 
@@ -72,6 +75,7 @@ describe('API smoke', () => {
     const created = await app.inject({
       method: 'POST',
       url: '/api/polls',
+      headers: { 'x-telegram-init-data': adminInitData() },
       payload: {
         question: 'Smoke test poll?',
         options: ['Yes', 'No'],
@@ -93,6 +97,7 @@ describe('API smoke', () => {
     const created = await app.inject({
       method: 'POST',
       url: '/api/bingo/tasks',
+      headers: { 'x-telegram-init-data': adminInitData() },
       payload: { title: 'Share to story' },
     })
     expect(created.statusCode).toBe(200)
@@ -105,7 +110,11 @@ describe('API smoke', () => {
   })
 
   it('reaction start and current endpoints respond', async () => {
-    const start = await app.inject({ method: 'POST', url: '/api/reaction/start' })
+    const start = await app.inject({
+      method: 'POST',
+      url: '/api/reaction/start',
+      headers: { 'x-telegram-init-data': adminInitData() },
+    })
     expect(start.statusCode).toBe(200)
     const started = start.json() as { roundId: string }
     expect(started.roundId).toBeTruthy()
@@ -120,6 +129,7 @@ describe('API smoke', () => {
     const response = await app.inject({
       method: 'POST',
       url: '/api/haptic/trigger',
+      headers: { 'x-telegram-init-data': adminInitData() },
       payload: { type: 'impact', style: 'medium' },
     })
     expect(response.statusCode).toBe(200)
@@ -194,6 +204,7 @@ describe('API smoke', () => {
     const started = await app.inject({
       method: 'POST',
       url: '/api/reaction/start',
+      headers: { 'x-telegram-init-data': adminInitData() },
     })
     expect(started.statusCode).toBe(200)
     const roundId = (started.json() as { roundId: string }).roundId

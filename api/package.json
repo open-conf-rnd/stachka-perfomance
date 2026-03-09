@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "prisma generate && tsc",
     "start": "node dist/index.js",
-    "test:smoke": "DATABASE_URL=${DATABASE_URL:-postgresql://stachka:stachka@localhost:5432/stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest run test/smoke.test.ts",
+    "test:smoke": "ADMIN_USER_IDS= DATABASE_URL=${DATABASE_URL:-postgresql://stachka:stachka@localhost:5432/stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest run test/smoke.test.ts",
     "test:smoke:watch": "DATABASE_URL=${DATABASE_URL:-postgresql://stachka:stachka@localhost:5432/stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest test/smoke.test.ts"
   },
   "dependencies": {

@@ -187,15 +187,16 @@ export async function paymentRoutes(app: FastifyInstance) {
     })
 
     const users = await prisma.user.findMany({
-      where: { id: { in: grouped.map((g) => g.userId) } },
+      where: { id: { in: grouped.map((g: { userId: string }) => g.userId) } },
       select: { id: true, firstName: true, username: true },
     })
 
-    const usersById = new Map(users.map((u) => [u.id, u]))
-    const supporters = grouped.map((item) => ({
+    type UserRow = { id: string; firstName: string; username: string | null }
+    const usersById = new Map<string, UserRow>(users.map((u: UserRow) => [u.id, u]))
+    const supporters = grouped.map((item: { userId: string; _count: { _all: number }; _sum: { amount: number | null } }) => ({
       userId: item.userId,
-      firstName: usersById.get(item.userId)?.firstName || 'Unknown',
-      username: usersById.get(item.userId)?.username || null,
+      firstName: usersById.get(item.userId)?.firstName ?? 'Unknown',
+      username: usersById.get(item.userId)?.username ?? null,
       paymentsCount: item._count._all,
       totalAmount: item._sum.amount || 0,
       currency: 'XTR',

@@ -19,13 +19,13 @@ async function buildPollStats(pollId: string) {
 
   const counts: Record<string, number> = {}
   for (const option of poll.options) {
-    counts[option.id] = poll.votes.filter((v) => v.optionId === option.id).length
+    counts[option.id] = poll.votes.filter((v: { optionId: string }) => v.optionId === option.id).length
   }
 
   return {
     pollId: poll.id,
     question: poll.question,
-    options: poll.options.map((o) => ({ id: o.id, label: o.label })),
+    options: poll.options.map((o: { id: string; label: string }) => ({ id: o.id, label: o.label })),
     counts,
     total: poll.votes.length,
   }
@@ -67,15 +67,15 @@ export async function pollRoutes(app: FastifyInstance) {
       orderBy: { createdAt: 'asc' },
     })
 
-    return polls.map((poll) => {
+    return polls.map((poll: { id: string; question: string; options: Array<{ id: string; label: string }>; votes: Array<{ optionId: string }> }) => {
       const counts: Record<string, number> = {}
       for (const option of poll.options) {
-        counts[option.id] = poll.votes.filter((v) => v.optionId === option.id).length
+        counts[option.id] = poll.votes.filter((v: { optionId: string }) => v.optionId === option.id).length
       }
       return {
         id: poll.id,
         question: poll.question,
-        options: poll.options.map((o) => ({ id: o.id, label: o.label })),
+        options: poll.options.map((o: { id: string; label: string }) => ({ id: o.id, label: o.label })),
         counts,
         total: poll.votes.length,
       }
@@ -111,7 +111,7 @@ export async function pollRoutes(app: FastifyInstance) {
       return reply.status(404).send({ error: 'Poll not found' })
     }
 
-    if (!poll.options.some((o) => o.id === optionId)) {
+    if (!poll.options.some((o: { id: string }) => o.id === optionId)) {
       return reply.status(400).send({ error: 'Invalid optionId' })
     }
 

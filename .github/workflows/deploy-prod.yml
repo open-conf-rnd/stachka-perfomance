@@ -45,6 +45,7 @@ jobs:
       - name: Run smoke tests
         run: npm run test:smoke
         env:
+          ADMIN_USER_IDS: ""
           DATABASE_URL: postgresql://stachka:stachka@localhost:5432/stachka
 
   build-and-push-api:
