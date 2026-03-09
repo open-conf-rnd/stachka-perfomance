@@ -11,6 +11,8 @@ services:
       context: ./caddy
       dockerfile: Dockerfile
     env_file: ../.env
+    environment:
+      - DOMAIN=${DOMAIN}
     ports:
       - "80:80"
       - "443:443"
