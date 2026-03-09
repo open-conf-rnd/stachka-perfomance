@@ -1,8 +1,9 @@
 <!doctype html>
 <html lang="ru">
   <head>
+    <!-- Must be first: Telegram client may call receiveEvent before page loads (iOS/macOS race) -->
     <script>
-      (function(){var w=window;w.TelegramGameProxy={receiveEvent:function(){}};(w.Telegram=w.Telegram||{}).WebView={receiveEvent:function(){}};})();
+      (function(){var r=function(){};var w=window;w.TelegramGameProxy={receiveEvent:r};w.TelegramGameProxy_receiveEvent=r;(w.Telegram=w.Telegram||{}).WebView={receiveEvent:r};})();
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
