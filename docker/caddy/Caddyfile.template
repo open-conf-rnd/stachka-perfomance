@@ -1,11 +1,11 @@
 # Production: HTTP и HTTPS, reverse proxy to web
-# DOMAIN задаётся в .env (из PROD_ENV)
+# DOMAIN подставляется при старте через envsubst
 # HTTP — всегда доступен (в т.ч. для ACME challenge)
-http://{env.DOMAIN} {
+http://${DOMAIN} {
     reverse_proxy web:80
 }
 
 # HTTPS — Let's Encrypt, автообновление
-https://{env.DOMAIN} {
+https://${DOMAIN} {
     reverse_proxy web:80
 }
