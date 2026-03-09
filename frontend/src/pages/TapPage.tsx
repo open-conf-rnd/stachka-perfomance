@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { PageLayout } from '../components/PageLayout'
-import { apiRequest } from '../lib/api'
+import { apiRequest, apiRequestWithNotifications } from '../lib/api'
 import { wsUrl } from '../config'
 
 interface TapState {
@@ -78,7 +78,22 @@ export function TapPage() {
     setSubmitting(true)
     setError(null)
     try {
-      const data = await apiRequest<TapState & { success: boolean }>('/api/tap', 'POST')
+      const data = await apiRequestWithNotifications<TapState & { success: boolean }>(
+        '/api/tap',
+        'POST',
+        undefined,
+        {
+          successCondition: (response) =>
+            typeof response === 'object' &&
+            response !== null &&
+            'userCount' in response &&
+            typeof (response as { userCount?: unknown }).userCount === 'number' &&
+            (response as { userCount: number }).userCount === 10,
+          popupTitle: 'Бинго',
+          successMessage: '10 тапов набраны, бинго-задание засчитано',
+          errorMessage: 'Не удалось отправить тап',
+        }
+      )
       setState({ userCount: data.userCount, total: data.total, goal: data.goal })
       if (data.total >= data.goal) setGoalReached(true)
     } catch (err) {

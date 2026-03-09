@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../components/PageLayout'
-import { apiRequest } from '../lib/api'
+import { apiRequestWithNotifications } from '../lib/api'
 import { triggerHaptic } from '../lib/haptic'
 import { wsUrl } from '../config'
 
@@ -57,16 +57,27 @@ export function HapticPage() {
   const runImpact = (style: ImpactStyle) => {
     const ok = triggerHaptic({ type: 'impact', style })
     setStatus(ok ? `Impact: ${style}` : 'Haptic недоступен в текущей среде')
-    void apiRequest('/api/haptic/track', 'POST', { type: 'impact', style }).catch(() => {})
+    void apiRequestWithNotifications('/api/haptic/track', 'POST', { type: 'impact', style }, {
+      notifyOnSuccess: false,
+      notifyOnError: false,
+    }).catch(() => {})
   }
 
   const runNotification = (notificationType: NotificationType) => {
     const ok = triggerHaptic({ type: 'notification', notificationType })
     setStatus(ok ? `Notification: ${notificationType}` : 'Haptic недоступен в текущей среде')
-    void apiRequest('/api/haptic/track', 'POST', {
-      type: 'notification',
-      notificationType,
-    }).catch(() => {})
+    void apiRequestWithNotifications(
+      '/api/haptic/track',
+      'POST',
+      {
+        type: 'notification',
+        notificationType,
+      },
+      {
+        notifyOnSuccess: false,
+        notifyOnError: false,
+      }
+    ).catch(() => {})
   }
 
   const notificationColors: Record<NotificationType, string> = {

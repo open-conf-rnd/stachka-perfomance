@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { PageLayout } from '../components/PageLayout'
-import { apiRequest } from '../lib/api'
+import { apiRequest, apiRequestWithNotifications } from '../lib/api'
 import { wsUrl } from '../config'
+import { notifyTelegramResult } from '../lib/telegramNotifications'
 
 interface InvoiceResponse {
   invoiceUrl: string
@@ -64,7 +65,15 @@ export function SupportPage() {
     setPaying(true)
     setError(null)
     try {
-      const invoice = await apiRequest<InvoiceResponse>('/api/payments/invoice', 'POST')
+      const invoice = await apiRequestWithNotifications<InvoiceResponse>(
+        '/api/payments/invoice',
+        'POST',
+        undefined,
+        {
+          notifyOnSuccess: false,
+          errorMessage: 'Не удалось создать инвойс',
+        }
+      )
       const openInvoice = window.Telegram?.WebApp?.openInvoice
       if (!openInvoice) {
         setStatus('OpenInvoice недоступен, открой TMA в Telegram')
@@ -74,6 +83,7 @@ export function SupportPage() {
       openInvoice(invoice.invoiceUrl, (paymentStatus) => {
         setStatus(`Статус оплаты: ${paymentStatus}`)
         if (paymentStatus === 'paid') {
+          notifyTelegramResult('success', 'Оплата прошла, бинго-задание поддержки засчитано', 'Бинго')
           loadSupporters()
         }
       })

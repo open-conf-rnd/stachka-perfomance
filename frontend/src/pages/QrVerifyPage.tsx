@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQRScanner } from '@telegram-apps/sdk-react'
 import { PageLayout } from '../components/PageLayout'
-import { apiRequest } from '../lib/api'
+import { apiRequestWithNotifications } from '../lib/api'
 
 export function QrVerifyPage() {
   const qrScanner = useQRScanner()
@@ -25,10 +25,15 @@ export function QrVerifyPage() {
         return
       }
       setStatus('Проверяю код...')
-      await apiRequest<{ success: boolean; alreadyCompleted: boolean }>(
+      await apiRequestWithNotifications<{ success: boolean; alreadyCompleted: boolean }>(
         '/api/qr/verify',
         'POST',
-        { code: content.trim() }
+        { code: content.trim() },
+        {
+          popupTitle: 'Бинго',
+          successMessage: 'QR задание бинго засчитано',
+          errorMessage: 'Не удалось проверить QR',
+        }
       )
       setStatus('Задание отмечено')
     } catch (err) {

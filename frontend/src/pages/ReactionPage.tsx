@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageLayout } from '../components/PageLayout'
-import { apiRequest } from '../lib/api'
+import { apiRequest, apiRequestWithNotifications, type MeResponse } from '../lib/api'
 import { wsUrl } from '../config'
+import { notifyTelegramResult } from '../lib/telegramNotifications'
 
 type RoundStatus = 'PENDING' | 'ACTIVE' | 'FINISHED'
 
@@ -26,6 +27,7 @@ interface LeaderboardItem {
 }
 
 export function ReactionPage() {
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
   const [roundNumber, setRoundNumber] = useState<number | null>(null)
   const [status, setStatus] = useState<RoundStatus | 'IDLE'>('IDLE')
   const [countdown, setCountdown] = useState<number | null>(null)
@@ -42,8 +44,10 @@ export function ReactionPage() {
     let active = true
     ;(async () => {
       try {
+        const me = await apiRequest<MeResponse>('/api/me').catch(() => null)
         const data = await apiRequest<CurrentRoundResponse>('/api/reaction/current')
         if (!active) return
+        setCurrentUserId(me?.user?.id ?? null)
         if (data.round) {
           setRoundNumber(data.round.roundNumber ?? null)
           setStatus(data.round.status)
@@ -85,6 +89,9 @@ export function ReactionPage() {
 
         if (msg.type === 'reaction:podium' && msg.payload) {
           const payload = msg.payload
+          if (payload.user.id === currentUserId) {
+            notifyTelegramResult('success', 'Ты в топ-3 реакции, бинго-задание засчитано', 'Бинго')
+          }
           setPodium((prev) => {
             const next = prev.filter((item) => item.place !== payload.place)
             next.push({
@@ -111,7 +118,7 @@ export function ReactionPage() {
       active = false
       ws.close()
     }
-  }, [])
+  }, [currentUserId])
 
   useEffect(() => {
     if (countdown === null || countdown <= 0) return
@@ -123,9 +130,14 @@ export function ReactionPage() {
     setSubmitting(true)
     setError(null)
     try {
-      const data = await apiRequest<{ success: boolean; alreadyTapped: boolean; roundId: string }>(
+      const data = await apiRequestWithNotifications<{ success: boolean; alreadyTapped: boolean; roundId: string }>(
         '/api/reaction/tap',
-        'POST'
+        'POST',
+        undefined,
+        {
+          notifyOnSuccess: false,
+          errorMessage: 'Не удалось отправить реакцию',
+        }
       )
       setAlreadyTapped(Boolean(data.alreadyTapped))
     } catch (err) {

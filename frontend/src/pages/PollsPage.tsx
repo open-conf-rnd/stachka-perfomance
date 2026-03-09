@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { PageLayout } from '../components/PageLayout'
-import { apiRequest } from '../lib/api'
+import { apiRequest, apiRequestWithNotifications } from '../lib/api'
 
 interface PollOption {
   id: string
@@ -50,8 +50,14 @@ export function PollsPage() {
   const vote = async (pollId: string, optionId: string) => {
     setSubmittingPollId(pollId)
     setError(null)
+    const willCompleteAllPolls = !votedPollIds[pollId] && votedCount + 1 >= polls.length && polls.length > 0
     try {
-      await apiRequest(`/api/polls/${pollId}/vote`, 'POST', { optionId })
+      await apiRequestWithNotifications(`/api/polls/${pollId}/vote`, 'POST', { optionId }, {
+        notifyOnSuccess: willCompleteAllPolls,
+        popupTitle: 'Бинго',
+        successMessage: 'Все опросы пройдены, бинго-задание засчитано',
+        errorMessage: 'Не удалось отправить голос',
+      })
       setVotedPollIds((prev) => ({ ...prev, [pollId]: true }))
       await loadPolls(true)
     } catch (err) {

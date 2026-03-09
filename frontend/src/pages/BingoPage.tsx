@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { PageLayout } from '../components/PageLayout'
-import { apiRequest } from '../lib/api'
+import { apiRequest, apiRequestWithNotifications } from '../lib/api'
 import { wsUrl } from '../config'
 
 interface BingoTask {
@@ -74,9 +74,15 @@ export function BingoPage() {
   const completeTaskById = async (taskId: string) => {
     setError(null)
     try {
-      await apiRequest<{ success: boolean; alreadyCompleted: boolean }>(
+      await apiRequestWithNotifications<{ success: boolean; alreadyCompleted: boolean }>(
         `/api/bingo/tasks/${taskId}/complete`,
-        'POST'
+        'POST',
+        undefined,
+        {
+          popupTitle: 'Бинго',
+          successMessage: 'Задание бинго отмечено как выполненное',
+          errorMessage: 'Не удалось отметить задание бинго',
+        }
       )
       await loadTasks()
     } catch {
