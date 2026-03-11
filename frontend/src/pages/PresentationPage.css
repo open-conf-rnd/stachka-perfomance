@@ -1,4 +1,19 @@
-.reveal .slide-fullsize {
+.reveal,
+.reveal h1,
+.reveal h2,
+.reveal p,
+.reveal section {
+  font-family: 'Montserrat', sans-serif !important;
+}
+
+.reveal .slide-fullsize,
+.reveal .slide-title {
   width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
+}
+
+.reveal .slide-title section {
+  display: block !important;
   height: 100% !important;
 }

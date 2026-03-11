@@ -1,9 +1,12 @@
+import { SlideFrame } from '../SlideFrame'
+import './TitleSlide.css'
+
 export function TitleSlide() {
   return (
-    <>
-      <h2>Пишем помощника для</h2>
-      <h2>вашего хобби на</h2>
-      <h2>Telegram mini App</h2>
-    </>
+    <SlideFrame>
+      <h1 className="title-slide__title">
+        Пишем помощника для вашего хобби на Telegram mini Apps
+      </h1>
+    </SlideFrame>
   )
 }

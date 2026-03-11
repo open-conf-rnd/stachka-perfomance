@@ -1,0 +1,1 @@
+export { SlideFrame } from './SlideFrame'

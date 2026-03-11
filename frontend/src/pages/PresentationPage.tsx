@@ -1,6 +1,7 @@
 import { Deck, Slide } from '@revealjs/react'
 import 'reveal.js/dist/reveal.css'
-import 'reveal.js/dist/theme/black.css'
+import 'reveal.js/dist/theme/white.css'
+import './presentation/fonts.css'
 import './PresentationPage.css'
 import {
   TitleSlide,
@@ -10,6 +11,8 @@ import {
   RegistrationSlide,
   ParticipantsSlide,
   ThanksSlide,
+  SlideFrameBottom,
+  SlideLogoBottom,
 } from './presentation'
 
 export function PresentationPage() {
@@ -26,16 +29,20 @@ export function PresentationPage() {
           height: 1080,
         }}
       >
-        <Slide>
+        <Slide className="slide-fullsize" data-align="topleft">
           <TitleSlide />
         </Slide>
 
-        <Slide>
-          <WhoAmISlide />
+        <Slide className="slide-fullsize" data-align="topleft">
+          <SlideLogoBottom>
+            <WhoAmISlide />
+          </SlideLogoBottom>
         </Slide>
 
-        <Slide>
-          <ConferencesSlide />
+        <Slide className="slide-fullsize" data-align="topleft">
+          <SlideLogoBottom>
+            <ConferencesSlide />
+          </SlideLogoBottom>
         </Slide>
 
         <Slide>

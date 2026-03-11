@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { useThemeParams } from '@telegram-apps/sdk-react'
 import './App.css'
 import '../components/Grid'
@@ -28,40 +28,47 @@ function App() {
   const themeParams = useThemeParams()
 
   return (
-    <div
-      className="app"
-      style={{
-        backgroundColor: themeParams?.bgColor ?? '#1c1c1e',
-        color: themeParams?.textColor ?? '#ffffff',
-      }}
-    >
+    <div className="app">
       <WsUserHapticListener />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/welcome" element={<WelcomePage />} />
-          <Route path="/bingo" element={<BingoPage />} />
-          <Route path="/qr" element={<QrVerifyPage />} />
-          <Route path="/polls" element={<PollsPage />} />
-          <Route path="/tap" element={<TapPage />} />
-          <Route path="/reaction" element={<ReactionPage />} />
-          <Route path="/reaction/rounds" element={<ReactionRoundsPage />} />
-          <Route path="/reaction/rounds/:id" element={<ReactionRoundDetailPage />} />
-          <Route path="/haptic" element={<HapticPage />} />
-          <Route path="/support" element={<SupportPage />} />
-          <Route path="/presentation" element={<PresentationPage />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Navigate to="/admin/participants" replace />} />
-            <Route path="participants" element={<AdminParticipantsPage />} />
-            <Route path="reaction" element={<AdminReactionPage />} />
-            <Route path="polls" element={<AdminPollsPage />} />
-            <Route path="haptic" element={<AdminHapticPage />} />
-            <Route path="bingo" element={<AdminBingoPage />} />
-          </Route>
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        <AppContent themeParams={themeParams} />
       </BrowserRouter>
+    </div>
+  )
+}
+
+function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemeParams> }) {
+  const location = useLocation()
+  const isPresentation = location.pathname === '/presentation'
+  const bg = isPresentation ? '#f8f8f8' : (themeParams?.bgColor ?? '#1c1c1e')
+  const fg = isPresentation ? '#1a1a1a' : (themeParams?.textColor ?? '#ffffff')
+
+  return (
+    <div className="app__route" style={{ backgroundColor: bg, color: fg, flex: 1, minHeight: 0 }}>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/welcome" element={<WelcomePage />} />
+        <Route path="/bingo" element={<BingoPage />} />
+        <Route path="/qr" element={<QrVerifyPage />} />
+        <Route path="/polls" element={<PollsPage />} />
+        <Route path="/tap" element={<TapPage />} />
+        <Route path="/reaction" element={<ReactionPage />} />
+        <Route path="/reaction/rounds" element={<ReactionRoundsPage />} />
+        <Route path="/reaction/rounds/:id" element={<ReactionRoundDetailPage />} />
+        <Route path="/haptic" element={<HapticPage />} />
+        <Route path="/support" element={<SupportPage />} />
+        <Route path="/presentation" element={<PresentationPage />} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Navigate to="/admin/participants" replace />} />
+          <Route path="participants" element={<AdminParticipantsPage />} />
+          <Route path="reaction" element={<AdminReactionPage />} />
+          <Route path="polls" element={<AdminPollsPage />} />
+          <Route path="haptic" element={<AdminHapticPage />} />
+          <Route path="bingo" element={<AdminBingoPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </div>
   )
 }

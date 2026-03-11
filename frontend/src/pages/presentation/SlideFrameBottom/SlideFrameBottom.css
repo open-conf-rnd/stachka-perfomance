@@ -1,0 +1,29 @@
+.slide-frame-bottom {
+  font-family: 'Montserrat', sans-serif;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: url(/slides/frame.png) center / 100% 100% no-repeat;
+}
+
+.slide-frame-bottom__logo {
+  position: absolute;
+  bottom: 24px;
+  left: 48px;
+  margin: 0;
+  width: clamp(300px, 28vmin, 520px);
+  height: auto;
+  object-fit: contain;
+  object-position: left bottom;
+}
+
+.slide-frame-bottom__content {
+  position: absolute;
+  inset: 48px;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 120px;
+  box-sizing: border-box;
+}

@@ -229,7 +229,7 @@ export function RegistrationSlide() {
             size={600}
             level="M"
             bgColor="transparent"
-            fgColor="white"
+            fgColor="#1a1a1a"
           />
         </div>
         {!hasParticipants && (

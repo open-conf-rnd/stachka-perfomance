@@ -1,0 +1,1 @@
+export { SlideLogoBottom } from './SlideLogoBottom'
