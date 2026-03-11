@@ -13,11 +13,6 @@ import {
 } from './presentation'
 
 export function PresentationPage() {
-  const displayToken =
-    typeof location !== 'undefined'
-      ? new URLSearchParams(location.search).get('token')
-      : undefined
-
   return (
      <Deck
         config={{
@@ -48,13 +43,13 @@ export function PresentationPage() {
         </Slide>
 
         <Slide className="slide-fullsize" data-align="topleft">
-          <RegistrationSlide displayToken={displayToken ?? undefined} />
+          <RegistrationSlide />
         </Slide>
 
         <Slide>
           <h2>Участники</h2>
           <p style={{ fontSize: '0.8em', opacity: 0.8 }}>Зарегистрированные участники</p>
-          <ParticipantsSlide displayToken={displayToken ?? undefined} />
+          <ParticipantsSlide />
         </Slide>
 
         <Slide>

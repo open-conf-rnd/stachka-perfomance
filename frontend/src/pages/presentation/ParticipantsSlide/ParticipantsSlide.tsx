@@ -2,18 +2,14 @@ import { useEffect, useState } from 'react'
 import { fetchParticipants, type Participant } from '../participants'
 import './ParticipantsSlide.css'
 
-interface ParticipantsSlideProps {
-  displayToken?: string
-}
-
-export function ParticipantsSlide({ displayToken }: ParticipantsSlideProps) {
+export function ParticipantsSlide() {
   const [participants, setParticipants] = useState<Participant[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
-    fetchParticipants(displayToken)
+    fetchParticipants()
       .then((data) => {
         if (active) setParticipants(data)
       })
@@ -26,7 +22,7 @@ export function ParticipantsSlide({ displayToken }: ParticipantsSlideProps) {
     return () => {
       active = false
     }
-  }, [displayToken])
+  }, [])
 
   if (loading) return <p>Загрузка участников...</p>
   if (error) return <p className="fragment">Ошибка: {error}</p>
