@@ -38,16 +38,18 @@ export async function adminRoutes(app: FastifyInstance) {
         firstName: true,
         lastName: true,
         username: true,
+        photoUrl: true,
         _count: { select: { completions: true } },
       },
       orderBy: { completions: { _count: 'desc' } },
     })
 
-    return users.map((u: { id: string; firstName: string; lastName: string | null; username: string | null; _count: { completions: number } }) => ({
+    return users.map((u) => ({
       id: u.id,
       firstName: u.firstName,
       lastName: u.lastName ?? null,
       username: u.username ?? null,
+      photoUrl: u.photoUrl ?? null,
       completionsCount: u._count.completions,
     }))
   })

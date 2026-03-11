@@ -19,6 +19,7 @@ import { AdminReactionPage } from './pages/admin/AdminReactionPage'
 import { AdminPollsPage } from './pages/admin/AdminPollsPage'
 import { AdminHapticPage } from './pages/admin/AdminHapticPage'
 import { AdminBingoPage } from './pages/admin/AdminBingoPage'
+import { PresentationPage } from './pages/PresentationPage'
 import { WsUserHapticListener } from './components/WsUserHapticListener'
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
           <Route path="/reaction/rounds/:id" element={<ReactionRoundDetailPage />} />
           <Route path="/haptic" element={<HapticPage />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/presentation" element={<PresentationPage />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Navigate to="/admin/participants" replace />} />
             <Route path="participants" element={<AdminParticipantsPage />} />

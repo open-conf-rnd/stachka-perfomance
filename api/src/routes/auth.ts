@@ -1,6 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
 import { validateInitData } from '../lib/telegram.js'
+import { wsBroadcast } from '../lib/ws-broadcast.js'
 
 export async function authRoutes(app: FastifyInstance) {
   app.get('/api/me', async (req, reply) => {
@@ -48,6 +49,14 @@ export async function authRoutes(app: FastifyInstance) {
         photoUrl: tgUser.photo_url ?? null,
       },
     })
+
+    await wsBroadcast('participant:registered', {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName ?? null,
+      username: user.username ?? null,
+      photoUrl: user.photoUrl ?? null,
+    }, 'display:participants')
 
     return { registered: true, isNew: true, user }
   })

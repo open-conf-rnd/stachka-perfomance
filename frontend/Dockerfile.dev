@@ -11,4 +11,5 @@ COPY . .
 
 EXPOSE 5173
 
-CMD ["npm", "run", "dev"]
+# node_modules в контейнере — отдельный volume; npm install заполняет его при старте
+CMD ["sh", "-c", "npm install && npm run dev"]

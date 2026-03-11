@@ -9,6 +9,7 @@ import { reactionRoutes } from './routes/reaction.js'
 import { hapticRoutes } from './routes/haptic.js'
 import { paymentRoutes } from './routes/payments.js'
 import { adminRoutes } from './routes/admin.js'
+import { displayRoutes } from './routes/display.js'
 
 export async function createApp() {
   const app = Fastify({ logger: true })
@@ -23,6 +24,7 @@ export async function createApp() {
   await app.register(hapticRoutes)
   await app.register(paymentRoutes)
   await app.register(adminRoutes)
+  await app.register(displayRoutes)
 
   app.get('/health', async () => ({ status: 'ok' }))
   app.get('/ready', async () => ({ ready: true }))

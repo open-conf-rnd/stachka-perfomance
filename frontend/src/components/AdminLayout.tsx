@@ -5,6 +5,7 @@ import { apiRequest } from '../lib/api'
 
 const adminMenu = [
   { path: '/admin/participants', title: 'Участники', desc: 'Рейтинг по бинго' },
+  { path: '/presentation', title: 'Презентация', desc: 'reveal.js на большом экране' },
   { path: '/admin/reaction', title: 'Реакция', desc: 'Запуск раунда' },
   { path: '/admin/polls', title: 'Опросы', desc: 'Создать опрос' },
   { path: '/admin/haptic', title: 'Вибрация', desc: 'Отправить всем участникам' },
