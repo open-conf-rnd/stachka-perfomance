@@ -1,0 +1,1 @@
+export { WhoAmISlide } from './WhoAmISlide'

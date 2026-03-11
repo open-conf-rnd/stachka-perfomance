@@ -1,0 +1,1 @@
+export { ThanksSlide } from './ThanksSlide'

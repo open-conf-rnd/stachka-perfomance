@@ -1,0 +1,23 @@
+.participants-list {
+  max-height: 60vh;
+  overflow-y: auto;
+  text-align: left;
+}
+
+.participants-list__items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.participants-list__item {
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.25rem;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+.participants-list__bingo {
+  opacity: 0.8;
+  margin-left: 0.5rem;
+}

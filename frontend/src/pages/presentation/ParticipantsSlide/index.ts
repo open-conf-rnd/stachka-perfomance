@@ -1,0 +1,1 @@
+export { ParticipantsSlide } from './ParticipantsSlide'

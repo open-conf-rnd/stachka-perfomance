@@ -1,0 +1,1 @@
+export { ConferencesSlide } from './ConferencesSlide'

@@ -1,0 +1,1 @@
+export { RegistrationSlide } from './RegistrationSlide'
