@@ -23,6 +23,5 @@
   inset: 48px;
   display: flex;
   flex-direction: column;
-  padding-bottom: 120px;
   box-sizing: border-box;
 }
