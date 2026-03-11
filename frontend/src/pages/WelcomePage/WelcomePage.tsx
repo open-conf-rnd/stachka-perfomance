@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Confetti } from '@neoconfetti/react'
-import { PageLayout } from '../components/PageLayout'
+import { PageLayout } from '../../components/PageLayout'
+import './WelcomePage.css'
 
 export function WelcomePage() {
   const navigate = useNavigate()

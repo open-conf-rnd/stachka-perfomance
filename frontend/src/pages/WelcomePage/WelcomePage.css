@@ -1,0 +1,29 @@
+.welcome__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  flex: 1;
+  text-align: center;
+}
+
+.welcome__illustration {
+  font-size: 5.5rem;
+  line-height: 1;
+  opacity: 0.95;
+  filter: drop-shadow(0 4px 16px color-mix(in srgb, currentColor 20%, transparent));
+  animation: welcome-pulse 2s ease-in-out infinite;
+}
+
+@keyframes welcome-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.95; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+.welcome__text {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  opacity: 0.9;
+}

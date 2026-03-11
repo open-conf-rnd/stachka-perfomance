@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Confetti } from '@neoconfetti/react'
-import { PageLayout } from '../components/PageLayout'
-import { apiRequest, type MeResponse, type RegisterResponse } from '../lib/api'
+import { PageLayout } from '../../components/PageLayout'
+import { apiRequest, type MeResponse, type RegisterResponse } from '../../lib/api'
+import './RegisterPage.css'
 
 export function RegisterPage() {
   const navigate = useNavigate()

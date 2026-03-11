@@ -1,0 +1,1 @@
+export { HapticPage } from './HapticPage'

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { PageLayout } from '../components/PageLayout'
-import { apiRequest, apiRequestWithNotifications } from '../lib/api'
-import { wsUrl } from '../config'
+import { PageLayout } from '../../components/PageLayout'
+import { apiRequest, apiRequestWithNotifications } from '../../lib/api'
+import { wsUrl } from '../../config'
+import './BingoPage.css'
 
 interface BingoTask {
   id: string

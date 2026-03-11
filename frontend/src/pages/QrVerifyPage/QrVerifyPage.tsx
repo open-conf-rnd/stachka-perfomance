@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useQRScanner } from '@telegram-apps/sdk-react'
-import { PageLayout } from '../components/PageLayout'
-import { apiRequestWithNotifications } from '../lib/api'
+import { PageLayout } from '../../components/PageLayout'
+import { apiRequestWithNotifications } from '../../lib/api'
+import './QrVerifyPage.css'
 
 export function QrVerifyPage() {
   const qrScanner = useQRScanner()

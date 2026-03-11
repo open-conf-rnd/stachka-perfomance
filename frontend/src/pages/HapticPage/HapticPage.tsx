@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { PageLayout } from '../components/PageLayout'
-import { apiRequestWithNotifications } from '../lib/api'
-import { triggerHaptic } from '../lib/haptic'
-import { wsUrl } from '../config'
+import { PageLayout } from '../../components/PageLayout'
+import { apiRequestWithNotifications } from '../../lib/api'
+import { triggerHaptic } from '../../lib/haptic'
+import { wsUrl } from '../../config'
+import './HapticPage.css'
 
 type ImpactStyle = 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'
 type NotificationType = 'success' | 'warning' | 'error'

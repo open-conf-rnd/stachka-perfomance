@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import { useTelegramBackButton } from '../hooks/useTelegramBackButton'
+import { useTelegramBackButton } from '../../hooks/useTelegramBackButton'
+import './PageLayout.css'
 
 interface PageLayoutProps {
   title: string

@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { mockTelegramEnv } from '@telegram-apps/sdk'
 import { SDKProvider } from '@telegram-apps/sdk-react'
-import App from './App.tsx'
+import App from './App'
 import './index.css'
 
 declare global {
