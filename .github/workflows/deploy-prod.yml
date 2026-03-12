@@ -1,4 +1,14 @@
+# test: обновление раннеров
+# Production deployment workflow
+# Test commit для обновления раннеров
+# test: обновление раннеров
+# test: обновление раннеров
+# test: обновление раннеров
+# test: обновление раннеров
+# test: обновление раннеров
+# test: обновление раннеров
 name: Deploy Production
+# test: обновление раннеров
 
 on:
   push:
