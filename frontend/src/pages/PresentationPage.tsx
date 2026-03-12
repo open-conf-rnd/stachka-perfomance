@@ -11,7 +11,6 @@ import {
   RegistrationSlide,
   ParticipantsSlide,
   ThanksSlide,
-  SlideFrameBottom,
   SlideLogoBottom,
 } from './presentation'
 
