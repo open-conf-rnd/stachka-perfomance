@@ -12,6 +12,8 @@ import {
   ParticipantsSlide,
   ThanksSlide,
   SlideLogoBottom,
+  SlideImageText,
+  SlideBlocks,
 } from './presentation'
 
 export function PresentationPage() {
@@ -41,6 +43,31 @@ export function PresentationPage() {
         <Slide className="slide-fullsize" data-align="topleft">
           <SlideLogoBottom>
             <ConferencesSlide />
+          </SlideLogoBottom>
+        </Slide>
+
+        <Slide className="slide-fullsize" data-align="topleft">
+          <SlideLogoBottom>
+            <SlideImageText
+              title="Пример: текст и картинка"
+              description="Левая половина — заголовок и описание, правая — картинка с object-fit"
+              imageSrc="/slides/rectangle-3.png"
+              objectFit="contain"
+            />
+          </SlideLogoBottom>
+        </Slide>
+
+        <Slide className="slide-fullsize" data-align="topleft">
+          <SlideLogoBottom>
+            <SlideBlocks
+              title="Пример: блоки"
+              blockHeight={240}
+              blocks={[
+                { imageSrc: '/slides/rectangle-3.png', description: 'Блок 1' },
+                { imageSrc: '/slides/image-4.png', description: 'Блок 2' },
+                { imageSrc: '/slides/rectangle-3.png', description: 'Блок 3' },
+              ]}
+            />
           </SlideLogoBottom>
         </Slide>
 
