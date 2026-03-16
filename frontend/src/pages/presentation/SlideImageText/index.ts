@@ -1,0 +1,1 @@
+export { SlideImageText } from './SlideImageText'
