@@ -1,4 +1,4 @@
-import { SlideFrame } from '../SlideFrame'
+import { SlideFrame } from '../templates/SlideFrame'
 import './TitleSlide.css'
 
 export function TitleSlide() {

@@ -1,12 +1,11 @@
-export { SlideFrame } from './SlideFrame'
-export { SlideFrameBottom } from './SlideFrameBottom'
-export { SlideLogoBottom } from './SlideLogoBottom'
-export { SlideImageText } from './SlideImageText'
-export { SlideBlocks } from './SlideBlocks'
+export {
+  SlideFrame,
+  SlideFrameBottom,
+  SlideLogoBottom,
+  SlideImageText,
+  SlideBlocks,
+} from './templates'
 export { TitleSlide } from './TitleSlide'
 export { WhoAmISlide } from './WhoAmISlide'
 export { ConferencesSlide } from './ConferencesSlide'
-export { WhatToExpectSlide } from './WhatToExpectSlide'
 export { RegistrationSlide } from './RegistrationSlide'
-export { ParticipantsSlide } from './ParticipantsSlide'
-export { ThanksSlide } from './ThanksSlide'

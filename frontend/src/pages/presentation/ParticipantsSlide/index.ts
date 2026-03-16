@@ -1,1 +1,0 @@
-export { ParticipantsSlide } from './ParticipantsSlide'

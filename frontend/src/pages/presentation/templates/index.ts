@@ -1,0 +1,5 @@
+export { SlideFrame } from './SlideFrame'
+export { SlideFrameBottom } from './SlideFrameBottom'
+export { SlideLogoBottom } from './SlideLogoBottom'
+export { SlideImageText } from './SlideImageText'
+export { SlideBlocks } from './SlideBlocks'
