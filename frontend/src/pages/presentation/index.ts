@@ -1,6 +1,8 @@
 export { SlideFrame } from './SlideFrame'
 export { SlideFrameBottom } from './SlideFrameBottom'
 export { SlideLogoBottom } from './SlideLogoBottom'
+export { SlideImageText } from './SlideImageText'
+export { SlideBlocks } from './SlideBlocks'
 export { TitleSlide } from './TitleSlide'
 export { WhoAmISlide } from './WhoAmISlide'
 export { ConferencesSlide } from './ConferencesSlide'
