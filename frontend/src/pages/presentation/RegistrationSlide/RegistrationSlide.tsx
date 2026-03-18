@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { QRCodeSVG } from 'qrcode.react'
-import { wsUrl } from '../../../config'
+import {
+  subscribePresentationChannel,
+  subscribePresentationWs,
+} from '../../../lib/presentationWs'
 import { fetchParticipants, type Participant } from '../participants'
 import './RegistrationSlide.css'
 
@@ -159,25 +162,20 @@ export function RegistrationSlide() {
   }, [loadInitial])
 
   useEffect(() => {
-    const ws = new WebSocket(wsUrl)
-    ws.onopen = () => {
-      ws.send(JSON.stringify({ type: 'subscribe', channel: DISPLAY_CHANNEL }))
+    const unsubscribeChannel = subscribePresentationChannel(DISPLAY_CHANNEL)
+    const unsubscribeMessages = subscribePresentationWs((msg) => {
+      if (msg.type !== 'participant:registered' || !msg.payload) return
+      const p = msg.payload as Participant
+      setParticipants((prev) => {
+        if (prev.some((x) => x.id === p.id)) return prev
+        return [...prev, p]
+      })
+    })
+
+    return () => {
+      unsubscribeMessages()
+      unsubscribeChannel()
     }
-    ws.onmessage = (event) => {
-      try {
-        const msg = JSON.parse(event.data) as { type: string; payload: Participant }
-        if (msg.type === 'participant:registered' && msg.payload) {
-          const p = msg.payload
-          setParticipants((prev) => {
-            if (prev.some((x) => x.id === p.id)) return prev
-            return [...prev, p]
-          })
-        }
-      } catch {
-        // ignore
-      }
-    }
-    return () => ws.close()
   }, [])
 
   useEffect(() => {

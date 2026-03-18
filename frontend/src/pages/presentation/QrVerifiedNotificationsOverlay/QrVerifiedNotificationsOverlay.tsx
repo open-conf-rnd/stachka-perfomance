@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { wsUrl } from '../../../config'
+import { subscribePresentationWs } from '../../../lib/presentationWs'
 import './QrVerifiedNotificationsOverlay.css'
 
 interface QrVerifiedPayload {
@@ -21,33 +21,27 @@ export function QrVerifiedNotificationsOverlay() {
   const timeoutIdsRef = useRef<number[]>([])
 
   useEffect(() => {
-    const ws = new WebSocket(wsUrl)
+    const unsubscribe = subscribePresentationWs((msg) => {
+      if (msg.type !== 'qr:verified' || !msg.payload) return
 
-    ws.onmessage = (event) => {
-      try {
-        const msg = JSON.parse(event.data) as { type: string; payload?: QrVerifiedPayload }
-        if (msg.type !== 'qr:verified' || !msg.payload) return
+      const payload = msg.payload as QrVerifiedPayload
+      const userLabel =
+        payload.user?.firstName ||
+        (payload.user?.username ? `@${payload.user.username}` : 'Участник')
+      const suffix = payload.alreadyCompleted ? 'уже выполнял(а) это задание' : 'выполнил(а) задание'
+      const text = `✅ ${userLabel} ${suffix}`
 
-        const userLabel =
-          msg.payload.user?.firstName ||
-          (msg.payload.user?.username ? `@${msg.payload.user.username}` : 'Участник')
-        const suffix = msg.payload.alreadyCompleted ? 'уже выполнял(а) это задание' : 'выполнил(а) задание'
-        const text = `✅ ${userLabel} ${suffix}`
+      const id = nextNotificationIdRef.current++
+      setNotifications((prev) => [{ id, text }, ...prev].slice(0, 5))
 
-        const id = nextNotificationIdRef.current++
-        setNotifications((prev) => [{ id, text }, ...prev].slice(0, 5))
-
-        const timeoutId = window.setTimeout(() => {
-          setNotifications((prev) => prev.filter((item) => item.id !== id))
-        }, 9000)
-        timeoutIdsRef.current.push(timeoutId)
-      } catch {
-        // ignore malformed ws messages
-      }
-    }
+      const timeoutId = window.setTimeout(() => {
+        setNotifications((prev) => prev.filter((item) => item.id !== id))
+      }, 9000)
+      timeoutIdsRef.current.push(timeoutId)
+    })
 
     return () => {
-      ws.close()
+      unsubscribe()
       timeoutIdsRef.current.forEach((id) => window.clearTimeout(id))
       timeoutIdsRef.current = []
     }
