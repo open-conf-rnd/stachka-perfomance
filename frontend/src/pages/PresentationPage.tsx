@@ -266,44 +266,39 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <h2>Слайд 30</h2>
-          <p>SlideLogoBottom</p>
+          <SlideImageText title="TMA-стартер" description="Сча разберемся как стартовать" imageSrc="/slides/starter.png" />
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <h2>Слайд 33</h2>
-          <p>SlideLogoBottom</p>
-        </SlideLogoBottom>
+        <SlideFrame><h2>Небольшой стартер для вашего приложения</h2><p>https://github.com/DmitriyGrosh/tma-starter</p></SlideFrame>
       </Slide>
+
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideBlocks title="Слайд 34" blockHeight={200} blocks={[
-            { imageSrc: PLACEHOLDER_IMG, description: '1' },
-            { imageSrc: PLACEHOLDER_IMG, description: '2' },
-            { imageSrc: PLACEHOLDER_IMG, description: '3' },
+          <SlideBlocks title="Идеальный мир" blockHeight={200} blocks={[
+            { imageSrc: "/slides/code-1.png", description: 'Устанавливаем' },
+            { imageSrc: "/slides/code-2.png", description: 'Запускаем' },
           ]} />
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Слайд 35" description="SlideImageText" imageSrc={PLACEHOLDER_IMG} />
+          <SlideImageText title="Локальная разработка" description="На этапе разработки мини-приложения Telegram требуют действительного URL-адреса для отображения и тестирования в клиенте Telegram." imageSrc="/slides/local.png" />
         </SlideLogoBottom>
       </Slide>
 
-      {[36, 37].map((n) => (
-        <Slide key={n} className="slide-fullsize" data-align="topleft">
+      <Slide className="slide-fullsize" data-align="topleft">
           <SlideLogoBottom>
-            <SlideBlocks title={`Слайд ${n}`} blockHeight={200} blocks={[
-              { imageSrc: PLACEHOLDER_IMG, description: 'Блок 1' },
-              { imageSrc: PLACEHOLDER_IMG, description: 'Блок 2' },
+            <SlideBlocks title="Как поднять локальный https" blockHeight={200} blocks={[
+              { imageSrc: "/slides/ngrok.png", description: 'Самый популярный способ, но нужен vpn' },
+              { imageSrc: "/slides/cloudflare.png", description: 'Второй по популярности способ, но нужен vpn' },
+              { imageSrc: "/slides/nginx.png", description: 'поднимаем локальный proxy ' },
             ]} />
           </SlideLogoBottom>
         </Slide>
-      ))}
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
