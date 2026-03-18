@@ -234,16 +234,12 @@ export function PresentationPage() {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideFrame><h2>Слайд 23</h2><p>SlideFrame</p></SlideFrame>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideFrame><h2>Слайд 24</h2><p>SlideFrame</p></SlideFrame>
+        <SlideFrame><h2>Что не успели сделать</h2><p>Но очень хотелось бы</p></SlideFrame>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Слайд 25" description="SlideImageText" imageSrc={PLACEHOLDER_IMG} />
+          <SlideImageText title="Мини игры" description="Играем и получаем награды" imageSrc="/slides/games.png" />
         </SlideLogoBottom>
       </Slide>
 
