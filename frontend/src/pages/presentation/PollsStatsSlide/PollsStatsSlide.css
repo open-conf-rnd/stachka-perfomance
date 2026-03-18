@@ -1,0 +1,99 @@
+.polls-stats-slide {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  gap: 18px;
+}
+
+.polls-stats-slide__title {
+  margin: 0;
+  font-size: clamp(3rem, 5.4vmin, 84px);
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.polls-stats-slide__subtitle {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.1vmin, 30px);
+  color: #333;
+}
+
+.polls-stats-slide__status {
+  margin: 0;
+  font-size: clamp(1.2rem, 1.9vmin, 28px);
+  color: #333;
+}
+
+.polls-stats-slide__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  min-height: 0;
+  flex: 1;
+}
+
+.polls-stats-slide__card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(26, 26, 26, 0.12);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  min-height: 0;
+}
+
+.polls-stats-slide__question {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.2vmin, 32px);
+  line-height: 1.2;
+  color: #1a1a1a;
+}
+
+.polls-stats-slide__options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.polls-stats-slide__option {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.polls-stats-slide__option-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: clamp(0.95rem, 1.5vmin, 21px);
+  color: #333;
+}
+
+.polls-stats-slide__bar-track {
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.polls-stats-slide__bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #5c84ff 0%, #3b6dff 100%);
+  min-width: 4px;
+}
+
+.polls-stats-slide__bar-fill--leader {
+  background: linear-gradient(90deg, #20b86b 0%, #1a9f5b 100%);
+}
+
+.polls-stats-slide__total {
+  margin: auto 0 0;
+  font-size: clamp(1rem, 1.4vmin, 20px);
+  color: #444;
+}

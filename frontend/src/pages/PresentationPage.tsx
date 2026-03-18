@@ -9,6 +9,7 @@ import {
   RegistrationSlide,
   QrTaskSlide,
   QrVerifiedNotificationsOverlay,
+  PollsStatsSlide,
   SlideFrame,
   SlideLogoBottom,
   SlideImageText,
@@ -246,8 +247,14 @@ export function PresentationPage() {
       {[26, 27, 28, 29, 30].map((n) => (
         <Slide key={n} className="slide-fullsize" data-align="topleft">
           <SlideLogoBottom>
-            <h2>Слайд {n}</h2>
-            <p>SlideLogoBottom</p>
+            {n === 26 ? (
+              <PollsStatsSlide />
+            ) : (
+              <>
+                <h2>Слайд {n}</h2>
+                <p>SlideLogoBottom</p>
+              </>
+            )}
           </SlideLogoBottom>
         </Slide>
       ))}
