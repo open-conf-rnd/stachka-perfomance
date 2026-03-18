@@ -4,6 +4,7 @@ export {
   SlideLogoBottom,
   SlideImageText,
   SlideBlocks,
+  SlideFullImage,
 } from './templates'
 export { TitleSlide } from './TitleSlide'
 export { WhoAmISlide } from './WhoAmISlide'

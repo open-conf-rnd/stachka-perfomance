@@ -8,15 +8,20 @@ import {
   WhoAmISlide,
   RegistrationSlide,
   SlideFrame,
-  SlideFrameBottom,
   SlideLogoBottom,
   SlideImageText,
   SlideBlocks,
+  SlideFullImage,
 } from './presentation'
+import { QRCodeSVG } from 'qrcode.react'
 
 const PLACEHOLDER_IMG = '/slides/rectangle-3.png'
+const BOT_USERNAME = 'stachkagrosh_bot'
+const BINGO_START_PARAM = 'bingo'
 
 export function PresentationPage() {
+  const botBingoLink = `https://t.me/${BOT_USERNAME}?startapp=${BINGO_START_PARAM}`
+
   return (
     <Deck
       config={{
@@ -41,18 +46,43 @@ export function PresentationPage() {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideBlocks
+            title="Делаю разные митапы и конференции"
+            blockHeight={220}
+            blocks={[
+              { imageSrc: "/slides/openconf.png", description: 'OpenConf' },
+              { imageSrc: '/slides/codieue.png', description: 'Кодьё' },
+              { imageSrc: '/slides/fnd.png', description: 'Фронтенд? Да, ну!' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText
+            title="Чего ждать от доклада?"
+            description="Неболшой дислеймер"
+            imageSrc="/slides/disclaimer.png"
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
         <RegistrationSlide />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideBlocks
-            title="Слайд 4"
+            title="Структура"
             blockHeight={220}
+            revealByClick
             blocks={[
-              { imageSrc: PLACEHOLDER_IMG, description: 'Блок 1' },
-              { imageSrc: PLACEHOLDER_IMG, description: 'Блок 2' },
-              { imageSrc: PLACEHOLDER_IMG, description: 'Блок 3' },
+              { imageSrc: "/slides/business.png", description: 'Много бизнеса' },
+              { imageSrc: "/slides/interactive.png", description: 'Много интерактива' },
+              { imageSrc: "/slides/code.png", description: 'Много кода' },
             ]}
           />
         </SlideLogoBottom>
@@ -61,21 +91,31 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Слайд 5"
-            description="Заголовок слева, описание и картинка справа"
-            imageSrc={PLACEHOLDER_IMG}
+            title="Основаная мысль"
+            description="Делать приложения под tma не сложно и полезно"
+            imageSrc="/slides/mind.png"
           />
         </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFullImage imageSrc="/slides/openconf-banner.png" />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFullImage imageSrc="/slides/stand.png" />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideBlocks
-            title="Слайд 6"
+            title="Типичные задачи"
             blockHeight={220}
+            revealByClick
             blocks={[
-              { imageSrc: PLACEHOLDER_IMG, description: 'Описание 1' },
-              { imageSrc: PLACEHOLDER_IMG, description: 'Описание 2' },
+              { imageSrc: "/slides/navigation.png", description: 'Как сделать удобную навигацию?' },
+              { imageSrc: "/slides/activity.png", description: 'Как помочь партнерам с активностями?' },
+              { imageSrc: "/slides/form.png", description: 'Как собрать обратную связь?' },
             ]}
           />
         </SlideLogoBottom>
@@ -84,47 +124,35 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Слайд 7"
-            description="Текст и картинка"
-            imageSrc={PLACEHOLDER_IMG}
+            title="Уточка помоги"
+            description="Как объединить всё в одном месте?"
+            imageSrc="/slides/help.png"
           />
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideFrameBottom>
-          <h2>Слайд 8</h2>
-          <p>SlideFrameBottom — лого внизу</p>
-        </SlideFrameBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideFrameBottom>
-          <h2>Слайд 9</h2>
-          <p>SlideFrameBottom</p>
-        </SlideFrameBottom>
+        <RegistrationSlide />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Слайд 10"
-            description="SlideImageText"
-            imageSrc={PLACEHOLDER_IMG}
+            title="Как помочь партнерам с активностью"
+            description="Мы хотим чтобы к каждому партнеру подходили участники"
+            imageSrc="/slides/activity.png"
           />
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideBlocks
-            title="Слайд 11"
-            blockHeight={200}
-            blocks={[
-              { imageSrc: PLACEHOLDER_IMG, description: 'Блок A' },
-              { imageSrc: PLACEHOLDER_IMG, description: 'Блок B' },
-              { imageSrc: PLACEHOLDER_IMG, description: 'Блок C' },
-            ]}
+        <QRCodeSVG
+            value={botBingoLink}
+            size={900}
+            level="M"
+            bgColor="transparent"
+            fgColor="#1a1a1a"
           />
         </SlideLogoBottom>
       </Slide>
@@ -132,33 +160,10 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Слайд 12"
-            description="SlideImageText"
-            imageSrc={PLACEHOLDER_IMG}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <h2>Слайд 13</h2>
-          <p>SlideLogoBottom — лого слева внизу</p>
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <h2>Слайд 14</h2>
-          <p>SlideLogoBottom</p>
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText
-            title="Слайд 15"
-            description="SlideImageText"
-            imageSrc={PLACEHOLDER_IMG}
+            title="Прямо в бинго"
+            description="так же говорят?"
+            imageSrc="/slides/bingo.png"
+            objectFit="contain"
           />
         </SlideLogoBottom>
       </Slide>
@@ -180,13 +185,6 @@ export function PresentationPage() {
             description="SlideImageText"
             imageSrc={PLACEHOLDER_IMG}
           />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <h2>Слайд 18</h2>
-          <p>SlideLogoBottom</p>
         </SlideLogoBottom>
       </Slide>
 

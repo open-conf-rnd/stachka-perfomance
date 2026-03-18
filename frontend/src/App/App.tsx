@@ -1,5 +1,6 @@
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import { useThemeParams } from '@telegram-apps/sdk-react'
+import { useEffect } from 'react'
+import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { useLaunchParams, useThemeParams } from '@telegram-apps/sdk-react'
 import './App.css'
 import '../components/Grid'
 import '../components/Button'
@@ -39,9 +40,17 @@ function App() {
 
 function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemeParams> }) {
   const location = useLocation()
+  const navigate = useNavigate()
+  const launchParams = useLaunchParams()
   const isPresentation = location.pathname === '/presentation'
   const bg = isPresentation ? '#f8f8f8' : (themeParams?.bgColor ?? '#1c1c1e')
   const fg = isPresentation ? '#1a1a1a' : (themeParams?.textColor ?? '#ffffff')
+
+  useEffect(() => {
+    if (launchParams.startParam === 'bingo' && location.pathname === '/') {
+      navigate('/bingo', { replace: true })
+    }
+  }, [launchParams.startParam, location.pathname, navigate])
 
   return (
     <div className="app__route" style={{ backgroundColor: bg, color: fg, flex: 1, minHeight: 0 }}>
