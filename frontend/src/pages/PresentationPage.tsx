@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Deck, Slide } from '@revealjs/react'
 import 'reveal.js/dist/reveal.css'
 import 'reveal.js/dist/theme/white.css'
@@ -14,13 +15,64 @@ import {
   SlideFullImage,
 } from './presentation'
 import { QRCodeSVG } from 'qrcode.react'
+import { wsUrl } from '../config'
 
 const PLACEHOLDER_IMG = '/slides/rectangle-3.png'
 const BOT_USERNAME = 'stachkagrosh_bot'
 const BINGO_START_PARAM = 'bingo'
+const PRESENTATION_TASK_QR_CODE = 'stachka-bingo-presentation-qr'
+
+interface QrVerifiedPayload {
+  user?: {
+    firstName?: string
+    username?: string | null
+  }
+  alreadyCompleted?: boolean
+}
+
+interface QrSlideNotification {
+  id: number
+  text: string
+}
 
 export function PresentationPage() {
   const botBingoLink = `https://t.me/${BOT_USERNAME}?startapp=${BINGO_START_PARAM}`
+  const [qrNotifications, setQrNotifications] = useState<QrSlideNotification[]>([])
+  const nextNotificationIdRef = useRef(1)
+  const timeoutIdsRef = useRef<number[]>([])
+
+  useEffect(() => {
+    const ws = new WebSocket(wsUrl)
+
+    ws.onmessage = (event) => {
+      try {
+        const msg = JSON.parse(event.data) as { type: string; payload?: QrVerifiedPayload }
+        if (msg.type !== 'qr:verified' || !msg.payload) return
+
+        const userLabel =
+          msg.payload.user?.firstName ||
+          (msg.payload.user?.username ? `@${msg.payload.user.username}` : 'Участник')
+        const suffix = msg.payload.alreadyCompleted ? 'уже выполнял(а) это задание' : 'выполнил(а) задание'
+        const text = `✅ ${userLabel} ${suffix}`
+
+        const id = nextNotificationIdRef.current++
+        setQrNotifications((prev) => [{ id, text }, ...prev].slice(0, 5))
+
+        const timeoutId = window.setTimeout(() => {
+          setQrNotifications((prev) => prev.filter((item) => item.id !== id))
+        }, 9000)
+        timeoutIdsRef.current.push(timeoutId)
+      } catch {
+        // ignore malformed ws messages
+      }
+    }
+
+    return () => {
+      ws.close()
+      timeoutIdsRef.current.forEach((id) => window.clearTimeout(id))
+      timeoutIdsRef.current = []
+    }
+  }, [])
 
   return (
     <Deck
@@ -170,10 +222,28 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText
-            title="Слайд 16"
-            description="SlideImageText"
-            imageSrc={PLACEHOLDER_IMG}
+          {qrNotifications.length > 0 ? (
+            <div className="presentation-qr-notifications" aria-live="polite">
+              {qrNotifications.map((notification) => (
+                <div key={notification.id} className="presentation-qr-notification">
+                  {notification.text}
+                </div>
+              ))}
+            </div>
+          ) : null}
+          <h2 style={{ margin: '0 0 1rem', fontSize: 'clamp(2.4rem, 4.4vmin, 72px)' }}>
+            Сканируй QR в мини-аппе
+          </h2>
+          <p style={{ margin: '0 0 1.5rem', fontSize: 'clamp(1.3rem, 2.3vmin, 34px)' }}>
+            Открой экран сканера и наведи камеру на код
+          </p>
+
+          <QRCodeSVG
+            value={PRESENTATION_TASK_QR_CODE}
+            size={760}
+            level="M"
+            bgColor="transparent"
+            fgColor="#1a1a1a"
           />
         </SlideLogoBottom>
       </Slide>

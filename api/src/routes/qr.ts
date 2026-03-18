@@ -6,6 +6,7 @@ import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 
 const BINGO_QR_TASK_ID = process.env.BINGO_QR_TASK_ID
+const PRESENTATION_TASK_QR_CODE = 'stachka-bingo-presentation-qr'
 
 function getInitData(headerValue: unknown): string | null {
   return typeof headerValue === 'string' && headerValue.length > 0 ? headerValue : null
@@ -16,6 +17,8 @@ function createQrCodeValue() {
 }
 
 export async function qrRoutes(app: FastifyInstance) {
+  app.get('/api/qr/presentation', async () => ({ code: PRESENTATION_TASK_QR_CODE }))
+
   app.post<{
     Body: { taskId: string; code?: string }
   }>('/api/qr/generate', async (req, reply) => {
@@ -63,6 +66,45 @@ export async function qrRoutes(app: FastifyInstance) {
     const code = req.body?.code?.trim()
     if (!code) {
       return reply.status(400).send({ error: 'code is required' })
+    }
+
+    if (code === PRESENTATION_TASK_QR_CODE) {
+      if (!BINGO_QR_TASK_ID) {
+        return reply.status(400).send({ error: 'BINGO_QR_TASK_ID is not configured' })
+      }
+
+      const task = await prisma.bingoTask.findUnique({
+        where: { id: BINGO_QR_TASK_ID },
+        select: { id: true, title: true },
+      })
+      if (!task) {
+        return reply.status(404).send({ error: 'BINGO_QR_TASK_ID task not found' })
+      }
+
+      const completion = await completeBingoTaskForUser(task.id, userId)
+      if (!completion.ok) {
+        return reply.status(500).send({ error: 'Cannot complete QR task' })
+      }
+
+      await wsBroadcast('qr:verified', {
+        code: PRESENTATION_TASK_QR_CODE,
+        task: {
+          id: task.id,
+          title: task.title,
+        },
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          username: user.username,
+        },
+        alreadyCompleted: completion.alreadyCompleted,
+      })
+
+      return {
+        success: true,
+        taskId: task.id,
+        alreadyCompleted: completion.alreadyCompleted,
+      }
     }
 
     const qrCode = await prisma.qrCode.findUnique({
