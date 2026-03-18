@@ -10,6 +10,8 @@ import {
   QrTaskSlide,
   QrVerifiedNotificationsOverlay,
   PollsStatsSlide,
+  PollsLeadersSlide,
+  PollsSummarySlide,
   SlideFrame,
   SlideLogoBottom,
   SlideImageText,
@@ -244,28 +246,30 @@ export function PresentationPage() {
         </SlideLogoBottom>
       </Slide>
 
-      {[26, 27, 28, 29, 30].map((n) => (
-        <Slide key={n} className="slide-fullsize" data-align="topleft">
-          <SlideLogoBottom>
-            {n === 26 ? (
-              <PollsStatsSlide />
-            ) : (
-              <>
-                <h2>Слайд {n}</h2>
-                <p>SlideLogoBottom</p>
-              </>
-            )}
-          </SlideLogoBottom>
-        </Slide>
-      ))}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <PollsStatsSlide />
+        </SlideLogoBottom>
+      </Slide>
 
-      {[31, 32].map((n) => (
-        <Slide key={n} className="slide-fullsize" data-align="topleft">
-          <SlideLogoBottom>
-            <SlideImageText title={`Слайд ${n}`} description="SlideImageText" imageSrc={PLACEHOLDER_IMG} />
-          </SlideLogoBottom>
-        </Slide>
-      ))}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <PollsLeadersSlide />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <PollsSummarySlide />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <h2>Слайд 30</h2>
+          <p>SlideLogoBottom</p>
+        </SlideLogoBottom>
+      </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>

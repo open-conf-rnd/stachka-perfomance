@@ -1,0 +1,1 @@
+export { PollsSummarySlide } from './PollsSummarySlide'
