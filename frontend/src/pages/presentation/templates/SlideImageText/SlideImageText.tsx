@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react'
 import './SlideImageText.css'
 
 interface SlideImageTextProps {
@@ -5,6 +6,7 @@ interface SlideImageTextProps {
   description: string
   imageSrc: string
   objectFit?: 'contain' | 'cover' | 'fill' | 'none'
+  imageContent?: ReactNode
 }
 
 export function SlideImageText({
@@ -12,6 +14,7 @@ export function SlideImageText({
   description,
   imageSrc,
   objectFit = 'contain',
+  imageContent,
 }: SlideImageTextProps) {
   return (
     <div className="slide-image-text">
@@ -20,12 +23,14 @@ export function SlideImageText({
         <p className="slide-image-text__description">{description}</p>
       </div>
       <div className="slide-image-text__image-container">
-        <img
-          src={imageSrc}
-          alt=""
-          className="slide-image-text__image"
-          style={{ objectFit }}
-        />
+        {imageContent ?? (
+          <img
+            src={imageSrc}
+            alt=""
+            className="slide-image-text__image"
+            style={{ objectFit }}
+          />
+        )}
       </div>
     </div>
   )

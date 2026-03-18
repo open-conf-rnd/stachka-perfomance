@@ -1,12 +1,14 @@
 import crypto from 'node:crypto'
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
-import { validateInitData } from '../lib/telegram.js'
+import { sendTelegramMessage, validateInitData } from '../lib/telegram.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 
 const BINGO_QR_TASK_ID = process.env.BINGO_QR_TASK_ID
 const PRESENTATION_TASK_QR_CODE = 'stachka-bingo-presentation-qr'
+const FEEDBACK_FORM_QR_CODE = 'stachka-feedback-form-qr'
+const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf2CQmnNT05BuBYyFNd5mkKsbCLrqLNZ73Eph-neA-6UoliWQ/viewform?usp=publish-editor'
 
 function getInitData(headerValue: unknown): string | null {
   return typeof headerValue === 'string' && headerValue.length > 0 ? headerValue : null
@@ -66,6 +68,39 @@ export async function qrRoutes(app: FastifyInstance) {
     const code = req.body?.code?.trim()
     if (!code) {
       return reply.status(400).send({ error: 'code is required' })
+    }
+
+    if (code === FEEDBACK_FORM_QR_CODE) {
+      await sendTelegramMessage(
+        user.id,
+        [
+          '<b>Спасибо, что были на докладе!</b>',
+          'Буду рад вашей обратной связи.',
+          `<a href="${FEEDBACK_FORM_URL}">Заполнить форму</a>`,
+        ].join('\n')
+      )
+
+      await wsBroadcast('qr:verified', {
+        code: FEEDBACK_FORM_QR_CODE,
+        task: {
+          id: 'feedback-form',
+          title: 'Обратная связь после доклада',
+        },
+        user: {
+          id: user.id,
+          firstName: user.firstName,
+          username: user.username,
+        },
+        alreadyCompleted: false,
+        feedbackSent: true,
+      })
+
+      return {
+        success: true,
+        taskId: 'feedback-form',
+        alreadyCompleted: false,
+        feedbackSent: true,
+      }
     }
 
     if (code === PRESENTATION_TASK_QR_CODE) {

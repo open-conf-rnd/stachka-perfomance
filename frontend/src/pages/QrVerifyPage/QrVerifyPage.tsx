@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useQRScanner } from '@telegram-apps/sdk-react'
 import { PageLayout } from '../../components/PageLayout'
-import { apiRequestWithNotifications } from '../../lib/api'
+import { apiRequest } from '../../lib/api'
+import { notifyTelegramResult } from '../../lib/telegramNotifications'
 import './QrVerifyPage.css'
 
 const BINGO_START_PARAM_CONSUMED_KEY = 'bingo-start-param-consumed'
@@ -12,6 +13,12 @@ function clearLaunchParamsFromUrl() {
   url.searchParams.delete('startapp')
   url.searchParams.delete('startattach')
   window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
+}
+
+interface VerifyQrResponse {
+  success: boolean
+  alreadyCompleted?: boolean
+  feedbackSent?: boolean
 }
 
 export function QrVerifyPage() {
@@ -36,22 +43,28 @@ export function QrVerifyPage() {
         return
       }
       setStatus('Проверяю код...')
-      await apiRequestWithNotifications<{ success: boolean; alreadyCompleted: boolean }>(
+      const response = await apiRequest<VerifyQrResponse>(
         '/api/qr/verify',
         'POST',
-        { code: content.trim() },
-        {
-          popupTitle: 'Бинго',
-          successMessage: 'QR задание бинго засчитано',
-          errorMessage: 'Не удалось проверить QR',
-        }
+        { code: content.trim() }
       )
+      if (response.feedbackSent) {
+        notifyTelegramResult(
+          'success',
+          'Ссылка на форму отправлена вам в бота',
+          'Обратная связь'
+        )
+        setStatus('Отправили ссылку на форму в бот')
+      } else {
+        notifyTelegramResult('success', 'QR задание бинго засчитано', 'Бинго')
+        setStatus('Задание отмечено')
+      }
       sessionStorage.setItem(BINGO_START_PARAM_CONSUMED_KEY, '1')
       clearLaunchParamsFromUrl()
-      setStatus('Задание отмечено')
     } catch (err) {
       setScanning(false)
       setError(err instanceof Error ? err.message : 'Не удалось проверить QR')
+      notifyTelegramResult('error', 'Не удалось проверить QR', 'Бинго')
       setStatus('')
     }
   }

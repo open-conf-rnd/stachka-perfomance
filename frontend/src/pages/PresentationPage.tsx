@@ -20,6 +20,7 @@ import { QRCodeSVG } from 'qrcode.react'
 const PLACEHOLDER_IMG = '/slides/rectangle-3.png'
 const BOT_USERNAME = 'stachkagrosh_bot'
 const BINGO_START_PARAM = 'bingo'
+const FEEDBACK_FORM_QR_CODE = 'stachka-feedback-form-qr'
 
 export function PresentationPage() {
   const botBingoLink = `https://t.me/${BOT_USERNAME}?startapp=${BINGO_START_PARAM}`
@@ -181,9 +182,28 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Слайд 17"
-            description="SlideImageText"
-            imageSrc={PLACEHOLDER_IMG}
+            title="Как помочь участнику с навигацией"
+            description="Мы хотим чтобы все люди всегда знали время следующего доклада и где он будет идти"
+            imageSrc="/slides/navigation.png"
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideBlocks title="Навигация и уведомления" blockHeight={200} blocks={[
+            { imageSrc: "/slides/notification1.png", description: 'Уведомлении о начале доклада' },
+            { imageSrc: "/slides/notification-2.png", description: 'Уведомлении о начале активности' },
+          ]} />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText
+            title="Как собрать обратную связь"
+            description="Мы хотим чтобы все люди могли оставить свою обратную связь"
+            imageSrc="/slides/form.png"
           />
         </SlideLogoBottom>
       </Slide>
@@ -191,23 +211,19 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Слайд 19"
-            description="SlideImageText"
+            title="Сбор связи после доклада"
+            description="Уведомления в бот о том что прошел докалад и на него можно оставить обратную связь + у каждого доклада есть прямая ссылка на то чтобы человек зашел и оставил обратку"
             imageSrc={PLACEHOLDER_IMG}
+            imageContent={(
+              <QRCodeSVG
+                value={FEEDBACK_FORM_QR_CODE}
+                size={760}
+                level="M"
+                bgColor="transparent"
+                fgColor="#1a1a1a"
+              />
+            )}
           />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <h2>Слайд 20</h2>
-          <p>SlideLogoBottom</p>
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText title="Слайд 21" description="SlideImageText" imageSrc={PLACEHOLDER_IMG} />
         </SlideLogoBottom>
       </Slide>
 
