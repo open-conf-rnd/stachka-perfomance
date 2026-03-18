@@ -1,0 +1,1 @@
+export { QrVerifiedNotificationsOverlay } from './QrVerifiedNotificationsOverlay'

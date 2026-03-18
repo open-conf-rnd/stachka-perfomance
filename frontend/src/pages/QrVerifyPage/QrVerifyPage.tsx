@@ -4,6 +4,16 @@ import { PageLayout } from '../../components/PageLayout'
 import { apiRequestWithNotifications } from '../../lib/api'
 import './QrVerifyPage.css'
 
+const BINGO_START_PARAM_CONSUMED_KEY = 'bingo-start-param-consumed'
+
+function clearLaunchParamsFromUrl() {
+  const url = new URL(window.location.href)
+  url.searchParams.delete('tgWebAppStartParam')
+  url.searchParams.delete('startapp')
+  url.searchParams.delete('startattach')
+  window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
+}
+
 export function QrVerifyPage() {
   const qrScanner = useQRScanner()
   const [status, setStatus] = useState<string>('')
@@ -36,6 +46,8 @@ export function QrVerifyPage() {
           errorMessage: 'Не удалось проверить QR',
         }
       )
+      sessionStorage.setItem(BINGO_START_PARAM_CONSUMED_KEY, '1')
+      clearLaunchParamsFromUrl()
       setStatus('Задание отмечено')
     } catch (err) {
       setScanning(false)

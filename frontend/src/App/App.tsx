@@ -25,6 +25,9 @@ import { AdminBingoPage } from '../pages/admin/AdminBingoPage'
 import { PresentationPage } from '../pages/PresentationPage'
 import { WsUserHapticListener } from '../components/WsUserHapticListener'
 
+const BINGO_START_PARAM = 'bingo'
+const BINGO_START_PARAM_CONSUMED_KEY = 'bingo-start-param-consumed'
+
 function App() {
   const themeParams = useThemeParams()
 
@@ -47,7 +50,12 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
   const fg = isPresentation ? '#1a1a1a' : (themeParams?.textColor ?? '#ffffff')
 
   useEffect(() => {
-    if (launchParams.startParam === 'bingo' && location.pathname === '/') {
+    const shouldOpenBingo = launchParams.startParam === BINGO_START_PARAM && location.pathname === '/'
+    if (!shouldOpenBingo) return
+
+    const alreadyConsumed = sessionStorage.getItem(BINGO_START_PARAM_CONSUMED_KEY) === '1'
+    if (!alreadyConsumed) {
+      sessionStorage.setItem(BINGO_START_PARAM_CONSUMED_KEY, '1')
       navigate('/bingo', { replace: true })
     }
   }, [launchParams.startParam, location.pathname, navigate])
