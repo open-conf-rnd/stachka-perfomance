@@ -1,11 +1,12 @@
 # Production: только api — REST на Fastify
 # Сборка: context = api/ (docker build -f api/Dockerfile api/)
+# --no-optional исключает @prisma/studio-core (не нужен в prod), уменьшает образ
 FROM node:22-alpine
 
 WORKDIR /app
 
 COPY package.json ./
-RUN npm install
+RUN npm install --no-optional
 
 COPY . .
 RUN npm run build \

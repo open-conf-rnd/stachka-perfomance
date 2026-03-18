@@ -205,6 +205,10 @@ jobs:
 
           compose_cmd="docker compose --env-file .env --file docker/docker-compose.prod.yml"
 
+          # Free disk on VPS before pull (avoids "no space left on device" during extract)
+          docker image prune -af || true
+          docker builder prune -af || true
+
           retry() {
             local max_attempts="$1"
             shift
