@@ -973,6 +973,19 @@ export function PresentationPage() {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFrame>
+          <h2 style={{ margin: 0, fontSize: 'clamp(2.5rem, 5vmin, 80px)', fontWeight: 700, color: '#1a1a1a' }}>
+            Итоги доклада
+          </h2>
+          <ul style={{ margin: '1.5rem 0 0', paddingLeft: '1.5em', fontSize: 'clamp(3rem, 2.5vmin, 36px)', lineHeight: 1.5, color: '#333' }}>
+            <li>TMA — один бот, регистрация, навигация, активности, обратная связь</li>
+            <li>Делать мини-приложения под Telegram не сложно и полезно</li>
+          </ul>
+        </SlideFrame>
+      </Slide>
+
+
+      <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px', width: '100%', height: '100%' }}>
             <h2 style={{ margin: 0, fontSize: 'clamp(2.2rem, 4.5vmin, 72px)', fontWeight: 700, color: '#1a1a1a' }}>
