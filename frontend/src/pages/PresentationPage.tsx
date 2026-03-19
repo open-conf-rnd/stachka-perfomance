@@ -602,10 +602,43 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideBlocks title="Слайд 41" blockHeight={200} blocks={[
-            { imageSrc: PLACEHOLDER_IMG, description: 'Блок 1' },
-            { imageSrc: PLACEHOLDER_IMG, description: 'Блок 2' },
-          ]} />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', height: '100%', minHeight: 0 }}>
+            <h2 style={{ margin: 0, fontSize: 'clamp(2.2rem, 4.5vmin, 72px)', fontWeight: 700, color: '#1a1a1a', flexShrink: 0 }}>
+              Немного про отладку
+            </h2>
+            <p style={{ margin: 0, fontSize: 'clamp(1.1rem, 2.2vmin, 28px)', lineHeight: 1.4, color: '#334155', flexShrink: 0 }}>
+              Нужно скачать бета-версию Telegram Desktop: обновления приходят быстрее, новые фичи доступны раньше. Стабильная версия обновляется реже, но лучше протестирована. Установите бета поверх текущего Telegram Desktop.
+            </p>
+            <div style={{ flex: 1, minHeight: 0, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+              <img src="/slides/beta.png" alt="Beta version и Old system versions на desktop.telegram.org" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 8 }} />
+            </div>
+            <a
+              href="https://desktop.telegram.org/changelog#beta-version"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: 'clamp(1rem, 2vmin, 24px)', color: '#0088cc', fontWeight: 600, flexShrink: 0 }}
+            >
+              desktop.telegram.org/changelog#beta-version
+            </a>
+          </div>
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText title="Нажать 5 раз на настройки" description="" imageSrc="/slides/5click.png" />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText title="Включаем debug" description="" imageSrc="/slides/debug.png" />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText title="Нажимаем правой кнопкой мыши" description="" imageSrc="/slides/rightclick.png" />
         </SlideLogoBottom>
       </Slide>
 
