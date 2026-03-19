@@ -696,6 +696,15 @@ export function PresentationPage() {
           <p style={{ margin: 0, fontSize: 'clamp(1.4rem, 2.8vmin, 40px)', color: '#555', marginTop: '16px' }}>
             Разберём по шагам: код → где используется
           </p>
+          <SlideBlocks
+            title=""
+            blockHeight={220}
+            blocks={[
+              { imageSrc: '/slides/code.png', description: 'Код фичи' },
+              { imageSrc: '/slides/interactive.png', description: 'В приложении' },
+              { imageSrc: '/slides/form.png', description: 'Где используется' },
+            ]}
+          />
         </SlideLogoBottom>
       </Slide>
 

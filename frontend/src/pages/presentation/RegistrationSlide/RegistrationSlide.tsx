@@ -4,7 +4,7 @@ import {
   subscribePresentationChannel,
   subscribePresentationWs,
 } from '../../../lib/presentationWs'
-import { fetchParticipants, type Participant } from '../participants'
+import { fetchParticipants, fetchDisplayParticipants, type Participant } from '../participants'
 import './RegistrationSlide.css'
 
 const BOT_LINK = 'https://t.me/stachkagrosh_bot'
@@ -150,12 +150,23 @@ export function RegistrationSlide() {
   const count = participants.length
   const hasParticipants = count >= 1
 
+  const displayToken =
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('display_token') ||
+        (import.meta as unknown as { env?: { VITE_DISPLAY_TOKEN?: string } }).env?.VITE_DISPLAY_TOKEN ||
+        ''
+      : ''
+
   const loadInitial = useCallback(() => {
-    fetchParticipants()
+    const load =
+      displayToken.length > 0
+        ? fetchDisplayParticipants(displayToken)
+        : fetchParticipants()
+    load
       .then(setParticipants)
       .catch((err) => setError(err instanceof Error ? err.message : 'Ошибка'))
       .finally(() => setLoading(false))
-  }, [])
+  }, [displayToken])
 
   useEffect(() => {
     loadInitial()
@@ -213,9 +224,8 @@ export function RegistrationSlide() {
     [arranged.length, computedSize, containerSize.w, containerSize.h]
   )
 
-  if (loading) return <p>Загрузка...</p>
-  if (error) return <p className="fragment">Ошибка: {error}</p>
-
+  if (loading && participants.length === 0) return <p>Загрузка...</p>
+  if (error && participants.length === 0) return <p className="fragment">Ошибка: {error}</p>
 
   return (
     <div className={`registration-slide ${hasParticipants ? 'registration-slide--has-participants' : ''}`}>
