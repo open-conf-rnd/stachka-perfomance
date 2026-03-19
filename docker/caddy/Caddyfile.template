@@ -1,12 +1,5 @@
-# Production: HTTP и HTTPS, reverse proxy to web
+# Production: один блок — Caddy сам включит HTTPS и редирект HTTP→HTTPS (Let's Encrypt)
 # DOMAIN подставляется при старте через envsubst (например event-starter.ru)
-# Поддержка и корня, и www
-# HTTP — всегда доступен (в т.ч. для ACME challenge)
-http://${DOMAIN}, www.${DOMAIN} {
-    reverse_proxy web:80
-}
-
-# HTTPS — Let's Encrypt, автообновление
-https://${DOMAIN}, www.${DOMAIN} {
+${DOMAIN}, www.${DOMAIN} {
     reverse_proxy web:80
 }

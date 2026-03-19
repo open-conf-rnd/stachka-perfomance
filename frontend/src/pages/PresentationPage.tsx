@@ -642,6 +642,51 @@ export function PresentationPage() {
         </SlideLogoBottom>
       </Slide>
 
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideCode
+            title="Решаем проблемы на Linux"
+            codeFontSize="clamp(2rem, 3.5vmin, 56px)"
+            revealByClick
+            lines={[
+              { text: '# Самоподписанный сертификат — добавить в доверенные', comment: true },
+              { text: 'sudo cp docker/nginx/ssl/cert.pem /usr/local/share/ca-certificates/my-local.crt', comment: false },
+              { text: 'sudo update-ca-certificates', comment: false },
+              { text: '', comment: false },
+              { text: '# Или запуск Chrome с игнором сертификата (только для разработки)', comment: true },
+              { text: 'google-chrome --ignore-certificate-errors \\', comment: false },
+              { text: '  --ignore-certificate-errors-spki-list \\', comment: false },
+              { text: '  --user-data-dir=/tmp/chrome-dev https://my.local', comment: false },
+              { text: '', comment: false },
+              { text: '# Chromium', comment: true },
+              { text: 'chromium --ignore-certificate-errors --user-data-dir=/tmp/chrome-dev https://my.local', comment: false },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideCode
+            title="Решаем проблемы на Windows"
+            codeFontSize="clamp(2rem, 3.5vmin, 56px)"
+            revealByClick
+            lines={[
+              { text: 'REM Добавить сертификат в доверенные (PowerShell от администратора)', comment: true },
+              { text: 'Import-Certificate -FilePath "docker\\nginx\\ssl\\cert.pem" -CertStoreLocation Cert:\\LocalMachine\\Root', comment: false },
+              { text: '', comment: false },
+              { text: 'REM Или через certmgr: certmgr.msc → Доверенные корневые ЦС → Действия → Импорт', comment: true },
+              { text: '', comment: false },
+              { text: 'REM Chrome с игнором сертификата (только для разработки)', comment: true },
+              { text: '& "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" ^', comment: false },
+              { text: '  --ignore-certificate-errors --user-data-dir=%TEMP%\\chrome-dev https://my.local', comment: false },
+              { text: '', comment: false },
+              { text: 'REM После добавления серта перезапустить браузер', comment: true },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
       {/* Фичи TMA в приложении — по одной: код → использование */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
