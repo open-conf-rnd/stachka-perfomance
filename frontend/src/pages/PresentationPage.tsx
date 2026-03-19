@@ -492,9 +492,59 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <h2>Слайд 40</h2>
-          <p>SlideLogoBottom</p>
+          <SlideImageText description="" title="Проблемы и их решения" imageSrc="/slides/problems.png" />
         </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="scripts/gen-ssl.sh"
+          codeFontSize="clamp(1.4rem, 2.8vmin, 44px)"
+          fragmentIndexPerLine={[
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* блок 1: пути и загрузка .env */
+            1, 1, 1, 1, /* блок 2: DOMAIN и mkdir */
+            2, 2, 2, 2, 2, /* блок 3: openssl */
+          ]}
+          lines={[
+            { text: '# Пути и загрузка переменных из .env', comment: true },
+            { text: 'set -e', comment: false },
+            { text: 'SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"', comment: false },
+            { text: 'PROJECT_DIR="$SCRIPT_DIR/.."', comment: false },
+            { text: 'SSL_DIR="$PROJECT_DIR/docker/nginx/ssl"', comment: false },
+            { text: 'ENV_FILE="$PROJECT_DIR/.env"', comment: false },
+            { text: '', comment: false },
+            { text: 'if [ -f "$ENV_FILE" ]; then', comment: false },
+            { text: '  set -a && source "$ENV_FILE" && set +a', comment: false },
+            { text: 'fi', comment: false },
+            { text: '', comment: false },
+            { text: '# Домен из аргумента или .env, создаём каталог для сертификатов', comment: true },
+            { text: 'DOMAIN="${1:-${DOMAIN}}"', comment: false },
+            { text: 'mkdir -p "$SSL_DIR"', comment: false },
+            { text: '', comment: false },
+            { text: '# Генерация самоподписанного сертификата (cert.pem, key.pem)', comment: true },
+            { text: 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 \\', comment: false },
+            { text: '  -keyout "$SSL_DIR/key.pem" -out "$SSL_DIR/cert.pem" \\', comment: false },
+            { text: '  -subj "/CN=$DOMAIN" -addext "subjectAltName=DNS:$DOMAIN"', comment: false },
+            { text: 'echo "SSL сертификаты созданы в $SSL_DIR для домена: $DOMAIN"', comment: false },
+          ]}
+        />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title=".env (переменные для TMA / локального HTTPS)"
+          codeFontSize="clamp(1.6rem, 3vmin, 52px)"
+          lines={[
+            { text: '# Telegram Bot API (для бота Mini App)', comment: true },
+            { text: 'TG_BOT_API=your_bot_token', comment: false },
+            { text: '', comment: false },
+            { text: '# Домен для HTTPS (ngrok, my.local и т.д.). После смены — ./scripts/gen-ssl.sh', comment: true },
+            { text: 'DOMAIN=localhost', comment: false },
+            { text: '', comment: false },
+            { text: 'API_PORT=3000', comment: false },
+            { text: 'STATS_WS_PORT=3001', comment: false },
+          ]}
+        />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
