@@ -14,6 +14,8 @@ interface SlideCodeProps {
   title?: string
   /** Размер шрифта кода (CSS font-size), например: "80px", "clamp(4rem, 8vmin, 120px)" */
   codeFontSize?: string
+  /** Показывать строки по клику (fragment). false — весь код виден сразу */
+  revealByClick?: boolean
   /** Индекс fragment для каждой строки (0, 1, 2…). Строки с одним индексом появляются одним блоком по клику. Длина массива = lines.length. */
   fragmentIndexPerLine?: number[]
 }
@@ -24,7 +26,7 @@ function normalizeLines(lines: string[] | SlideCodeLine[]): SlideCodeLine[] {
   )
 }
 
-export function SlideCode({ lines, title, codeFontSize, fragmentIndexPerLine }: SlideCodeProps) {
+export function SlideCode({ lines, title, codeFontSize, revealByClick = true, fragmentIndexPerLine }: SlideCodeProps) {
   const normalized = normalizeLines(lines)
 
   return (
@@ -39,11 +41,12 @@ export function SlideCode({ lines, title, codeFontSize, fragmentIndexPerLine }: 
             const fragmentIndex = fragmentIndexPerLine && fragmentIndexPerLine[index] !== undefined
               ? fragmentIndexPerLine[index]
               : index
+            const useFragment = revealByClick
             return (
               <div
                 key={index}
-                className={`slide-code__line ${line.comment ? 'slide-code__line--comment' : ''} fragment`}
-                data-fragment-index={fragmentIndex}
+                className={`slide-code__line ${line.comment ? 'slide-code__line--comment' : ''} ${useFragment ? 'fragment' : ''}`}
+                data-fragment-index={useFragment ? fragmentIndex : undefined}
               >
                 {line.text || '\u00A0'}
               </div>

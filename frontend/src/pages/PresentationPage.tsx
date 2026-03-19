@@ -642,6 +642,59 @@ export function PresentationPage() {
         </SlideLogoBottom>
       </Slide>
 
+      {/* Фичи TMA в приложении — по одной: код → использование */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <h2 style={{ margin: 0, fontSize: 'clamp(2.5rem, 5vmin, 80px)', fontWeight: 700, color: '#1a1a1a' }}>
+            Фичи TMA в приложении
+          </h2>
+          <p style={{ margin: 0, fontSize: 'clamp(1.4rem, 2.8vmin, 40px)', color: '#555', marginTop: '16px' }}>
+            Разберём по шагам: код → где используется
+          </p>
+        </SlideLogoBottom>
+      </Slide>
+
+      {/* 1. initData — код */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="1. initData — авторизация запросов к API"
+          codeFontSize="clamp(2.5rem, 3vmin, 64px)"
+          revealByClick={false}
+          lines={[
+            { text: '// lib/api.ts', comment: true },
+            { text: 'function getInitData(): string {', comment: false },
+            { text: "  return window.Telegram?.WebApp?.initData ?? ''", comment: false },
+            { text: '}', comment: false },
+            { text: '', comment: false },
+            { text: '// В каждом запросе:', comment: true },
+            { text: 'const response = await fetch(url, {', comment: false },
+            { text: '  method,', comment: false },
+            { text: '  headers: {', comment: false },
+            { text: "    'Content-Type': 'application/json',", comment: false },
+            { text: "    'x-telegram-init-data': getInitData(),", comment: false },
+            { text: '  },', comment: false },
+            { text: '  body: bodySerialized,', comment: false },
+            { text: '})', comment: false },
+          ]}
+        />
+      </Slide>
+
+      {/* 1. initData — использование */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="initData: где используется"
+            subtitle="Бэкенд проверяет подпись initData и узнаёт пользователя"
+            revealByClick
+            steps={[
+              { label: 'Любой экран', description: 'Регистрация, опросы, бинго, тап, реакция' },
+              { label: 'apiRequest()', description: 'Каждый fetch отправляет заголовок x-telegram-init-data' },
+              { label: 'Бэкенд', description: 'Проверяет подпись, извлекает user — без своего логина' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
       </Deck>
     </>
   )
