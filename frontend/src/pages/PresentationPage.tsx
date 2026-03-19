@@ -19,6 +19,7 @@ import {
   SlideFullImage,
   SlideCode,
   SlideFlow,
+  SlideProsCons,
 } from './presentation'
 import { QRCodeSVG } from 'qrcode.react'
 
@@ -364,6 +365,129 @@ export function PresentationPage() {
             { text: "  -d '{\"url\":\"https://xx.ngrok-free.app\"}'", comment: false },
           ]}
         />
+      </Slide>
+
+      {/* Плюсы и минусы подходов */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideProsCons
+            title="ngrok"
+            titleFontSize="clamp(2.6rem, 5vmin, 80px)"
+            columnTitleFontSize="clamp(2.4rem, 4.8vmin, 72px)"
+            itemFontSize="clamp(3rem, 4vmin, 64px)"
+            revealByClick
+            pros={[
+              'Валидный SSL — Telegram доверяет без доп. настроек',
+              'Быстрый старт: одна команда, не нужен Docker',
+              'Не нужно трогать /etc/hosts и сертификаты',
+              'Удобно для демо и тестов с реального телефона',
+            ]}
+            cons={[
+              'Нужен интернет и доступ к ngrok',
+              'Лимиты бесплатного плана',
+              'Трафик идёт через облако ngrok',
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      {/* Docker + Nginx + Self-Signed SSL для TMA — та же логика, что и для ngrok */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText
+            title="Docker + Nginx + Self-Signed SSL"
+            description="Локальный HTTPS для Telegram Mini App без облачного туннеля"
+            imageSrc="/slides/nginx.png"
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="SSL, hosts и Docker"
+          codeFontSize="clamp(2.2rem, 4vmin, 56px)"
+          lines={[
+            { text: '# Генерация самоподписанного сертификата', comment: true },
+            { text: '$ ./scripts/gen-ssl.sh   # cert.pem, key.pem', comment: false },
+            { text: '', comment: false },
+            { text: '# DNS на localhost (DOMAIN из .env, например my.local)', comment: true },
+            { text: '$ echo "127.0.0.1 my.local" | sudo tee -a /etc/hosts', comment: false },
+            { text: '', comment: false },
+            { text: '# Запуск Nginx + сервисов', comment: true },
+            { text: '$ docker compose -f docker/docker-compose.dev.yml up --build', comment: false },
+            { text: '# → https://my.local:443', comment: true },
+          ]}
+        />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="Docker + Nginx + Self-Signed SSL для Telegram Mini App"
+            subtitle="Как Telegram доходит до вашего приложения через /etc/hosts и Nginx"
+            revealByClick
+            steps={[
+              { label: 'Telegram', description: 'Пользователь жмёт кнопку → WebView' },
+              { label: 'Bot API', description: 'web_app.url = https://DOMAIN', arrowLabel: 'HTTPS' },
+              { label: '/etc/hosts', description: 'DOMAIN → 127.0.0.1', arrowLabel: 'DNS' },
+              { label: 'Nginx (Docker)', description: 'SSL терминация (cert.pem + key.pem). / → :5173, /api/ → :3000, /ws → :3001', arrowLabel: ':443' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="Шаги настройки (Nginx)"
+            revealByClick
+            steps={[
+              { label: '1. SSL', description: './scripts/gen-ssl.sh — самоподписанный серт' },
+              { label: '2. .env', description: 'DOMAIN=my.local' },
+              { label: '3. /etc/hosts', description: '127.0.0.1 my.local' },
+              { label: '4. Docker', description: 'docker compose up — Nginx + Frontend, API, WS' },
+              { label: '5. Бот', description: 'web_app.url = https://my.local' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="Терминал: SSL + hosts + Docker"
+          codeFontSize="clamp(2.2rem, 4vmin, 56px)"
+          lines={[
+            { text: '$ ./scripts/gen-ssl.sh', comment: false },
+            { text: '$ echo "127.0.0.1 my.local" >> /etc/hosts', comment: false },
+            { text: '$ docker compose -f docker/docker-compose.dev.yml up --build', comment: false },
+            { text: '', comment: false },
+            { text: '# Самоподписанный серт — Telegram не доверяет.', comment: true },
+            { text: '# Нужен --ignore-certificate-errors в WebView или ngrok.', comment: true },
+          ]}
+        />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideProsCons
+            title="Docker + Nginx (локальный HTTPS)"
+            titleFontSize="clamp(2.6rem, 5vmin, 80px)"
+            columnTitleFontSize="clamp(2.4rem, 4.8vmin, 72px)"
+            itemFontSize="clamp(2.8rem, 4vmin, 64px)"
+            revealByClick
+            pros={[
+              'Всё локально: не зависит от внешних сервисов',
+              'Один docker compose — Nginx + Frontend + API + WS',
+              'Полный контроль над доменом и сертификатами',
+              'Нет лимитов и платных подписок',
+            ]}
+            cons={[
+              'Самоподписанный серт — Telegram не доверяет по умолчанию',
+              'Нужен --ignore-certificate-errors или обход для теста в TG',
+              'Сложнее настройка: SSL, /etc/hosts, Docker',
+            ]}
+          />
+        </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">

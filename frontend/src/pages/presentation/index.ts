@@ -7,6 +7,7 @@ export {
   SlideFullImage,
   SlideCode,
   SlideFlow,
+  SlideProsCons,
 } from './templates'
 export { TitleSlide } from './TitleSlide'
 export { WhoAmISlide } from './WhoAmISlide'
