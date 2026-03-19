@@ -573,6 +573,35 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', minHeight: 0 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', alignItems: 'center', textAlign: 'center' }}>
+              <h2 style={{ margin: 0, fontSize: 'clamp(2.5rem, 5vmin, 80px)', fontWeight: 700, color: '#1a1a1a' }}>
+                Выводы
+              </h2>
+              <p style={{ margin: 0, fontSize: 'clamp(2rem, 4.2vmin, 64px)', lineHeight: 1.4, color: '#334155', maxWidth: '90%' }}>
+                Если возьмёте мой стартер или похожее решение — вот такой простой старт можете сделать.
+              </p>
+              <pre
+                style={{
+                  margin: 0,
+                  padding: '24px 32px',
+                  background: '#1a1b26',
+                  color: '#c0caf5',
+                  borderRadius: 16,
+                  fontSize: 'clamp(1.4rem, 2.8vmin, 44px)',
+                  fontFamily: "'JetBrains Mono', 'Fira Code', Consolas, monospace",
+                  overflow: 'auto',
+                }}
+              >
+                <code>docker compose -f docker/docker-compose.dev.yml up --build -d</code>
+              </pre>
+            </div>
+          </div>
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
           <SlideBlocks title="Слайд 41" blockHeight={200} blocks={[
             { imageSrc: PLACEHOLDER_IMG, description: 'Блок 1' },
             { imageSrc: PLACEHOLDER_IMG, description: 'Блок 2' },
