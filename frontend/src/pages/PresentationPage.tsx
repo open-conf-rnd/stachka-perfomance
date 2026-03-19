@@ -549,6 +549,30 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
+          <SlideImageText title="Проблема самоподписного сертификата" description="Нельзя просто так сгенерить сертификат" imageSrc="/slides/cert.png" />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText title="Открываем Keyscan" description="" imageSrc="/slides/keyscan.png" />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText title="Ищем локальный домен" description="" imageSrc="/slides/local-domain.png" />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText title="Нажимаем на доверие" description="" imageSrc="/slides/trust.png" />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
           <SlideBlocks title="Слайд 41" blockHeight={200} blocks={[
             { imageSrc: PLACEHOLDER_IMG, description: 'Блок 1' },
             { imageSrc: PLACEHOLDER_IMG, description: 'Блок 2' },
