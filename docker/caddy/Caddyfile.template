@@ -1,11 +1,12 @@
 # Production: HTTP и HTTPS, reverse proxy to web
-# DOMAIN подставляется при старте через envsubst
+# DOMAIN подставляется при старте через envsubst (например event-starter.ru)
+# Поддержка и корня, и www
 # HTTP — всегда доступен (в т.ч. для ACME challenge)
-http://${DOMAIN} {
+http://${DOMAIN}, www.${DOMAIN} {
     reverse_proxy web:80
 }
 
 # HTTPS — Let's Encrypt, автообновление
-https://${DOMAIN} {
+https://${DOMAIN}, www.${DOMAIN} {
     reverse_proxy web:80
 }
