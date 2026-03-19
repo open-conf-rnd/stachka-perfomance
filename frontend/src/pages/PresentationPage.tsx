@@ -736,7 +736,7 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
           title="3. BackButton — кнопка «Назад»"
-          codeFontSize="clamp(1.3rem, 2.6vmin, 40px)"
+          codeFontSize="clamp(3rem, 3vmin, 64px)"
           revealByClick={false}
           lines={[
             { text: '// useTelegramBackButton.ts', comment: true },
@@ -774,7 +774,7 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
           title="4. HapticFeedback — вибрации"
-          codeFontSize="clamp(1.3rem, 2.6vmin, 40px)"
+          codeFontSize="clamp(2.3rem, 2.8vmin, 64px)"
           revealByClick={false}
           lines={[
             { text: '// lib/haptic.ts', comment: true },
@@ -799,7 +799,6 @@ export function PresentationPage() {
             steps={[
               { label: 'HapticPage', description: 'Демо: кнопки impact и notification' },
               { label: 'Бинго, тап, реакции', description: 'impact при нажатии, notification после успеха/ошибки' },
-              { label: 'apiRequestWithNotifications', description: 'notificationOccurred + showPopup после запроса' },
             ]}
           />
         </SlideLogoBottom>
@@ -809,7 +808,7 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
           title="5. showPopup / showAlert — уведомления"
-          codeFontSize="clamp(1.3rem, 2.6vmin, 40px)"
+          codeFontSize="clamp(2.3rem, 3vmin, 64px)"
           revealByClick={false}
           lines={[
             { text: '// telegramNotifications.ts', comment: true },
@@ -840,7 +839,7 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
           title="6. LaunchParams (startParam) — старт по ссылке"
-          codeFontSize="clamp(1.3rem, 2.6vmin, 40px)"
+          codeFontSize="clamp(2.3rem, 3vmin, 64px)"
           revealByClick={false}
           lines={[
             { text: '// App.tsx', comment: true },
@@ -874,7 +873,7 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
           title="7. openInvoice — оплата (Telegram Stars)"
-          codeFontSize="clamp(1.3rem, 2.6vmin, 40px)"
+          codeFontSize="clamp(2.8rem, 3vmin, 64px)"
           revealByClick={false}
           lines={[
             { text: '// SupportPage.tsx', comment: true },
@@ -909,7 +908,7 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
           title="8. openTelegramLink — открыть ссылку в Telegram"
-          codeFontSize="clamp(1.3rem, 2.6vmin, 40px)"
+          codeFontSize="clamp(2.4rem, 3vmin, 64px)"
           revealByClick={false}
           lines={[
             { text: '// BingoPage — Share в чат', comment: true },
@@ -944,7 +943,7 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
           title="9. shareToStory — шаринг в Stories"
-          codeFontSize="clamp(1.3rem, 2.6vmin, 40px)"
+          codeFontSize="clamp(2.7rem, 3vmin, 64px)"
           revealByClick={false}
           lines={[
             { text: '// BingoPage.tsx', comment: true },
@@ -970,6 +969,26 @@ export function PresentationPage() {
               { label: 'Stories', description: 'Медиа + текст + ссылка-виджет на Mini App' },
             ]}
           />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px', width: '100%', height: '100%' }}>
+            <h2 style={{ margin: 0, fontSize: 'clamp(2.2rem, 4.5vmin, 72px)', fontWeight: 700, color: '#1a1a1a' }}>
+              Обратная связь
+            </h2>
+            <p style={{ margin: 0, fontSize: 'clamp(1.2rem, 2.4vmin, 32px)', color: '#555' }}>
+              Отсканируйте QR-код
+            </p>
+            <QRCodeSVG
+              value="https://forms.yandex.ru/cloud/698dbe0f6d2d734220a9f7bc/?stachka_ul26=62"
+              size={400}
+              level="M"
+              bgColor="transparent"
+              fgColor="#1a1a1a"
+            />
+          </div>
         </SlideLogoBottom>
       </Slide>
 

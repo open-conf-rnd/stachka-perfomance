@@ -23,8 +23,12 @@
 - Установить Docker и Docker Compose v2
 - Настроить доступ к GHCR (на VPS выполнить `docker login ghcr.io` с PAT, чтобы daemon мог пуллить образы)
 - Добавить публичный ключ SSH в `~/.ssh/authorized_keys` для `VPS_USERNAME`
-- **DNS**: домен (например `open-conf-rnd.pro`) должен указывать A‑записью на IP VPS — иначе Let's Encrypt не выдаст сертификат
-- **Диск**: перед каждым `docker compose pull` workflow выполняет `docker image prune -af` и `docker builder prune -af` на VPS. Если появляется ошибка «no space left on device», на VPS нужно освободить место (удалить старые образы/тома вручную или увеличить диск).
+- **PostgreSQL**: один раз создать каталог для данных (при деплое не перезаписывается):
+  ```bash
+  sudo mkdir -p /var/lib/stachka-postgres && sudo chown 70:70 /var/lib/stachka-postgres
+  ```
+- **DNS**: домен должен указывать A‑записью на IP VPS — иначе Let's Encrypt не выдаст сертификат
+- **Диск**: перед каждым `docker compose pull` workflow выполняет `docker image prune -af` и `docker builder prune -af` на VPS. Данные БД лежат в `/var/lib/stachka-postgres` и при деплое не удаляются (`down` без `-v`).
 
 ### 4. Ручной запуск
 **Actions → Deploy Production → Run workflow**
