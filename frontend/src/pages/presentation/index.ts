@@ -5,6 +5,8 @@ export {
   SlideImageText,
   SlideBlocks,
   SlideFullImage,
+  SlideCode,
+  SlideFlow,
 } from './templates'
 export { TitleSlide } from './TitleSlide'
 export { WhoAmISlide } from './WhoAmISlide'

@@ -1,0 +1,117 @@
+.slide-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.slide-flow__title {
+  margin: 0;
+  font-size: clamp(2.8rem, 5vmin, 72px);
+  font-weight: 700;
+  color: #1a1a1a;
+  flex-shrink: 0;
+}
+
+.slide-flow__subtitle {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.8vmin, 40px);
+  color: #555;
+  flex-shrink: 0;
+}
+
+.slide-flow__chain {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  flex: 1;
+  min-height: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.slide-flow__step-wrap {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 0;
+}
+
+.slide-flow__arrow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  flex-shrink: 0;
+  min-width: 64px;
+}
+
+.slide-flow__arrow-line {
+  width: 48px;
+  height: 4px;
+  background: linear-gradient(90deg, #8b7cf8, #6366f1);
+  border-radius: 2px;
+}
+
+.slide-flow__arrow-label {
+  margin-top: 8px;
+  font-size: clamp(1.2rem, 2.2vmin, 28px);
+  font-weight: 600;
+  color: #6366f1;
+}
+
+.slide-flow__block {
+  flex: 1;
+  min-width: 0;
+  min-height: 280px;
+  padding: 28px 32px;
+  border-radius: 24px;
+  background: #fff;
+  border: 3px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+}
+
+.slide-flow__block--cloud {
+  border-color: #a78bfa;
+  background: linear-gradient(180deg, #f5f3ff 0%, #ede9fe 100%);
+}
+
+.slide-flow__block--local {
+  border-color: #34d399;
+  background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+.slide-flow__zone {
+  font-size: clamp(1rem, 2vmin, 24px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.slide-flow__block--cloud .slide-flow__zone {
+  color: #7c3aed;
+}
+
+.slide-flow__block--local .slide-flow__zone {
+  color: #059669;
+}
+
+.slide-flow__block-label {
+  font-size: clamp(1.6rem, 3.2vmin, 48px);
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.slide-flow__block-desc {
+  font-size: clamp(1.3rem, 1.8vmin, 32px);
+  color: #475569;
+  line-height: 1.35;
+}

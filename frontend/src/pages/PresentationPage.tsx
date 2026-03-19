@@ -17,6 +17,8 @@ import {
   SlideImageText,
   SlideBlocks,
   SlideFullImage,
+  SlideCode,
+  SlideFlow,
 } from './presentation'
 import { QRCodeSVG } from 'qrcode.react'
 
@@ -231,12 +233,6 @@ export function PresentationPage() {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText title="Слайд 22" description="SlideImageText" imageSrc={PLACEHOLDER_IMG} />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
         <SlideFrame><h2>Что не успели сделать</h2><p>Но очень хотелось бы</p></SlideFrame>
       </Slide>
 
@@ -267,13 +263,11 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText title="TMA-стартер" description="Сча разберемся как стартовать" imageSrc="/slides/starter.png" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+            <h2 style={{ margin: 0, fontSize: 'clamp(2rem, 4vmin, 48px)', fontWeight: 700 }}>https://github.com/DmitriyGrosh/tma-starter</h2>
+          </div>
         </SlideLogoBottom>
       </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideFrame><h2>Небольшой стартер для вашего приложения</h2><p>https://github.com/DmitriyGrosh/tma-starter</p></SlideFrame>
-      </Slide>
-
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
@@ -302,18 +296,74 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <h2>Слайд 38</h2>
-          <p>SlideLogoBottom</p>
+          <SlideImageText title="Как поднять локальный https" description="SlideImageText" imageSrc="/slides/ngrok.png" />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="Запуск ngrok"
+          codeFontSize="clamp(3rem, 6vmin, 100px)"
+          lines={[
+            { text: '# Установка (если ещё нет)', comment: true },
+            { text: 'npm install -g ngrok', comment: false },
+            { text: '# или: brew install ngrok', comment: true },
+            { text: '', comment: false },
+            { text: '# Запуск туннеля на порт приложения', comment: true },
+            { text: 'ngrok http 3000', comment: false },
+            { text: '', comment: false },
+            { text: '# ngrok создаёт URL вида:', comment: true },
+            { text: 'https://a1b2c3d4.ngrok-free.app ->', comment: false },
+            { text: '-> http://localhost:3000', comment: false },
+          ]}
+        />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="Local HTTPS + ngrok для Telegram Mini App"
+            subtitle="Как Telegram открывает ваше локальное приложение через безопасный туннель"
+            revealByClick
+            steps={[
+              { label: 'Telegram', description: 'Пользователь жмёт кнопку → WebView' },
+              { label: 'Bot API', description: 'web_app.url = https://xx.ngrok.app', arrowLabel: 'HTTPS' },
+              { label: 'ngrok Edge', description: 'SSL терминация, валидный сертификат', arrowLabel: 'DNS', zone: 'cloud' },
+              { label: 'ngrok Agent', description: 'Исходящее соединение', arrowLabel: 'TLS туннель', zone: 'local' },
+              { label: 'Dev Server', description: 'localhost:5173. HMR & DevTools', arrowLabel: ':5173', zone: 'local' },
+            ]}
+          />
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideBlocks title="Слайд 39" blockHeight={200} blocks={[
-            { imageSrc: PLACEHOLDER_IMG, description: 'A' },
-            { imageSrc: PLACEHOLDER_IMG, description: 'B' },
-          ]} />
+          <SlideFlow
+            title="Шаги настройки"
+            revealByClick
+            steps={[
+              { label: '1. Dev-сервер', description: 'npm run dev → :5173' },
+              { label: '2. ngrok', description: 'ngrok http 5173 → https URL' },
+              { label: '3. Бот', description: 'URL → web_app.url' },
+              { label: '4. Готово', description: 'TG → ngrok → localhost' },
+            ]}
+          />
         </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="Терминал: dev + ngrok + Bot API"
+          codeFontSize="clamp(2.2rem, 4vmin, 56px)"
+          lines={[
+            { text: '$ npm run dev   # :5173', comment: false },
+            { text: '$ ngrok http 5173', comment: false },
+            { text: '', comment: false },
+            { text: '# Подставить свой https URL в setChatMenuButton:', comment: true },
+            { text: '$ curl -X POST ".../setChatMenuButton" \\', comment: false },
+            { text: "  -d '{\"url\":\"https://xx.ngrok-free.app\"}'", comment: false },
+          ]}
+        />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
