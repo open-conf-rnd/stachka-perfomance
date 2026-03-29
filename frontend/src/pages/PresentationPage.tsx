@@ -635,7 +635,6 @@ webApp.showPopup({
         <SlideLogoBottom>
           <SlideImageText title="TMA-стартер" description="Сейчас разберёмся, как стартовать" imageSrc="/slides/starter.png" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-            <h2 style={{ margin: 0, fontSize: 'clamp(2rem, 4vmin, 48px)', fontWeight: 700 }}>https://github.com/DmitriyGrosh/tma-starter</h2>
           </div>
         </SlideLogoBottom>
       </Slide>
@@ -657,9 +656,8 @@ webApp.showPopup({
 
       <Slide className="slide-fullsize" data-align="topleft">
           <SlideLogoBottom>
-            <SlideBlocks title="Как поднять локальный HTTPS" blockHeight={200} blocks={[
-              { imageSrc: "/slides/ngrok.png", description: 'Самый популярный способ, но нужен VPN' },
-              { imageSrc: "/slides/cloudflare.png", description: 'Второй по популярности способ, но нужен VPN' },
+            <SlideBlocks descriptionScale={2}  title="Как поднять локальный HTTPS" blockHeight={200} blocks={[
+              { imageSrc: "/slides/ngrok.png", description: 'Самый популярный способ, но ...' },
               { imageSrc: "/slides/nginx.png", description: 'Поднимаем локальный прокси' },
             ]} />
           </SlideLogoBottom>
@@ -667,43 +665,7 @@ webApp.showPopup({
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Как поднять локальный HTTPS" description="Покажу на примере ngrok" imageSrc="/slides/ngrok.png" />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="Запуск ngrok"
-          codeFontSize="clamp(3rem, 6vmin, 100px)"
-          lines={[
-            { text: '# Установка (если ещё нет)', comment: true },
-            { text: 'npm install -g ngrok', comment: false },
-            { text: '# или: brew install ngrok', comment: true },
-            { text: '', comment: false },
-            { text: '# Запуск туннеля на порт приложения', comment: true },
-            { text: 'ngrok http 3000', comment: false },
-            { text: '', comment: false },
-            { text: '# ngrok создаёт URL вида:', comment: true },
-            { text: 'https://a1b2c3d4.ngrok-free.app ->', comment: false },
-            { text: '-> http://localhost:3000', comment: false },
-          ]}
-        />
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="Local HTTPS + ngrok для Telegram Mini App"
-            subtitle="Как Telegram открывает ваше локальное приложение через безопасный туннель"
-            revealByClick
-            steps={[
-              { label: 'Telegram', description: 'Пользователь жмёт кнопку → WebView' },
-              { label: 'Bot API', description: 'web_app.url = https://xx.ngrok.app', arrowLabel: 'HTTPS' },
-              { label: 'ngrok Edge', description: 'SSL терминация, валидный сертификат', arrowLabel: 'DNS', zone: 'cloud' },
-              { label: 'ngrok Agent', description: 'Исходящее соединение', arrowLabel: 'TLS туннель', zone: 'local' },
-              { label: 'Dev Server', description: 'localhost:5173. HMR & DevTools', arrowLabel: ':5173', zone: 'local' },
-            ]}
-          />
+          <SlideImageText title="Как поднять локальный HTTPS" description="" imageSrc="/slides/ngrok.png" />
         </SlideLogoBottom>
       </Slide>
 
@@ -722,21 +684,6 @@ webApp.showPopup({
         </SlideLogoBottom>
       </Slide>
 
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="Терминал: dev + ngrok + Bot API"
-          codeFontSize="clamp(2.2rem, 4vmin, 56px)"
-          lines={[
-            { text: '$ npm run dev   # :5173', comment: false },
-            { text: '$ ngrok http 5173', comment: false },
-            { text: '', comment: false },
-            { text: '# Подставить свой https URL в setChatMenuButton:', comment: true },
-            { text: '$ curl -X POST ".../setChatMenuButton" \\', comment: false },
-            { text: "  -d '{\"url\":\"https://xx.ngrok-free.app\"}'", comment: false },
-          ]}
-        />
-      </Slide>
-
       {/* Плюсы и минусы подходов */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
@@ -747,15 +694,13 @@ webApp.showPopup({
             itemFontSize="clamp(3rem, 4vmin, 64px)"
             revealByClick
             pros={[
-              'Валидный SSL — Telegram доверяет без доп. настроек',
-              'Быстрый старт: одна команда, не нужен Docker',
-              'Не нужно трогать /etc/hosts и сертификаты',
+              'Валидный SSL',
+              'Быстрый старт',
               'Удобно для демо и тестов с реального телефона',
             ]}
             cons={[
               'Нужен интернет и доступ к ngrok',
-              'Лимиты бесплатного плана',
-              'Трафик идёт через облако ngrok',
+              'Бесячая авторизация при входе',
             ]}
           />
         </SlideLogoBottom>
@@ -770,24 +715,6 @@ webApp.showPopup({
             imageSrc="/slides/nginx.png"
           />
         </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="SSL, hosts и Docker"
-          codeFontSize="clamp(2.2rem, 4vmin, 56px)"
-          lines={[
-            { text: '# Генерация самоподписанного сертификата', comment: true },
-            { text: '$ ./scripts/gen-ssl.sh   # cert.pem, key.pem', comment: false },
-            { text: '', comment: false },
-            { text: '# DNS на localhost (DOMAIN из .env, например my.local)', comment: true },
-            { text: '$ echo "127.0.0.1 my.local" | sudo tee -a /etc/hosts', comment: false },
-            { text: '', comment: false },
-            { text: '# Запуск Nginx + сервисов', comment: true },
-            { text: '$ docker compose -f docker/docker-compose.dev.yml up --build', comment: false },
-            { text: '# → https://my.local:443', comment: true },
-          ]}
-        />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -808,37 +735,6 @@ webApp.showPopup({
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideFlow
-            title="Шаги настройки (Nginx)"
-            revealByClick
-            steps={[
-              { label: '1. SSL', description: './scripts/gen-ssl.sh — самоподписанный серт' },
-              { label: '2. .env', description: 'DOMAIN=my.local' },
-              { label: '3. /etc/hosts', description: '127.0.0.1 my.local' },
-              { label: '4. Docker', description: 'docker compose up — Nginx + Frontend, API, WS' },
-              { label: '5. Бот', description: 'web_app.url = https://my.local' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="Терминал: SSL + hosts + Docker"
-          codeFontSize="clamp(2.2rem, 4vmin, 56px)"
-          lines={[
-            { text: '$ ./scripts/gen-ssl.sh', comment: false },
-            { text: '$ echo "127.0.0.1 my.local" >> /etc/hosts', comment: false },
-            { text: '$ docker compose -f docker/docker-compose.dev.yml up --build', comment: false },
-            { text: '', comment: false },
-            { text: '# Самоподписанный серт — Telegram не доверяет.', comment: true },
-            { text: '# Нужен --ignore-certificate-errors в WebView или ngrok.', comment: true },
-          ]}
-        />
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
           <SlideProsCons
             title="Docker + Nginx (локальный HTTPS)"
             titleFontSize="clamp(2.6rem, 5vmin, 80px)"
@@ -848,12 +744,9 @@ webApp.showPopup({
             pros={[
               'Всё локально: не зависит от внешних сервисов',
               'Один docker compose — Nginx + Frontend + API + WS',
-              'Полный контроль над доменом и сертификатами',
-              'Нет лимитов и платных подписок',
             ]}
             cons={[
-              'Самоподписанный серт — Telegram не доверяет по умолчанию',
-              'Нужен --ignore-certificate-errors или обход для теста в TG',
+              'Самоподписанный серт',
               'Сложнее настройка: SSL, /etc/hosts, Docker',
             ]}
           />
@@ -864,57 +757,6 @@ webApp.showPopup({
         <SlideLogoBottom>
           <SlideImageText description="" title="Проблемы и их решения" imageSrc="/slides/problems.png" />
         </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="scripts/gen-ssl.sh"
-          codeFontSize="clamp(1.4rem, 2.8vmin, 44px)"
-          fragmentIndexPerLine={[
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, /* блок 1: пути и загрузка .env */
-            1, 1, 1, 1, /* блок 2: DOMAIN и mkdir */
-            2, 2, 2, 2, 2, /* блок 3: openssl */
-          ]}
-          lines={[
-            { text: '# Пути и загрузка переменных из .env', comment: true },
-            { text: 'set -e', comment: false },
-            { text: 'SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"', comment: false },
-            { text: 'PROJECT_DIR="$SCRIPT_DIR/.."', comment: false },
-            { text: 'SSL_DIR="$PROJECT_DIR/docker/nginx/ssl"', comment: false },
-            { text: 'ENV_FILE="$PROJECT_DIR/.env"', comment: false },
-            { text: '', comment: false },
-            { text: 'if [ -f "$ENV_FILE" ]; then', comment: false },
-            { text: '  set -a && source "$ENV_FILE" && set +a', comment: false },
-            { text: 'fi', comment: false },
-            { text: '', comment: false },
-            { text: '# Домен из аргумента или .env, создаём каталог для сертификатов', comment: true },
-            { text: 'DOMAIN="${1:-${DOMAIN}}"', comment: false },
-            { text: 'mkdir -p "$SSL_DIR"', comment: false },
-            { text: '', comment: false },
-            { text: '# Генерация самоподписанного сертификата (cert.pem, key.pem)', comment: true },
-            { text: 'openssl req -x509 -nodes -days 365 -newkey rsa:2048 \\', comment: false },
-            { text: '  -keyout "$SSL_DIR/key.pem" -out "$SSL_DIR/cert.pem" \\', comment: false },
-            { text: '  -subj "/CN=$DOMAIN" -addext "subjectAltName=DNS:$DOMAIN"', comment: false },
-            { text: 'echo "SSL сертификаты созданы в $SSL_DIR для домена: $DOMAIN"', comment: false },
-          ]}
-        />
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title=".env (переменные для TMA / локального HTTPS)"
-          codeFontSize="clamp(1.6rem, 3vmin, 52px)"
-          lines={[
-            { text: '# Telegram Bot API (для бота Mini App)', comment: true },
-            { text: 'TG_BOT_API=your_bot_token', comment: false },
-            { text: '', comment: false },
-            { text: '# Домен для HTTPS (ngrok, my.local и т.д.). После смены — ./scripts/gen-ssl.sh', comment: true },
-            { text: 'DOMAIN=localhost', comment: false },
-            { text: '', comment: false },
-            { text: 'API_PORT=3000', comment: false },
-            { text: 'STATS_WS_PORT=3001', comment: false },
-          ]}
-        />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -1009,51 +851,6 @@ webApp.showPopup({
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText title="Нажимаем правой кнопкой мыши" description="" imageSrc="/slides/rightclick.png" />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideCode
-            title="Решаем проблемы на Linux"
-            codeFontSize="clamp(2rem, 3.5vmin, 56px)"
-            revealByClick
-            lines={[
-              { text: '# Самоподписанный сертификат — добавить в доверенные', comment: true },
-              { text: 'sudo cp docker/nginx/ssl/cert.pem /usr/local/share/ca-certificates/my-local.crt', comment: false },
-              { text: 'sudo update-ca-certificates', comment: false },
-              { text: '', comment: false },
-              { text: '# Или запуск Chrome с игнором сертификата (только для разработки)', comment: true },
-              { text: 'google-chrome --ignore-certificate-errors \\', comment: false },
-              { text: '  --ignore-certificate-errors-spki-list \\', comment: false },
-              { text: '  --user-data-dir=/tmp/chrome-dev https://my.local', comment: false },
-              { text: '', comment: false },
-              { text: '# Chromium', comment: true },
-              { text: 'chromium --ignore-certificate-errors --user-data-dir=/tmp/chrome-dev https://my.local', comment: false },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideCode
-            title="Решаем проблемы на Windows"
-            codeFontSize="clamp(2rem, 3.5vmin, 56px)"
-            revealByClick
-            lines={[
-              { text: 'REM Добавить сертификат в доверенные (PowerShell от администратора)', comment: true },
-              { text: 'Import-Certificate -FilePath "docker\\nginx\\ssl\\cert.pem" -CertStoreLocation Cert:\\LocalMachine\\Root', comment: false },
-              { text: '', comment: false },
-              { text: 'REM Или через certmgr: certmgr.msc → Доверенные корневые ЦС → Действия → Импорт', comment: true },
-              { text: '', comment: false },
-              { text: 'REM Chrome с игнором сертификата (только для разработки)', comment: true },
-              { text: '& "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" ^', comment: false },
-              { text: '  --ignore-certificate-errors --user-data-dir=%TEMP%\\chrome-dev https://my.local', comment: false },
-              { text: '', comment: false },
-              { text: 'REM После добавления серта перезапустить браузер', comment: true },
-            ]}
-          />
         </SlideLogoBottom>
       </Slide>
 
