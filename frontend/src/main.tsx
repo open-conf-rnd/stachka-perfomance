@@ -10,6 +10,10 @@ declare global {
     Telegram?: {
       WebApp?: {
         initData?: string
+        /** Распарсенные поля initData; start_param — из ?startapp=… */
+        initDataUnsafe?: {
+          start_param?: string
+        }
         ready?: () => void
         openInvoice?: (
           url: string,
@@ -35,6 +39,18 @@ declare global {
           hide?: () => void
           onClick?: (handler: () => void) => void
           offClick?: (handler: () => void) => void
+        }
+        /** Bot API 6.9+; облако Telegram для пары ключ–значение на пользователя */
+        CloudStorage?: {
+          setItem?: (
+            key: string,
+            value: string,
+            callback?: (error: string | null, success?: boolean) => void
+          ) => unknown
+          getItem?: (
+            key: string,
+            callback: (error: string | null, value?: string) => void
+          ) => unknown
         }
       }
     }

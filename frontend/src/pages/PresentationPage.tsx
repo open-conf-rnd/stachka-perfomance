@@ -307,6 +307,48 @@ share(mediaUrl, {
         <SlideFullImage objectFit='contain' imageSrc="/slides/dogovor.png" />
       </Slide>
 
+
+      {/* 6. LaunchParams — использование */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="startParam и Cloud Storage: где используется"
+            subtitle=""
+            revealByClick
+            steps={[
+              { label: 'Ссылка из бота/рекламы', description: '?startapp=bingo' },
+              { label: 'При открытии TMA', description: 'start_param → флаг в Cloud Storage → /bingo' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      {/* 6. LaunchParams / startParam — код (AppContent, App.tsx) */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="LaunchParams и Telegram Cloud Storage"
+          code={`
+const cloud = window.Telegram?.WebApp?.CloudStorage
+const launchParams = window.Telegram?.WebApp?.initDataUnsafe?.start_param
+
+if (launchParams === 'bingo') {
+  cloud.getItem('bingoParam', (err, value) => {
+    if (err || value === '1') return
+
+    cloud.setItem('bingoParam', '1', () => {
+      navigate('/bingo', { replace: true })
+    })
+  })
+}
+`}
+          language="typescript"
+          revealByClick={false}
+          preFullWidth
+          codeVerticalAlign="center"
+          codeFontSize="clamp(2.4rem, 2.2vmin, 38px)"
+        />
+      </Slide>
+
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <QrTaskSlide />
@@ -323,7 +365,7 @@ share(mediaUrl, {
             blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
             steps={[
               { label: 'Кнопка', description: 'Пользователь нажимает «Сканировать QR»' },
-              { label: 'Метод', description: 'Проверяем supports("open") и вызываем open()' },
+              { label: 'Метод', description: 'вызываем showScanQrPopup()' },
               { label: 'Камера', description: 'Открывается нативный сканер QR-кодов' },
             ]}
           />
@@ -366,7 +408,7 @@ const content = await new Promise((resolve) => {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideBlocks title="Навигация и уведомления" blockHeight={200} blocks={[
+          <SlideBlocks descriptionScale={2} title="Навигация и уведомления" blockHeight={200} blocks={[
             { imageSrc: "/slides/notification1.png", description: 'Уведомления о начале доклада' },
             { imageSrc: "/slides/notification-2.png", description: 'Уведомления о начале активности' },
           ]} />
@@ -387,7 +429,7 @@ const content = await new Promise((resolve) => {
         <SlideLogoBottom>
           <SlideImageText
             title="Сбор обратной связи после доклада"
-            description="Уведомления в боте о том, что доклад завершился и на него можно оставить обратную связь. У каждого доклада есть прямая ссылка, чтобы человек сразу перешёл и оставил отзыв."
+            description=""
             imageSrc={PLACEHOLDER_IMG}
             imageContent={(
               <QRCodeSVG
@@ -400,6 +442,31 @@ const content = await new Promise((resolve) => {
             )}
           />
         </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="Отправка сообщения"
+          code={`
+await fetch(
+  \`https://api.telegram.org/bot\${botToken}/sendMessage\`,
+  {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id,
+      text,
+      parse_mode: 'HTML',
+      disable_web_page_preview: true,
+    }),
+  },
+)`}
+          language="typescript"
+          revealByClick={false}
+          preFullWidth
+          codeVerticalAlign="center"
+          codeFontSize="clamp(2.7rem, 2.2vmin, 38px)"
+        />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -1012,40 +1079,6 @@ const content = await new Promise((resolve) => {
             steps={[
               { label: 'apiRequestWithNotifications', description: 'Успех/ошибка после API (бинго, тап, опросы)' },
               { label: 'SupportPage', description: 'После оплаты Stars: «Оплата прошла» / «Оплата не прошла»' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* 6. LaunchParams / startParam — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="6. LaunchParams (startParam) — старт по ссылке"
-          codeFontSize="clamp(2.3rem, 3vmin, 64px)"
-          revealByClick={false}
-          lines={[
-            { text: '// App.tsx', comment: true },
-            { text: 'const launchParams = useLaunchParams()', comment: false },
-            { text: '', comment: false },
-            { text: "if (launchParams.startParam === 'bingo' && pathname === '/') {", comment: false },
-            { text: "  navigate('/bingo', { replace: true })", comment: false },
-            { text: '}', comment: false },
-            { text: '', comment: false },
-            { text: '// Ссылка: t.me/Bot?startapp=bingo → сразу открывается Бинго', comment: true },
-          ]}
-        />
-      </Slide>
-
-      {/* 6. LaunchParams — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="startParam: где используется"
-            subtitle="Глубокая ссылка в Mini App"
-            revealByClick
-            steps={[
-              { label: 'Ссылка из бота/рекламы', description: '?startapp=bingo' },
-              { label: 'При открытии TMA', description: 'Проверка startParam → редирект на /bingo' },
             ]}
           />
         </SlideLogoBottom>

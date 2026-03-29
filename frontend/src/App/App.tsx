@@ -5,6 +5,7 @@ import './App.css'
 import '../components/Grid'
 import '../components/Button'
 import { WsUserHapticListener } from '../components/WsUserHapticListener'
+import { getBingoStartParamConsumed, setBingoStartParamConsumed } from '../lib/telegramCloudStorage'
 
 // Lazy-загрузка страниц: меньший первый чанк → быстрее грузится при медленном VPN (~7 KB/s)
 const HomePage = lazy(() => import('../pages/HomePage').then(m => ({ default: m.HomePage })))
@@ -29,7 +30,6 @@ const AdminPagesAccessPage = lazy(() => import('../pages/admin/AdminPagesAccessP
 const PresentationPage = lazy(() => import('../pages/PresentationPage').then(m => ({ default: m.PresentationPage })))
 
 const BINGO_START_PARAM = 'bingo'
-const BINGO_START_PARAM_CONSUMED_KEY = 'bingo-start-param-consumed'
 
 function App() {
   const themeParams = useThemeParams()
@@ -56,10 +56,18 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
     const shouldOpenBingo = launchParams.startParam === BINGO_START_PARAM && location.pathname === '/'
     if (!shouldOpenBingo) return
 
-    const alreadyConsumed = sessionStorage.getItem(BINGO_START_PARAM_CONSUMED_KEY) === '1'
-    if (!alreadyConsumed) {
-      sessionStorage.setItem(BINGO_START_PARAM_CONSUMED_KEY, '1')
-      navigate('/bingo', { replace: true })
+    let cancelled = false
+    void (async () => {
+      const consumed = await getBingoStartParamConsumed()
+      if (cancelled || consumed) return
+      await setBingoStartParamConsumed()
+      if (!cancelled) {
+        navigate('/bingo', { replace: true })
+      }
+    })()
+
+    return () => {
+      cancelled = true
     }
   }, [launchParams.startParam, location.pathname, navigate])
 

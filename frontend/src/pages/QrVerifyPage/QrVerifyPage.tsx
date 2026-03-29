@@ -3,9 +3,8 @@ import { useQRScanner } from '@telegram-apps/sdk-react'
 import { PageLayout } from '../../components/PageLayout'
 import { apiRequest } from '../../lib/api'
 import { notifyTelegramResult } from '../../lib/telegramNotifications'
+import { setBingoStartParamConsumed } from '../../lib/telegramCloudStorage'
 import './QrVerifyPage.css'
-
-const BINGO_START_PARAM_CONSUMED_KEY = 'bingo-start-param-consumed'
 
 function clearLaunchParamsFromUrl() {
   const url = new URL(window.location.href)
@@ -59,7 +58,7 @@ export function QrVerifyPage() {
         notifyTelegramResult('success', 'QR задание бинго засчитано', 'Бинго')
         setStatus('Задание отмечено')
       }
-      sessionStorage.setItem(BINGO_START_PARAM_CONSUMED_KEY, '1')
+      await setBingoStartParamConsumed()
       clearLaunchParamsFromUrl()
     } catch (err) {
       setScanning(false)
