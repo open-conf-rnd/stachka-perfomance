@@ -479,6 +479,52 @@ await fetch(
         </SlideLogoBottom>
       </Slide>
 
+      {/* 4. HapticFeedback — использование */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="HapticFeedback: где используется"
+            subtitle="Тактильный отклик Telegram WebApp"
+            revealByClick
+            blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
+            steps={[
+              { label: 'Вибрации', description: 'разные части приложения' },
+              { label: 'Бинго, тап, реакции', description: 'вызываем вибрации' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      {/* 4. HapticFeedback — код */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="HapticFeedback"
+          code={`
+const haptic = window.Telegram?.WebApp?.HapticFeedback
+
+type ImpactStyle = 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'
+type NotificationType = 'success' | 'warning' | 'error'
+
+export function triggerHaptic(payload) {
+
+  if (payload.type === 'impact') {
+    haptic.impactOccurred?.(payload.style ?? 'medium')
+    return
+  }
+
+  if (payload.type === 'notification') {
+    haptic.notificationOccurred?.(payload.notificationType ?? 'success')
+    return
+  }
+}`}
+          language="typescript"
+          revealByClick={false}
+          preFullWidth
+          codeVerticalAlign="center"
+          codeFontSize="clamp(1.8rem, 2.2vmin, 38px)"
+        />
+      </Slide>
+
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <PollsStatsSlide />
@@ -494,6 +540,94 @@ await fetch(
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <PollsSummarySlide />
+        </SlideLogoBottom>
+      </Slide>
+
+      {/* 3. BackButton — использование */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="BackButton: где используется"
+            subtitle="Нативная кнопка «Назад» в шапке Mini App"
+            revealByClick
+            blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
+            steps={[
+              { label: 'Все страницы', description: 'по умолчанию true' },
+              { label: 'Когда скрываем', description: 'Главная — false' },
+              { label: 'По клику', description: '.onClick → возврат на главную' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      {/* 3. BackButton — код */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="BackButton"
+          code={`
+// Telegram.WebApp.BackButton — Bot API 6.1+
+const back = window.Telegram?.WebApp?.BackButton
+
+const onBack = () => {
+  // Router: navigate('/')
+}
+
+back?.show()
+back?.onClick(onBack)
+
+// перед уходом со «внутренней» страницы:
+back?.offClick(onBack)
+back?.hide()
+`}
+          language="typescript"
+          revealByClick={false}
+          preFullWidth
+          codeVerticalAlign="center"
+          codeFontSize="clamp(2.8rem, 2.2vmin, 38px)"
+        />
+      </Slide>
+
+      {/* 5. showPopup — использование */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="showPopup / showAlert: где используется"
+            subtitle="Сообщение пользователю и тактильный отклик"
+            revealByClick
+            blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
+            steps={[
+              { label: 'Мини-игры', description: 'Ошибки и успехи' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      {/* 5. showPopup / showAlert — код */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="Уведомления"
+          code={`
+const webApp = window.Telegram?.WebApp
+
+webApp.showAlert(message)
+
+webApp.showPopup({
+  title: 'Уведомление',
+  message,
+  buttons: [{ type: 'close' }],
+})
+            `}
+          language="typescript"
+          revealByClick={false}
+          preFullWidth
+          codeVerticalAlign="center"
+          codeFontSize="clamp(3.8rem, 2.2vmin, 38px)"
+        />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText title="Мини-игры" description="Играем и получаем награды" imageSrc="/slides/games.png" />
         </SlideLogoBottom>
       </Slide>
 
@@ -918,202 +1052,6 @@ await fetch(
               { text: '  --ignore-certificate-errors --user-data-dir=%TEMP%\\chrome-dev https://my.local', comment: false },
               { text: '', comment: false },
               { text: 'REM После добавления серта перезапустить браузер', comment: true },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* Фичи TMA в приложении — по одной: код → использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <h2 style={{ margin: 0, fontSize: 'clamp(2.5rem, 5vmin, 80px)', fontWeight: 700, color: '#1a1a1a' }}>
-            Фичи TMA в приложении
-          </h2>
-          <p style={{ margin: 0, fontSize: 'clamp(1.4rem, 2.8vmin, 40px)', color: '#555', marginTop: '16px' }}>
-            Разберём по шагам: код → где используется
-          </p>
-          <SlideBlocks
-            title=""
-            blockHeight={220}
-            blocks={[
-              { imageSrc: '/slides/code.png', description: 'Код фичи' },
-              { imageSrc: '/slides/interactive.png', description: 'В приложении' },
-              { imageSrc: '/slides/form.png', description: 'Где используется' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* 2. ThemeParams — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="2. ThemeParams — тема (фон и текст)"
-          codeFontSize="clamp(3.2rem, 3vmin, 64px)"
-          revealByClick={false}
-          lines={[
-            { text: '// App.tsx', comment: true },
-            { text: 'const themeParams = useThemeParams()', comment: false },
-            { text: '', comment: false },
-            { text: 'const bg = themeParams?.bgColor ?? "#1c1c1e"', comment: false },
-            { text: 'const fg = themeParams?.textColor ?? "#ffffff"', comment: false },
-            { text: '', comment: false },
-            { text: 'return (', comment: false },
-            { text: '  <div style={{ backgroundColor: bg, color: fg }}>', comment: false },
-            { text: '    ...', comment: false },
-            { text: '  </div>', comment: false },
-            { text: ')', comment: false },
-          ]}
-        />
-      </Slide>
-
-      {/* 2. ThemeParams — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="ThemeParams: где используется"
-            subtitle="Приложение подстраивается под светлую/тёмную тему Telegram"
-            revealByClick
-            steps={[
-              { label: 'App', description: 'Корневой div получает bgColor и textColor из Telegram' },
-              { label: 'Все экраны', description: 'Наследуют фон и цвет текста — без своих стилей темы' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* 3. BackButton — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="3. BackButton — кнопка «Назад»"
-          codeFontSize="clamp(3rem, 3vmin, 64px)"
-          revealByClick={false}
-          lines={[
-            { text: '// useTelegramBackButton.ts', comment: true },
-            { text: 'const backButton = useBackButton()', comment: false },
-            { text: '', comment: false },
-            { text: 'useEffect(() => {', comment: false },
-            { text: '  backButton.show()', comment: false },
-            { text: "  backButton.on('click', () => navigate('/'))", comment: false },
-            { text: '  return () => {', comment: false },
-            { text: "    backButton.off('click', ...)", comment: false },
-            { text: '    backButton.hide()', comment: false },
-            { text: '  }', comment: false },
-            { text: '}, [backButton, navigate])', comment: false },
-          ]}
-        />
-      </Slide>
-
-      {/* 3. BackButton — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="BackButton: где используется"
-            subtitle="PageLayout включает кнопку на всех экранах кроме главной и админки"
-            revealByClick
-            steps={[
-              { label: 'PageLayout', description: 'useTelegramBackButton(enableBackButton)' },
-              { label: 'Вложенные страницы', description: 'Видна кнопка «Назад» в шапке Telegram' },
-              { label: 'По клику', description: 'navigate("/") — возврат на главную' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* 4. HapticFeedback — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="4. HapticFeedback — вибрации"
-          codeFontSize="clamp(2.3rem, 2.8vmin, 64px)"
-          revealByClick={false}
-          lines={[
-            { text: '// lib/haptic.ts', comment: true },
-            { text: 'const haptic = window.Telegram?.WebApp?.HapticFeedback', comment: false },
-            { text: '', comment: false },
-            { text: '// Удар (кнопка, тап)', comment: true },
-            { text: 'haptic.impactOccurred?.(style)  // light | medium | heavy', comment: false },
-            { text: '', comment: false },
-            { text: '// Уведомление (успех/ошибка)', comment: true },
-            { text: 'haptic.notificationOccurred?.(type)  // success | warning | error', comment: false },
-          ]}
-        />
-      </Slide>
-
-      {/* 4. HapticFeedback — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="HapticFeedback: где используется"
-            subtitle="Вибрация при действиях и после ответа API"
-            revealByClick
-            steps={[
-              { label: 'HapticPage', description: 'Демо: кнопки impact и notification' },
-              { label: 'Бинго, тап, реакции', description: 'impact при нажатии, notification после успеха/ошибки' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* 5. showPopup / showAlert — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="5. showPopup / showAlert — уведомления"
-          codeFontSize="clamp(2.3rem, 3vmin, 64px)"
-          revealByClick={false}
-          lines={[
-            { text: '// telegramNotifications.ts', comment: true },
-            { text: 'webApp.showPopup({ title, message, buttons: [{ type: "close" }] })', comment: false },
-            { text: '// или showAlert(message)', comment: true },
-            { text: '', comment: false },
-            { text: 'notifyTelegramResult(type, message)  // haptic + popup', comment: false },
-          ]}
-        />
-      </Slide>
-
-      {/* 5. showPopup — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="showPopup: где используется"
-            subtitle="Всплывающее окно после действия + вибрация"
-            revealByClick
-            steps={[
-              { label: 'apiRequestWithNotifications', description: 'Успех/ошибка после API (бинго, тап, опросы)' },
-              { label: 'SupportPage', description: 'После оплаты Stars: «Оплата прошла» / «Оплата не прошла»' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* 8. openTelegramLink — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="8. openTelegramLink — открыть ссылку в Telegram"
-          codeFontSize="clamp(2.4rem, 3vmin, 64px)"
-          revealByClick={false}
-          lines={[
-            { text: '// BingoPage — Share в чат', comment: true },
-            { text: 'const shareUrl = `https://t.me/share/url?url=...&text=...`', comment: false },
-            { text: 'const openTelegramLink = window.Telegram?.WebApp?.openTelegramLink', comment: false },
-            { text: '', comment: false },
-            { text: 'if (openTelegramLink) {', comment: false },
-            { text: '  openTelegramLink(shareUrl)  // внутри Telegram', comment: false },
-            { text: '} else {', comment: false },
-            { text: "  window.open(shareUrl, '_blank')  // fallback", comment: false },
-            { text: '}', comment: false },
-          ]}
-        />
-      </Slide>
-
-      {/* 8. openTelegramLink — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="openTelegramLink: где используется"
-            subtitle="Шаринг в чат без выхода из TMA"
-            revealByClick
-            steps={[
-              { label: 'Бинго', description: 'Кнопка «Share в чат» — t.me/share/url с текстом и ссылкой на TMA' },
-              { label: 'Открытие', description: 'Выбор чата в интерфейсе Telegram, не браузер' },
             ]}
           />
         </SlideLogoBottom>
