@@ -10,6 +10,7 @@ import { hapticRoutes } from './routes/haptic.js'
 import { paymentRoutes } from './routes/payments.js'
 import { adminRoutes } from './routes/admin.js'
 import { displayRoutes } from './routes/display.js'
+import { featureRoutes } from './routes/features.js'
 
 export async function createApp() {
   const app = Fastify({ logger: true })
@@ -24,6 +25,7 @@ export async function createApp() {
   await app.register(hapticRoutes)
   await app.register(paymentRoutes)
   await app.register(adminRoutes)
+  await app.register(featureRoutes)
   await app.register(displayRoutes)
 
   app.get('/health', async () => ({ status: 'ok' }))

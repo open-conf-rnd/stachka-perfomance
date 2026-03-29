@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { PageLayout } from '../../components/PageLayout'
 import { apiRequest, apiRequestWithNotifications } from '../../lib/api'
 import { wsUrl } from '../../config'
+import { isFeatureKey } from '../../lib/featureAccess'
 import './BingoPage.css'
 
 interface BingoTask {
@@ -21,6 +22,7 @@ export function BingoPage() {
     shareStoriesTaskId: string | null
     shareChatTaskId: string | null
   }>({ shareStoriesTaskId: null, shareChatTaskId: null })
+  const [shareEnabled, setShareEnabled] = useState(false)
 
   const completedCount = useMemo(
     () => tasks.filter((task) => Boolean(task.completed)).length,
@@ -54,6 +56,19 @@ export function BingoPage() {
     )
       .then(setShareTaskIds)
       .catch(() => {})
+  }, [])
+
+  useEffect(() => {
+    void apiRequest<{ enabled: string[] }>('/api/features')
+      .then((data) => {
+        const enabledSet = new Set(
+          data.enabled.filter((key) => isFeatureKey(key))
+        )
+        setShareEnabled(enabledSet.has('bingoShare'))
+      })
+      .catch(() => {
+        setShareEnabled(false)
+      })
   }, [])
 
   useEffect(() => {
@@ -125,20 +140,25 @@ export function BingoPage() {
   }
 
   return (
-    <PageLayout title="Бинго" subtitle="Карточка заданий и Share to Story">
+    <PageLayout
+      title="Бинго"
+      subtitle={shareEnabled ? 'Карточка заданий и Share to Story' : 'Карточка заданий'}
+    >
       <p style={{ margin: '0 0 0.5rem' }}>
         Выполнено: {completedCount} / {tasks.length}
       </p>
       <p style={{ margin: '0 0 0.75rem' }}>Статус: {status}</p>
 
-      <div className="page__actions" style={{ marginTop: 0, marginBottom: '0.75rem' }}>
-        <button type="button" className="btn" onClick={shareToStory}>
-          Share to Story
-        </button>
-        <button type="button" className="btn" onClick={shareInChat}>
-          Share в чат
-        </button>
-      </div>
+      {shareEnabled && (
+        <div className="page__actions" style={{ marginTop: 0, marginBottom: '0.75rem' }}>
+          <button type="button" className="btn" onClick={shareToStory}>
+            Share to Story
+          </button>
+          <button type="button" className="btn" onClick={shareInChat}>
+            Share в чат
+          </button>
+        </div>
+      )}
 
       {loading ? <p className="page__loading">Загружаем задания...</p> : null}
       {error ? <p className="page__error">Ошибка: {error}</p> : null}

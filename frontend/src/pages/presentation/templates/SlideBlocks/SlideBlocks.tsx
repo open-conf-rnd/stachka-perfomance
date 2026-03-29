@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import './SlideBlocks.css'
 
 interface SlideBlocksProps {
@@ -5,6 +6,7 @@ interface SlideBlocksProps {
   blocks: Array<{ imageSrc: string; description: string }>
   blockHeight?: string | number
   revealByClick?: boolean
+  descriptionScale?: number
 }
 
 function toBlockHeightStyle(value: string | number): string {
@@ -19,11 +21,15 @@ export function SlideBlocks({
   blocks,
   blockHeight = 'auto',
   revealByClick = false,
+  descriptionScale = 1,
 }: SlideBlocksProps) {
   const blockHeightStyle = toBlockHeightStyle(blockHeight)
+  const rootStyle: CSSProperties = {
+    ['--slide-blocks-description-scale' as string]: String(descriptionScale),
+  }
 
   return (
-    <div className="slide-blocks">
+    <div className="slide-blocks" style={rootStyle}>
       <h2 className="slide-blocks__title">{title}</h2>
       <div className="slide-blocks__row">
         {blocks.map((block, index) => (

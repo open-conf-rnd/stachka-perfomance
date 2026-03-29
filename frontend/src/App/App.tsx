@@ -25,6 +25,7 @@ const AdminReactionPage = lazy(() => import('../pages/admin/AdminReactionPage').
 const AdminPollsPage = lazy(() => import('../pages/admin/AdminPollsPage').then(m => ({ default: m.AdminPollsPage })))
 const AdminHapticPage = lazy(() => import('../pages/admin/AdminHapticPage').then(m => ({ default: m.AdminHapticPage })))
 const AdminBingoPage = lazy(() => import('../pages/admin/AdminBingoPage').then(m => ({ default: m.AdminBingoPage })))
+const AdminPagesAccessPage = lazy(() => import('../pages/admin/AdminPagesAccessPage').then(m => ({ default: m.AdminPagesAccessPage })))
 const PresentationPage = lazy(() => import('../pages/PresentationPage').then(m => ({ default: m.PresentationPage })))
 
 const BINGO_START_PARAM = 'bingo'
@@ -86,6 +87,7 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
           <Route path="polls" element={<AdminPollsPage />} />
           <Route path="haptic" element={<AdminHapticPage />} />
           <Route path="bingo" element={<AdminBingoPage />} />
+          <Route path="pages" element={<AdminPagesAccessPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

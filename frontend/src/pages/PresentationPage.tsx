@@ -1,6 +1,9 @@
+import { useRef } from 'react'
 import { Deck, Slide } from '@revealjs/react'
 import 'reveal.js/dist/reveal.css'
 import 'reveal.js/dist/theme/white.css'
+import RevealHighlight from 'reveal.js/plugin/highlight/highlight.esm.js'
+import 'reveal.js/plugin/highlight/monokai.css'
 import './presentation/fonts.css'
 import './PresentationPage.css'
 import {
@@ -30,11 +33,32 @@ const FEEDBACK_FORM_QR_CODE = 'stachka-feedback-form-qr'
 
 export function PresentationPage() {
   const botBingoLink = `https://t.me/${BOT_USERNAME}?startapp=${BINGO_START_PARAM}`
+  const deckRef = useRef<{ getPlugin?: (name: string) => unknown } | null>(null)
+
+  const applyRevealHighlight = () => {
+    const plugin = deckRef.current?.getPlugin?.('highlight') as
+      | { hljs?: { highlightElement?: (node: Element) => void } }
+      | undefined
+    const highlightElement = plugin?.hljs?.highlightElement
+    if (!highlightElement) return
+
+    document.querySelectorAll('.reveal pre code').forEach((node) => {
+      highlightElement(node)
+    })
+  }
 
   return (
     <>
       <QrVerifiedNotificationsOverlay />
       <Deck
+        deckRef={deckRef}
+        plugins={[RevealHighlight]}
+        onReady={() => {
+          requestAnimationFrame(() => applyRevealHighlight())
+        }}
+        onSlideChange={() => {
+          requestAnimationFrame(() => applyRevealHighlight())
+        }}
         config={{
           hash: true,
           transition: 'slide',
@@ -44,6 +68,9 @@ export function PresentationPage() {
           slideNumber: 'c/t',
           width: 1920,
           height: 1080,
+          highlight: {
+            highlightOnLoad: true,
+          },
         }}
       >
       <Slide className="slide-fullsize" data-align="topleft">
@@ -61,6 +88,7 @@ export function PresentationPage() {
           <SlideBlocks
             title="Делаю разные митапы и конференции"
             blockHeight={220}
+            descriptionScale={1.8}
             blocks={[
               { imageSrc: "/slides/openconf.png", description: 'OpenConf' },
               { imageSrc: '/slides/codieue.png', description: 'Кодьё' },
@@ -73,8 +101,10 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
+            titleScale={1}
+            descriptionScale={1.2}
             title="Чего ждать от доклада?"
-            description="Неболшой дислеймер"
+            description="Небольшой дисклеймер"
             imageSrc="/slides/disclaimer.png"
           />
         </SlideLogoBottom>
@@ -102,8 +132,18 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Основаная мысль"
-            description="Делать приложения под tma не сложно и полезно"
+            title="Основная мысль"
+            description="Делать приложения под TMA несложно и полезно"
+            imageSrc="/slides/mind.png"
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText
+            title="На самом деле"
+            description="мини ап как быстрый доступ к веб приложению с встроенной авторизацией"
             imageSrc="/slides/mind.png"
           />
         </SlideLogoBottom>
@@ -122,10 +162,11 @@ export function PresentationPage() {
           <SlideBlocks
             title="Типичные задачи"
             blockHeight={220}
+            descriptionScale={1.4}
             revealByClick
             blocks={[
               { imageSrc: "/slides/navigation.png", description: 'Как сделать удобную навигацию?' },
-              { imageSrc: "/slides/activity.png", description: 'Как помочь партнерам с активностями?' },
+              { imageSrc: "/slides/activity.png", description: 'Как помочь партнёрам с активностями?' },
               { imageSrc: "/slides/form.png", description: 'Как собрать обратную связь?' },
             ]}
           />
@@ -135,7 +176,7 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Уточка помоги"
+            title="Уточка, помоги"
             description="Как объединить всё в одном месте?"
             imageSrc="/slides/help.png"
           />
@@ -149,8 +190,8 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Как помочь партнерам с активностью"
-            description="Мы хотим чтобы к каждому партнеру подходили участники"
+            title="Как помочь партнёрам с активностью"
+            description="Мы хотим, чтобы к каждому партнёру подходили участники"
             imageSrc="/slides/activity.png"
           />
         </SlideLogoBottom>
@@ -158,21 +199,34 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-        <QRCodeSVG
-            value={botBingoLink}
-            size={900}
-            level="M"
-            bgColor="transparent"
-            fgColor="#1a1a1a"
-          />
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '2rem',
+              width: '100%',
+            }}
+          >
+            <h2 style={{ margin: 0, fontSize: 'clamp(5rem, 10vmin, 180px)', color: '#1a1a1a', textAlign: 'left' }}>
+              Бинго
+            </h2>
+            <QRCodeSVG
+              value={botBingoLink}
+              size={900}
+              level="M"
+              bgColor="transparent"
+              fgColor="#1a1a1a"
+            />
+          </div>
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Прямо в бинго"
-            description="так же говорят?"
+            title="Прямо в Бинго"
+            description="Так говорят?"
             imageSrc="/slides/bingo.png"
             objectFit="contain"
           />
@@ -181,15 +235,130 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <QrTaskSlide />
+          <SlideImageText
+            title="Всё ещё Бинго"
+            description="для вниманательных"
+            imageSrc="/slides/bingo-share.png"
+            objectFit="contain"
+          />
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
+            title="Как будем взаимодействовать"
+            titleScale={0.8}
+            descriptionScale={1.2}
+            description="Удобно и просто"
+            imageSrc="/slides/pilot.png"
+            objectFit="contain"
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText
+            title="Шаринг"
+            description=""
+            imageSrc="/slides/bingo-share.png"
+            objectFit="contain"
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+            {/* 9. shareToStory — использование */}
+            <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="shareToStory: где используется"
+            subtitle="Кнопка «Share to Story» в Бинго"
+            revealByClick
+            blockDescFontSize="clamp(1.6rem, 2.8vmin, 42px)"
+            steps={[
+              { label: 'Бинго', description: 'Кнопка «Share to Story»' },
+              { label: 'Stories', description: 'Медиа + текст + ссылка' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+            {/* 9. shareToStory — код */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="1. shareToStory — шаринг в Stories"
+          code={`
+const share = window.Telegram?.WebApp?.shareToStory
+
+share(mediaUrl, {
+  text: 'Прохожу бинго на докладе!',
+  widget_link: { url: location.href, name: 'Открыть TMA' }
+})`}
+          language="javascript"
+          revealByClick={false}
+          preFullWidth
+          codeVerticalAlign="center"
+          codeFontSize="clamp(3rem, 3vmin, 64px)"
+        />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFullImage objectFit='contain' imageSrc="/slides/dogovor.png" />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <QrTaskSlide />
+        </SlideLogoBottom>
+      </Slide>
+
+      {/* 10. Telegram QR Scanner — использование */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideFlow
+            title="QR-сканирование: где используется"
+            subtitle="Telegram открывает нативную камеру внутри Mini App"
+            revealByClick
+            blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
+            steps={[
+              { label: 'Кнопка', description: 'Пользователь нажимает «Сканировать QR»' },
+              { label: 'Метод', description: 'Проверяем supports("open") и вызываем open()' },
+              { label: 'Камера', description: 'Открывается нативный сканер QR-кодов' },
+            ]}
+          />
+        </SlideLogoBottom>
+      </Slide>
+
+      {/* 10. Telegram QR Scanner — код */}
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="2. QR Scanner — открытие камеры"
+          code={`
+const webApp = window.Telegram?.WebApp
+
+const content = await new Promise((resolve) => {
+  webApp?.showScanQrPopup(
+    { text: 'Наведи на QR-код задания' },
+    (qrText) => {
+      resolve(qrText ?? null)
+      return true // true = закрыть сканер после чтения
+    }
+  )
+})`}
+          language="typescript"
+          revealByClick={false}
+          preFullWidth
+          codeVerticalAlign="center"
+          codeFontSize="clamp(2.2rem, 2.8vmin, 52px)"
+        />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText
             title="Как помочь участнику с навигацией"
-            description="Мы хотим чтобы все люди всегда знали время следующего доклада и где он будет идти"
+            description="Мы хотим, чтобы все всегда знали время следующего доклада и где он будет проходить"
             imageSrc="/slides/navigation.png"
           />
         </SlideLogoBottom>
@@ -198,8 +367,8 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideBlocks title="Навигация и уведомления" blockHeight={200} blocks={[
-            { imageSrc: "/slides/notification1.png", description: 'Уведомлении о начале доклада' },
-            { imageSrc: "/slides/notification-2.png", description: 'Уведомлении о начале активности' },
+            { imageSrc: "/slides/notification1.png", description: 'Уведомления о начале доклада' },
+            { imageSrc: "/slides/notification-2.png", description: 'Уведомления о начале активности' },
           ]} />
         </SlideLogoBottom>
       </Slide>
@@ -208,7 +377,7 @@ export function PresentationPage() {
         <SlideLogoBottom>
           <SlideImageText
             title="Как собрать обратную связь"
-            description="Мы хотим чтобы все люди могли оставить свою обратную связь"
+            description="Мы хотим, чтобы все могли оставить обратную связь"
             imageSrc="/slides/form.png"
           />
         </SlideLogoBottom>
@@ -217,8 +386,8 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Сбор связи после доклада"
-            description="Уведомления в бот о том что прошел докалад и на него можно оставить обратную связь + у каждого доклада есть прямая ссылка на то чтобы человек зашел и оставил обратку"
+            title="Сбор обратной связи после доклада"
+            description="Уведомления в боте о том, что доклад завершился и на него можно оставить обратную связь. У каждого доклада есть прямая ссылка, чтобы человек сразу перешёл и оставил отзыв."
             imageSrc={PLACEHOLDER_IMG}
             imageContent={(
               <QRCodeSVG
@@ -239,7 +408,7 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Мини игры" description="Играем и получаем награды" imageSrc="/slides/games.png" />
+          <SlideImageText title="Мини-игры" description="Играем и получаем награды" imageSrc="/slides/games.png" />
         </SlideLogoBottom>
       </Slide>
 
@@ -263,7 +432,7 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="TMA-стартер" description="Сча разберемся как стартовать" imageSrc="/slides/starter.png" />
+          <SlideImageText title="TMA-стартер" description="Сейчас разберёмся, как стартовать" imageSrc="/slides/starter.png" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
             <h2 style={{ margin: 0, fontSize: 'clamp(2rem, 4vmin, 48px)', fontWeight: 700 }}>https://github.com/DmitriyGrosh/tma-starter</h2>
           </div>
@@ -281,23 +450,23 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Локальная разработка" description="На этапе разработки мини-приложения Telegram требуют действительного URL-адреса для отображения и тестирования в клиенте Telegram." imageSrc="/slides/local.png" />
+          <SlideImageText title="Локальная разработка" description="На этапе разработки мини-приложения Telegram требует действительного URL-адреса для отображения и тестирования в клиенте." imageSrc="/slides/local.png" />
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
           <SlideLogoBottom>
-            <SlideBlocks title="Как поднять локальный https" blockHeight={200} blocks={[
-              { imageSrc: "/slides/ngrok.png", description: 'Самый популярный способ, но нужен vpn' },
-              { imageSrc: "/slides/cloudflare.png", description: 'Второй по популярности способ, но нужен vpn' },
-              { imageSrc: "/slides/nginx.png", description: 'поднимаем локальный proxy ' },
+            <SlideBlocks title="Как поднять локальный HTTPS" blockHeight={200} blocks={[
+              { imageSrc: "/slides/ngrok.png", description: 'Самый популярный способ, но нужен VPN' },
+              { imageSrc: "/slides/cloudflare.png", description: 'Второй по популярности способ, но нужен VPN' },
+              { imageSrc: "/slides/nginx.png", description: 'Поднимаем локальный прокси' },
             ]} />
           </SlideLogoBottom>
         </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Как поднять локальный https" description="SlideImageText" imageSrc="/slides/ngrok.png" />
+          <SlideImageText title="Как поднять локальный HTTPS" description="Покажу на примере ngrok" imageSrc="/slides/ngrok.png" />
         </SlideLogoBottom>
       </Slide>
 
@@ -549,7 +718,7 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Проблема самоподписного сертификата" description="Нельзя просто так сгенерить сертификат" imageSrc="/slides/cert.png" />
+          <SlideImageText title="Проблема самоподписанного сертификата" description="Нельзя просто так сгенерировать сертификат" imageSrc="/slides/cert.png" />
         </SlideLogoBottom>
       </Slide>
 
@@ -626,13 +795,13 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Нажать 5 раз на настройки" description="" imageSrc="/slides/5click.png" />
+          <SlideImageText title="Нажмите 5 раз на «Настройки»" description="" imageSrc="/slides/5click.png" />
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Включаем debug" description="" imageSrc="/slides/debug.png" />
+          <SlideImageText title="Включаем режим отладки" description="" imageSrc="/slides/debug.png" />
         </SlideLogoBottom>
       </Slide>
 
@@ -703,47 +872,6 @@ export function PresentationPage() {
               { imageSrc: '/slides/code.png', description: 'Код фичи' },
               { imageSrc: '/slides/interactive.png', description: 'В приложении' },
               { imageSrc: '/slides/form.png', description: 'Где используется' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* 1. initData — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="1. initData — авторизация запросов к API"
-          codeFontSize="clamp(2.5rem, 3vmin, 64px)"
-          revealByClick={false}
-          lines={[
-            { text: '// lib/api.ts', comment: true },
-            { text: 'function getInitData(): string {', comment: false },
-            { text: "  return window.Telegram?.WebApp?.initData ?? ''", comment: false },
-            { text: '}', comment: false },
-            { text: '', comment: false },
-            { text: '// В каждом запросе:', comment: true },
-            { text: 'const response = await fetch(url, {', comment: false },
-            { text: '  method,', comment: false },
-            { text: '  headers: {', comment: false },
-            { text: "    'Content-Type': 'application/json',", comment: false },
-            { text: "    'x-telegram-init-data': getInitData(),", comment: false },
-            { text: '  },', comment: false },
-            { text: '  body: bodySerialized,', comment: false },
-            { text: '})', comment: false },
-          ]}
-        />
-      </Slide>
-
-      {/* 1. initData — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="initData: где используется"
-            subtitle="Бэкенд проверяет подпись initData и узнаёт пользователя"
-            revealByClick
-            steps={[
-              { label: 'Любой экран', description: 'Регистрация, опросы, бинго, тап, реакция' },
-              { label: 'apiRequest()', description: 'Каждый fetch отправляет заголовок x-telegram-init-data' },
-              { label: 'Бэкенд', description: 'Проверяет подпись, извлекает user — без своего логина' },
             ]}
           />
         </SlideLogoBottom>
@@ -923,41 +1051,6 @@ export function PresentationPage() {
         </SlideLogoBottom>
       </Slide>
 
-      {/* 7. openInvoice — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="7. openInvoice — оплата (Telegram Stars)"
-          codeFontSize="clamp(2.8rem, 3vmin, 64px)"
-          revealByClick={false}
-          lines={[
-            { text: '// SupportPage.tsx', comment: true },
-            { text: 'const openInvoice = window.Telegram?.WebApp?.openInvoice', comment: false },
-            { text: '', comment: false },
-            { text: 'openInvoice(invoiceUrl, (paymentStatus) => {', comment: false },
-            { text: "  if (paymentStatus === 'paid') { ... }", comment: false },
-            { text: "  if (paymentStatus === 'failed') { ... }", comment: false },
-            { text: "  if (paymentStatus === 'cancelled') { ... }", comment: false },
-            { text: '})', comment: false },
-          ]}
-        />
-      </Slide>
-
-      {/* 7. openInvoice — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="openInvoice: где используется"
-            subtitle="Страница «Поддержать» — оплата Stars"
-            revealByClick
-            steps={[
-              { label: 'SupportPage', description: 'Кнопка «Поддержать» → бэкенд создаёт invoice' },
-              { label: 'openInvoice(url)', description: 'Telegram открывает окно оплаты Stars' },
-              { label: 'Callback', description: 'paid / failed / cancelled → уведомление и обновление списка' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
       {/* 8. openTelegramLink — код */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
@@ -988,39 +1081,6 @@ export function PresentationPage() {
             steps={[
               { label: 'Бинго', description: 'Кнопка «Share в чат» — t.me/share/url с текстом и ссылкой на TMA' },
               { label: 'Открытие', description: 'Выбор чата в интерфейсе Telegram, не браузер' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* 9. shareToStory — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="9. shareToStory — шаринг в Stories"
-          codeFontSize="clamp(2.7rem, 3vmin, 64px)"
-          revealByClick={false}
-          lines={[
-            { text: '// BingoPage.tsx', comment: true },
-            { text: 'const share = window.Telegram?.WebApp?.shareToStory', comment: false },
-            { text: '', comment: false },
-            { text: 'share(mediaUrl, {', comment: false },
-            { text: "  text: 'Прохожу бинго на докладе!',", comment: false },
-            { text: "  widget_link: { url: location.href, name: 'Открыть TMA' }", comment: false },
-            { text: '})', comment: false },
-          ]}
-        />
-      </Slide>
-
-      {/* 9. shareToStory — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="shareToStory: где используется"
-            subtitle="Кнопка «Share to Story» в Бинго"
-            revealByClick
-            steps={[
-              { label: 'Бинго', description: 'Кнопка «Share to Story»' },
-              { label: 'Stories', description: 'Медиа + текст + ссылка-виджет на Mini App' },
             ]}
           />
         </SlideLogoBottom>

@@ -1,4 +1,5 @@
 .slide-blocks {
+  --slide-blocks-description-scale: 1;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -39,7 +40,11 @@
 
 .slide-blocks__block-description {
   margin: 0;
-  font-size: clamp(1.5rem, 2.5vmin, 36px);
+  font-size: clamp(
+    calc(1.5rem * var(--slide-blocks-description-scale)),
+    calc(2.5vmin * var(--slide-blocks-description-scale)),
+    calc(36px * var(--slide-blocks-description-scale))
+  );
   font-weight: 400;
   color: #333;
 }

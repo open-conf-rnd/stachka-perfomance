@@ -122,3 +122,10 @@ model Payment {
   currency         String   @default("XTR")
   createdAt        DateTime @default(now())
 }
+
+model FeatureGate {
+  key       String   @id
+  enabled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

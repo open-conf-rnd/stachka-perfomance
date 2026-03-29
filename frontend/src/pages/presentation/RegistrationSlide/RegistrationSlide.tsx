@@ -7,7 +7,7 @@ import {
 import { fetchParticipants, fetchDisplayParticipants, type Participant } from '../participants'
 import './RegistrationSlide.css'
 
-const BOT_LINK = 'https://t.me/stachkagrosh_bot'
+const BOT_LINK = 'https://t.me/stachkagrosh_bot?startapp=home'
 const DISPLAY_CHANNEL = 'display:participants'
 
 /**
@@ -172,6 +172,7 @@ export function RegistrationSlide() {
     loadInitial()
   }, [loadInitial])
 
+  // Подписка на канал и приём событий регистрации в реальном времени
   useEffect(() => {
     const unsubscribeChannel = subscribePresentationChannel(DISPLAY_CHANNEL)
     const unsubscribeMessages = subscribePresentationWs((msg) => {
@@ -188,6 +189,18 @@ export function RegistrationSlide() {
       unsubscribeChannel()
     }
   }, [])
+
+  // Подстраховка: периодический refetch, если WS-события не дошли (например API не достучится до WS)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const load =
+        displayToken.length > 0
+          ? fetchDisplayParticipants(displayToken)
+          : fetchParticipants()
+      load.then(setParticipants).catch(() => {})
+    }, 15000)
+    return () => clearInterval(interval)
+  }, [displayToken])
 
   useEffect(() => {
     if (!hasParticipants || count === 0) return

@@ -11,12 +11,35 @@ let socket: WebSocket | null = null
 const listeners = new Set<WsListener>()
 const channelRefCount = new Map<string, number>()
 const activeChannels = new Set<string>()
+let reconnectTimer: number | null = null
+const RECONNECT_DELAY_MS = 1500
+
+function clearReconnectTimer() {
+  if (reconnectTimer !== null) {
+    window.clearTimeout(reconnectTimer)
+    reconnectTimer = null
+  }
+}
+
+function shouldReconnect(): boolean {
+  return listeners.size > 0
+}
+
+function scheduleReconnect() {
+  if (!shouldReconnect()) return
+  if (reconnectTimer !== null) return
+  reconnectTimer = window.setTimeout(() => {
+    reconnectTimer = null
+    ensureSocket()
+  }, RECONNECT_DELAY_MS)
+}
 
 function ensureSocket(): WebSocket {
   if (socket && socket.readyState !== WebSocket.CLOSED) {
     return socket
   }
 
+  clearReconnectTimer()
   socket = new WebSocket(wsUrl)
   socket.onopen = () => {
     for (const channel of channelRefCount.keys()) {
@@ -37,6 +60,7 @@ function ensureSocket(): WebSocket {
   socket.onclose = () => {
     socket = null
     activeChannels.clear()
+    scheduleReconnect()
   }
 
   return socket
@@ -60,6 +84,9 @@ export function subscribePresentationWs(listener: WsListener): () => void {
       socket.close()
       socket = null
       activeChannels.clear()
+    }
+    if (listeners.size === 0) {
+      clearReconnectTimer()
     }
   }
 }
