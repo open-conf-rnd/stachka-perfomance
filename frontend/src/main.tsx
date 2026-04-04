@@ -4,6 +4,7 @@ import { mockTelegramEnv } from '@telegram-apps/sdk'
 import { SDKProvider } from '@telegram-apps/sdk-react'
 import App from './App'
 import { captureVkLaunchParamsFromUrl, getVkLaunchParamsForHeaders } from './lib/authHeaders'
+import { peekAccountLinkTokenFromLocation } from './lib/accountLinkStorage'
 import { initVkBridge } from './lib/vkBridgeClient'
 import './index.css'
 
@@ -80,8 +81,10 @@ if (!isInsideTelegram) {
 }
 
 const hasVkLaunch = typeof window !== 'undefined' && getVkLaunchParamsForHeaders().length > 0
-if (hasVkLaunch) {
-  void initVkBridge().catch(() => {})
+const hasTgToVkAccountLinkInUrl =
+  typeof window !== 'undefined' && peekAccountLinkTokenFromLocation() !== null
+if (hasVkLaunch || hasTgToVkAccountLinkInUrl) {
+  initVkBridge().catch(() => {})
 }
 
 if (isInsideTelegram) {

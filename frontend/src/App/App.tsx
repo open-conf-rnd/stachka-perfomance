@@ -5,7 +5,12 @@ import './App.css'
 import '../components/Grid'
 import '../components/Button'
 import { WsUserHapticListener } from '../components/WsUserHapticListener'
+import {
+  useTelegramVkAccountLinkFromStartParam,
+  useTgToVkAccountLinkFromVkHashAndBridge,
+} from '@/entities/auth/model'
 import { PlatformProvider } from '../platform/PlatformContext'
+import { notifyAccountLinkSuccess } from '../lib/accountLinkSuccessNotify'
 import { getBingoStartParamConsumed, setBingoStartParamConsumed } from '../lib/telegramCloudStorage'
 
 // Lazy-загрузка страниц: меньший первый чанк → быстрее грузится при медленном VPN (~7 KB/s)
@@ -56,6 +61,9 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
   const isPresentation = location.pathname === '/presentation'
   const bg = isPresentation ? '#f8f8f8' : (themeParams?.bgColor ?? '#1c1c1e')
   const fg = isPresentation ? '#1a1a1a' : (themeParams?.textColor ?? '#ffffff')
+
+  useTelegramVkAccountLinkFromStartParam({ onLinkedSuccess: notifyAccountLinkSuccess })
+  useTgToVkAccountLinkFromVkHashAndBridge({ onLinkedSuccess: notifyAccountLinkSuccess })
 
   useEffect(() => {
     const shouldOpenBingo = launchParams.startParam === BINGO_START_PARAM && location.pathname === '/'

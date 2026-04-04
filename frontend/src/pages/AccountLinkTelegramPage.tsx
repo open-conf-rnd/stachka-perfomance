@@ -8,7 +8,7 @@ import {
   COMPLETED_TG_ACCOUNT_LINK_STARTPARAM_KEY,
   PENDING_VK_LINK_TOKEN_KEY,
 } from '../lib/accountLinkStorage'
-import { parseTelegramAccountLinkStartParam } from './parseTelegramAccountLinkStartParam'
+import { parseTelegramAccountLinkStartParam } from '@/entities/auth/lib/parseTelegramAccountLinkStartParam'
 import { usePlatform } from '@/platform/PlatformContext'
 import '@/pages/register/ui/RegisterPage.css'
 

@@ -1,3 +1,6 @@
+export type { AccountLinkAutoFlowOptions } from './useTelegramVkAccountLinkFromStartParam'
 export type { MeResponse, RegisterResponse, TgLinkTokenResponse, VkLinkTokenResponse } from './types'
 export * from './registerPageState'
 export { useAccountLinkRegistrationPoll } from './useAccountLinkRegistrationPoll'
+export { useTelegramVkAccountLinkFromStartParam } from './useTelegramVkAccountLinkFromStartParam'
+export { useTgToVkAccountLinkFromVkHashAndBridge } from './useTgToVkAccountLinkFromVkHashAndBridge'

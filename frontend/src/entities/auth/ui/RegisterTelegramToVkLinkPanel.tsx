@@ -61,15 +61,17 @@ export function RegisterTelegramToVkLinkPanel({ page }: Props) {
           Открой её <strong>во ВКонтакте</strong> — запустится мини-приложение;
         </li>
         <li>
-          В мини-приложении нажми <strong>«Связать аккаунт»</strong> — только после этого профили
-          объединятся. Затем снова открой бота в Telegram.
+          Открой мини-приложение по ссылке — привязка завершится автоматически, затем снова открой бота
+          в Telegram.
         </li>
       </ol>
       {!vkMiniAppLinkUrl ? (
         <button
           type="button"
           className="btn btn--primary register__link-cta"
-          onClick={() => void onCreateTgLinkToken()}
+          onClick={() => {
+            onCreateTgLinkToken()
+          }}
           disabled={disabled}
         >
           {linkBusy ? 'Готовим ссылку…' : 'Создать ссылку для ВКонтакте'}
@@ -79,7 +81,7 @@ export function RegisterTelegramToVkLinkPanel({ page }: Props) {
           url={vkMiniAppLinkUrl}
           linkWaitExpired={linkWaitExpired}
           onCopyFailed={() => patchRegisterFeedback('error', COPY_FAIL)}
-          waitingMessage="Ждём подтверждения во ВКонтакте… Можно вернуться сюда после «Связать аккаунт»."
+          waitingMessage="Ждём, пока ты откроешь ссылку во ВКонтакте и завершится привязка в мини-приложении…"
           expiredMessage="Срок ссылки истёк. Нажми «Создать ссылку для ВКонтакте» ещё раз."
         />
       )}

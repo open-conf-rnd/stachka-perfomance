@@ -16,3 +16,13 @@ export function createVkLinkToken(): Promise<VkLinkTokenResponse> {
 export function createTgLinkToken(): Promise<TgLinkTokenResponse> {
   return apiRequest<TgLinkTokenResponse>('/api/auth/tg-link-token', 'POST')
 }
+
+export type CompleteAccountLinkResponse = {
+  linked: boolean
+  alreadyLinked?: boolean
+  user: unknown
+}
+
+export function completeAccountLink(token: string): Promise<CompleteAccountLinkResponse> {
+  return apiRequest<CompleteAccountLinkResponse>('/api/auth/complete-account-link', 'POST', { token })
+}

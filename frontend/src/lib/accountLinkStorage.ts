@@ -4,6 +4,9 @@ export const PENDING_VK_LINK_TOKEN_KEY = 'stachka_pending_vk_link_token'
 /** После успешной привязки в Telegram — тот же startParam не ведёт снова на /account-link */
 export const COMPLETED_TG_ACCOUNT_LINK_STARTPARAM_KEY = 'stachka_tg_account_link_done_sp'
 
+/** После успешной привязки TG→VK в мини-приложении VK — тот же account_link не триггерит повторный complete */
+export const COMPLETED_VK_TG_ACCOUNT_LINK_TOKEN_KEY = 'stachka_vk_tg_account_link_done_token'
+
 function normalizeAccountLinkToken(raw: string | null | undefined): string | null {
   if (!raw) return null
   const t = raw.trim()
