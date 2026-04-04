@@ -180,28 +180,6 @@
   gap: 0.5rem;
 }
 
-.register__manual-code {
-  margin-top: 1rem;
-}
-
-.register__manual-code summary {
-  cursor: pointer;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-}
-
-.register__manual-code-input {
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0.5rem 0;
-  padding: 0.55rem 0.65rem;
-  border-radius: 8px;
-  border: 1px solid color-mix(in srgb, currentColor 20%, transparent);
-  background: color-mix(in srgb, currentColor 6%, transparent);
-  color: inherit;
-  font: inherit;
-}
-
 .register__link-open {
   text-align: center;
   text-decoration: none;

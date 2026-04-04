@@ -4,6 +4,7 @@ import { mockTelegramEnv } from '@telegram-apps/sdk'
 import { SDKProvider } from '@telegram-apps/sdk-react'
 import App from './App'
 import { captureVkLaunchParamsFromUrl, getVkLaunchParamsForHeaders } from './lib/authHeaders'
+import { initVkBridge } from './lib/vkBridgeClient'
 import './index.css'
 
 declare global {
@@ -80,9 +81,7 @@ if (!isInsideTelegram) {
 
 const hasVkLaunch = typeof window !== 'undefined' && getVkLaunchParamsForHeaders().length > 0
 if (hasVkLaunch) {
-  void import('@vkontakte/vk-bridge')
-    .then(({ default: bridge }) => bridge.send('VKWebAppInit'))
-    .catch(() => {})
+  void initVkBridge().catch(() => {})
 }
 
 if (isInsideTelegram) {

@@ -175,7 +175,39 @@ export async function authRoutes(app: FastifyInstance) {
     }
   })
 
-  /** Завершить привязку (заголовок второй платформы + токен из vk-link-token) */
+  /** Шаг 1 (Telegram): выдать токен и ссылку во ВКонтакте (#account_link=…) для завершения привязки */
+  app.post('/api/auth/tg-link-token', async (req, reply) => {
+    const initData = headerStr(req.headers['x-telegram-init-data'])
+    if (!initData) {
+      return reply.status(401).send({ error: 'Telegram init data required' })
+    }
+    const tgUser = validateInitData(initData)
+    if (!tgUser) {
+      return reply.status(401).send({ error: 'Invalid init data' })
+    }
+    const tgExt = String(tgUser.id)
+
+    await prisma.accountLinkToken.deleteMany({
+      where: { tgExtId: tgExt, usedAt: null },
+    })
+
+    const token = newLinkToken()
+    const expiresAt = new Date(Date.now() + LINK_TOKEN_TTL_MS)
+    await prisma.accountLinkToken.create({
+      data: {
+        token,
+        tgExtId: tgExt,
+        expiresAt,
+      },
+    })
+
+    return {
+      token,
+      expiresInMinutes: 15,
+    }
+  })
+
+  /** Завершить привязку (заголовок второй платформы + токен из vk-link-token или tg-link-token) */
   app.post<{
     Body: { token?: string }
   }>('/api/auth/complete-account-link', async (req, reply) => {

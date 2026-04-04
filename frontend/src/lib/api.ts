@@ -7,10 +7,15 @@ import {
 
 type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
 
+export type ApiRequestOptions = {
+  signal?: AbortSignal
+}
+
 export async function apiRequest<T>(
   path: string,
   method: HttpMethod = 'GET',
-  body?: unknown
+  body?: unknown,
+  options?: ApiRequestOptions
 ): Promise<T> {
   const url = apiBase ? `${apiBase}${path}` : path
   const hasBody = method !== 'GET' && body !== undefined
@@ -24,6 +29,7 @@ export async function apiRequest<T>(
       ...getApiAuthHeaders(),
     },
     body: bodySerialized,
+    signal: options?.signal,
   })
 
   if (!response.ok) {

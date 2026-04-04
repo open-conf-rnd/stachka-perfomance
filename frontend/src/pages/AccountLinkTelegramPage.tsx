@@ -2,26 +2,20 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLaunchParams } from '@telegram-apps/sdk-react'
 import { PageLayout } from '../components/PageLayout'
-import { ACCOUNT_LINK_STARTAPP_PREFIX, VK_MINI_APP_URL } from '../config'
+import { VK_MINI_APP_URL } from '../config'
 import { apiRequest } from '../lib/api'
 import {
   COMPLETED_TG_ACCOUNT_LINK_STARTPARAM_KEY,
   PENDING_VK_LINK_TOKEN_KEY,
 } from '../lib/accountLinkStorage'
-import { getAppPlatform } from '../lib/authHeaders'
-import './RegisterPage/RegisterPage.css'
-
-function parseLinkToken(startParam: string | undefined): string | null {
-  if (!startParam) return null
-  const prefix = ACCOUNT_LINK_STARTAPP_PREFIX
-  if (!startParam.startsWith(prefix) || startParam.length !== prefix.length + 32) return null
-  const hex = startParam.slice(prefix.length).toLowerCase()
-  return /^[a-f0-9]{32}$/.test(hex) ? hex : null
-}
+import { parseTelegramAccountLinkStartParam } from './parseTelegramAccountLinkStartParam'
+import { usePlatform } from '@/platform/PlatformContext'
+import '@/pages/register/ui/RegisterPage.css'
 
 export function AccountLinkTelegramPage() {
   const navigate = useNavigate()
   const launchParams = useLaunchParams()
+  const platform = usePlatform()
   const [token, setToken] = useState<string | null>(null)
   const [resolved, setResolved] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -29,11 +23,11 @@ export function AccountLinkTelegramPage() {
   const [done, setDone] = useState(false)
 
   useEffect(() => {
-    if (getAppPlatform() !== 'telegram') {
+    if (platform !== 'telegram') {
       navigate('/', { replace: true })
       return
     }
-    const fromParam = parseLinkToken(launchParams.startParam)
+    const fromParam = parseTelegramAccountLinkStartParam(launchParams.startParam)
     const stored = sessionStorage.getItem(PENDING_VK_LINK_TOKEN_KEY)
     const raw = (stored && /^[a-f0-9]{32}$/i.test(stored) ? stored.toLowerCase() : null) || fromParam
     if (!raw) {
@@ -44,7 +38,7 @@ export function AccountLinkTelegramPage() {
     sessionStorage.setItem(PENDING_VK_LINK_TOKEN_KEY, raw)
     setToken(raw)
     setResolved(true)
-  }, [launchParams.startParam, navigate])
+  }, [platform, launchParams.startParam, navigate])
 
   const onLink = async () => {
     if (!token) return

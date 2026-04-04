@@ -1,0 +1,5 @@
+export { RegisterAlreadyHaveAccountButton } from './RegisterAlreadyHaveAccountButton'
+export { RegisterLinkUrlWaitBlock } from './RegisterLinkUrlWaitBlock'
+export { RegisterSubmitButton } from './RegisterSubmitButton'
+export { RegisterTelegramToVkLinkPanel } from './RegisterTelegramToVkLinkPanel'
+export { RegisterVkToTelegramLinkPanel } from './RegisterVkToTelegramLinkPanel'
