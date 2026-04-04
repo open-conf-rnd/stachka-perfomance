@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { apiRequest, apiRequestWithNotifications } from '@/lib/api'
+import { apiRequest, apiRequestWithNotifications } from '@/shared/lib/api'
 import { wsUrl } from '@/config'
-import { isFeatureKey } from '@/lib/featureAccess'
+import { isFeatureKey } from '@/shared/lib/featureAccess'
 
 export interface BingoTask {
   id: string

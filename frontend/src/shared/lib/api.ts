@@ -1,4 +1,4 @@
-import { apiBase } from '../config'
+import { apiBase } from '@/config'
 import { getApiAuthHeaders } from './authHeaders'
 import {
   notifyTelegramResult,

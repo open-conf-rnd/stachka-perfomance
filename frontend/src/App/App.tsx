@@ -2,16 +2,16 @@ import { useEffect, lazy, Suspense } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { useLaunchParams, useThemeParams } from '@telegram-apps/sdk-react'
 import './App.css'
-import '../components/Grid'
-import '../components/Button'
-import { WsUserHapticListener } from '../components/WsUserHapticListener'
+import '@/shared/ui/Grid'
+import '@/shared/ui/Button'
+import { WsUserHapticListener } from '@/shared/ui/WsUserHapticListener'
 import {
   useTelegramVkAccountLinkFromStartParam,
   useTgToVkAccountLinkFromVkHashAndBridge,
 } from '@/entities/auth/model'
-import { PlatformProvider } from '../platform/PlatformContext'
-import { notifyAccountLinkSuccess } from '../lib/accountLinkSuccessNotify'
-import { getBingoStartParamConsumed, setBingoStartParamConsumed } from '../lib/telegramCloudStorage'
+import { PlatformProvider } from '@/shared/lib/platform/PlatformContext'
+import { notifyAccountLinkSuccess } from '@/shared/lib/accountLinkSuccessNotify'
+import { getBingoStartParamConsumed, setBingoStartParamConsumed } from '@/shared/lib/telegramCloudStorage'
 
 // Lazy-загрузка страниц: меньший первый чанк → быстрее грузится при медленном VPN (~7 KB/s)
 const HomePage = lazy(() => import('@/pages/home').then(m => ({ default: m.HomePage })))
@@ -30,7 +30,7 @@ const ReactionRoundDetailPage = lazy(() =>
   import('@/pages/reaction-round-detail').then(m => ({ default: m.ReactionRoundDetailPage }))
 )
 const HapticPage = lazy(() => import('@/pages/haptic-page').then(m => ({ default: m.HapticPage })))
-const AdminLayout = lazy(() => import('../components/AdminLayout').then(m => ({ default: m.AdminLayout })))
+const AdminLayout = lazy(() => import('@/shared/ui/AdminLayout').then(m => ({ default: m.AdminLayout })))
 const AdminParticipantsPage = lazy(() =>
   import('@/pages/admin/participants').then(m => ({ default: m.AdminParticipantsPage }))
 )

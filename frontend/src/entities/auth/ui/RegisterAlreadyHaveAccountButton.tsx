@@ -7,7 +7,7 @@ import {
   type RegisterActivityState,
   type RegisterFeedbackState,
 } from '@/entities/auth/model'
-import { getAppPlatform, type AppPlatform } from '@/lib/authHeaders'
+import { getAppPlatform, type AppPlatform } from '@/shared/lib/authHeaders'
 
 type Props = {
   activity: RegisterActivityState

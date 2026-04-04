@@ -1,4 +1,4 @@
-import { PageLayout } from '@/components/PageLayout'
+import { PageLayout } from '@/shared/ui/PageLayout'
 import { useBehavior } from '../model'
 
 export function TapPage() {

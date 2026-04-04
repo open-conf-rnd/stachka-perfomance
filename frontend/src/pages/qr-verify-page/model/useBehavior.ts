@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useQRScanner } from '@telegram-apps/sdk-react'
-import { apiRequest } from '@/lib/api'
-import { notifyTelegramResult } from '@/lib/telegramNotifications'
-import { setBingoStartParamConsumed } from '@/lib/telegramCloudStorage'
+import { apiRequest } from '@/shared/lib/api'
+import { notifyTelegramResult } from '@/shared/lib/telegramNotifications'
+import { setBingoStartParamConsumed } from '@/shared/lib/telegramCloudStorage'
 
 function clearLaunchParamsFromUrl() {
   const url = new URL(window.location.href)

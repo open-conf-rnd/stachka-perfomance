@@ -1,4 +1,4 @@
-import { PageLayout } from '@/components/PageLayout'
+import { PageLayout } from '@/shared/ui/PageLayout'
 import { VK_MINI_APP_URL } from '@/config'
 import { useBehavior } from '../model'
 import '@/pages/register/ui/RegisterPage.css'

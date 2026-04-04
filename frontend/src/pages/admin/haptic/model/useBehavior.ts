@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { apiRequest } from '@/lib/api'
+import { apiRequest } from '@/shared/lib/api'
 
 export type ImpactStyle = 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'
 export type NotificationType = 'success' | 'warning' | 'error'

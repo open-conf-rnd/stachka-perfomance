@@ -1,4 +1,4 @@
-import { PageLayout } from '@/components/PageLayout'
+import { PageLayout } from '@/shared/ui/PageLayout'
 import type { BingoTask } from '@/entities/bingo'
 import { useBehavior } from '../model'
 import { BingoDescriptionTooltip } from './BingoDescriptionTooltip'

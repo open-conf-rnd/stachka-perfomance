@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { apiRequest, apiRequestWithNotifications } from '@/lib/api'
+import { apiRequest, apiRequestWithNotifications } from '@/shared/lib/api'
 
 interface PollOption {
   id: string

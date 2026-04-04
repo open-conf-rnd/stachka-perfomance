@@ -1,4 +1,4 @@
-import { wsUrl } from '../config'
+import { wsUrl } from '@/config'
 
 interface WsMessage {
   type: string

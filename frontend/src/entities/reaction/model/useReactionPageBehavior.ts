@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { apiRequest, apiRequestWithNotifications, type MeResponse } from '@/lib/api'
+import { apiRequest, apiRequestWithNotifications, type MeResponse } from '@/shared/lib/api'
 import { wsUrl } from '@/config'
-import { notifyTelegramResult } from '@/lib/telegramNotifications'
+import { notifyTelegramResult } from '@/shared/lib/telegramNotifications'
 import type {
   ReactionCurrentRoundResponse,
   ReactionLeaderboardItem,

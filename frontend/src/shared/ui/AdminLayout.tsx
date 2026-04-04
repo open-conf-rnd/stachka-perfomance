@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { PageLayout } from './PageLayout'
-import { apiRequest } from '../lib/api'
+import { apiRequest } from '@/shared/lib/api'
 
 const adminMenu = [
   { path: '/admin/participants', title: 'Участники', desc: 'Рейтинг по бинго' },

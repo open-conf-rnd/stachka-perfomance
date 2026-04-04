@@ -6,7 +6,7 @@ import {
   type PatchRegisterFeedback,
   type RegisterLinkPanelsPageSlice,
 } from '@/entities/auth/model'
-import { usePlatform } from '@/platform/PlatformContext'
+import { usePlatform } from '@/shared/lib/platform/PlatformContext'
 import { useRegisterPageInitialMeCheck } from './useRegisterPageInitialMeCheck'
 
 /** Роутинг, платформа, стейт страницы регистрации и связанные эффекты. */

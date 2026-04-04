@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLaunchParams } from '@telegram-apps/sdk-react'
-import { apiRequest } from '@/lib/api'
+import { apiRequest } from '@/shared/lib/api'
 import {
   COMPLETED_TG_ACCOUNT_LINK_STARTPARAM_KEY,
   PENDING_VK_LINK_TOKEN_KEY,
-} from '@/lib/accountLinkStorage'
+} from '@/shared/lib/accountLinkStorage'
 import { parseTelegramAccountLinkStartParam } from '@/entities/auth/lib/parseTelegramAccountLinkStartParam'
-import { usePlatform } from '@/platform/PlatformContext'
+import { usePlatform } from '@/shared/lib/platform/PlatformContext'
 
 /** Страница /account-link: токен из start_param/sessionStorage и завершение привязки VK↔TG. */
 export function useAccountLinkTelegramBehavior() {

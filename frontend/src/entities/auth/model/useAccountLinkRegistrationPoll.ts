@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { apiRequest, type MeResponse } from '@/lib/api'
+import { apiRequest, type MeResponse } from '@/shared/lib/api'
 
 const DEFAULT_POLL_MS = 3000
 

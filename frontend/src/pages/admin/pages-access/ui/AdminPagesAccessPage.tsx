@@ -1,4 +1,4 @@
-import { adminFeatureToggleItems } from '@/lib/featureAccess'
+import { adminFeatureToggleItems } from '@/shared/lib/featureAccess'
 import { useBehavior } from '../model'
 import { AdminFeatureAccessRow } from './AdminFeatureAccessRow'
 

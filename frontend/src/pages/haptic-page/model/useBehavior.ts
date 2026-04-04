@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { apiRequestWithNotifications } from '@/lib/api'
-import { triggerHaptic } from '@/lib/haptic'
+import { apiRequestWithNotifications } from '@/shared/lib/api'
+import { triggerHaptic } from '@/shared/lib/haptic'
 import { wsUrl } from '@/config'
 
 export type ImpactStyle = 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'

@@ -1,5 +1,5 @@
 import { Confetti } from '@neoconfetti/react'
-import { PageLayout } from '@/components/PageLayout'
+import { PageLayout } from '@/shared/ui/PageLayout'
 import {
   RegisterAlreadyHaveAccountButton,
   RegisterSubmitButton,

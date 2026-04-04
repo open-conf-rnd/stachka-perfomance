@@ -1,4 +1,4 @@
-export type { MeResponse, RegisterResponse } from '@/lib/api'
+export type { MeResponse, RegisterResponse } from '@/shared/lib/api'
 
 export interface VkLinkTokenResponse {
   token: string

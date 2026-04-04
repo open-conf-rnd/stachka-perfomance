@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { apiRequest } from '@/lib/api'
+import { apiRequest } from '@/shared/lib/api'
 import type { ReactionRoundSummary } from './types'
 
 export function useReactionRoundsPageBehavior() {

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
-import { captureVkLaunchParamsFromUrl, getAppPlatform, type AppPlatform } from '../lib/authHeaders'
+import { captureVkLaunchParamsFromUrl, getAppPlatform, type AppPlatform } from '@/shared/lib/authHeaders'
 
 const PlatformContext = createContext<AppPlatform | null>(null)
 

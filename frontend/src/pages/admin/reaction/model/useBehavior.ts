@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { apiRequest } from '@/lib/api'
+import { apiRequest } from '@/shared/lib/api'
 
 export function useBehavior() {
   const [loading, setLoading] = useState(false)

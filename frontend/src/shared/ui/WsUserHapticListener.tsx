@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
-import { apiRequest, type MeResponse } from '../lib/api'
-import { triggerHaptic, type HapticPayload } from '../lib/haptic'
-import { wsUrl } from '../config'
+import { apiRequest, type MeResponse } from '@/shared/lib/api'
+import { triggerHaptic, type HapticPayload } from '@/shared/lib/haptic'
+import { wsUrl } from '@/config'
 
 interface WsHapticPayload {
   type: 'impact' | 'notification'

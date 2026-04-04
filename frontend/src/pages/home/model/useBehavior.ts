@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { apiRequest, type MeResponse } from '@/lib/api'
-import { isFeatureKey, type FeatureKey } from '@/lib/featureAccess'
+import { apiRequest, type MeResponse } from '@/shared/lib/api'
+import { isFeatureKey, type FeatureKey } from '@/shared/lib/featureAccess'
 
 export function useBehavior() {
   const navigate = useNavigate()

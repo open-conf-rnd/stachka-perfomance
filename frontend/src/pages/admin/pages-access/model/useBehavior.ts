@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { apiRequest } from '@/lib/api'
-import { type FeatureKey } from '@/lib/featureAccess'
+import { apiRequest } from '@/shared/lib/api'
+import { type FeatureKey } from '@/shared/lib/featureAccess'
 
 interface FeatureState {
   key: FeatureKey

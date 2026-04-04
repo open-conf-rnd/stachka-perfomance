@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom'
 import {
   COMPLETED_TG_ACCOUNT_LINK_STARTPARAM_KEY,
   PENDING_VK_LINK_TOKEN_KEY,
-} from '@/lib/accountLinkStorage'
+} from '@/shared/lib/accountLinkStorage'
 import { parseTelegramAccountLinkStartParam } from '../lib/parseTelegramAccountLinkStartParam'
 import { completeAccountLink } from '../requests/authRequests'
-import { usePlatform } from '@/platform/PlatformContext'
+import { usePlatform } from '@/shared/lib/platform/PlatformContext'
 
 const PENDING_LOCK_MAX_MS = 90_000
 

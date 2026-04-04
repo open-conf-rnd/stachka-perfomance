@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { apiRequest, apiRequestWithNotifications } from '@/lib/api'
+import { apiRequest, apiRequestWithNotifications } from '@/shared/lib/api'
 import { wsUrl } from '@/config'
 
 interface TapState {

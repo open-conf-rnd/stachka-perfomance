@@ -7,10 +7,10 @@ import {
   peekAccountLinkTokenFromLocation,
   peekAccountLinkTokenFromVkBridgeLocation,
   stripAccountLinkHashFromLocation,
-} from '@/lib/accountLinkStorage'
+} from '@/shared/lib/accountLinkStorage'
 import { completeAccountLink } from '../requests/authRequests'
 import type { AccountLinkAutoFlowOptions } from './useTelegramVkAccountLinkFromStartParam'
-import { usePlatform } from '@/platform/PlatformContext'
+import { usePlatform } from '@/shared/lib/platform/PlatformContext'
 
 const PENDING_LOCK_MAX_MS = 90_000
 

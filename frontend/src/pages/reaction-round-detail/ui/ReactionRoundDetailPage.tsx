@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { PageLayout } from '@/components/PageLayout'
+import { PageLayout } from '@/shared/ui/PageLayout'
 import { useBehavior } from '../model'
 import { ReactionRoundResultRow } from './ReactionRoundResultRow'
 

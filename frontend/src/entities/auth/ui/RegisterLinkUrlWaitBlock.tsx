@@ -1,4 +1,4 @@
-import { copyToClipboard } from '@/lib/copyToClipboard'
+import { copyToClipboard } from '@/shared/lib/copyToClipboard'
 
 type Props = {
   url: string

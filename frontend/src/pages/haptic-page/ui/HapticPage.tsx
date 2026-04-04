@@ -1,4 +1,4 @@
-import { PageLayout } from '@/components/PageLayout'
+import { PageLayout } from '@/shared/ui/PageLayout'
 import type { ImpactStyle, NotificationType } from '../model'
 import { useBehavior } from '../model'
 import './HapticPage.css'

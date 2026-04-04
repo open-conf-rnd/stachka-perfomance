@@ -3,9 +3,9 @@ import { createRoot } from 'react-dom/client'
 import { mockTelegramEnv } from '@telegram-apps/sdk'
 import { SDKProvider } from '@telegram-apps/sdk-react'
 import App from './App'
-import { captureVkLaunchParamsFromUrl, getVkLaunchParamsForHeaders } from './lib/authHeaders'
-import { peekAccountLinkTokenFromLocation } from './lib/accountLinkStorage'
-import { initVkBridge } from './lib/vkBridgeClient'
+import { captureVkLaunchParamsFromUrl, getVkLaunchParamsForHeaders } from '@/shared/lib/authHeaders'
+import { peekAccountLinkTokenFromLocation } from '@/shared/lib/accountLinkStorage'
+import { initVkBridge } from '@/shared/lib/vkBridgeClient'
 import './index.css'
 
 declare global {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { apiRequest } from '@/lib/api'
+import { apiRequest } from '@/shared/lib/api'
 
 interface Participant {
   id: string

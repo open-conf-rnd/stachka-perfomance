@@ -1,4 +1,4 @@
-import type { AppPlatform } from '@/lib/authHeaders'
+import type { AppPlatform } from '@/shared/lib/authHeaders'
 
 export function alreadyHaveAccountLabel(platform: AppPlatform): string {
   switch (platform) {

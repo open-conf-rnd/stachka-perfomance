@@ -1,5 +1,5 @@
-import { PageLayout } from '@/components/PageLayout'
-import { featureMenuItems } from '@/lib/featureAccess'
+import { PageLayout } from '@/shared/ui/PageLayout'
+import { featureMenuItems } from '@/shared/lib/featureAccess'
 import { useBehavior } from '../model'
 import { HomeMenuTile } from './HomeMenuTile'
 

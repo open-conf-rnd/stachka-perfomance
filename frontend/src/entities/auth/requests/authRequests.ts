@@ -1,4 +1,4 @@
-import { apiRequest } from '@/lib/api'
+import { apiRequest } from '@/shared/lib/api'
 import type { MeResponse, RegisterResponse, TgLinkTokenResponse, VkLinkTokenResponse } from '../model/types'
 
 export function fetchMe(signal?: AbortSignal): Promise<MeResponse> {

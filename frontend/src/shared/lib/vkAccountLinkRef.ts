@@ -1,4 +1,4 @@
-import { ACCOUNT_LINK_STARTAPP_PREFIX } from '../config'
+import { ACCOUNT_LINK_STARTAPP_PREFIX } from '@/config'
 import { getVkLaunchParamsForHeaders } from './authHeaders'
 
 /** Значение vk_ref / ?ref=… с внешней ссылки на мини-приложение (как startapp в Telegram). */
