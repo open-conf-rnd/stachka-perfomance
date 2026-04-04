@@ -1,4 +1,4 @@
-export const FEATURE_KEYS = ['bingo', 'qr', 'polls', 'tap', 'reaction', 'haptic', 'support', 'bingoShare'] as const
+export const FEATURE_KEYS = ['bingo', 'qr', 'polls', 'tap', 'reaction', 'haptic', 'bingoShare'] as const
 
 export type FeatureKey = (typeof FEATURE_KEYS)[number]
 export type MenuFeatureKey = Exclude<FeatureKey, 'bingoShare'>
@@ -17,7 +17,6 @@ export const featureMenuItems: FeatureMenuItem[] = [
   { key: 'tap', path: '/tap', title: 'Тапалка', desc: 'Большая кнопка и счетчик' },
   { key: 'reaction', path: '/reaction', title: 'Реакция', desc: 'Кто нажмет быстрее' },
   { key: 'haptic', path: '/haptic', title: 'Вибрации', desc: 'Демо Telegram Haptic' },
-  { key: 'support', path: '/support', title: 'Поддержать', desc: 'Telegram Stars' },
 ]
 
 export interface AdminFeatureToggleItem {
@@ -33,7 +32,6 @@ export const adminFeatureToggleItems: AdminFeatureToggleItem[] = [
   { key: 'tap', title: 'Тапалка', desc: 'Большая кнопка и счетчик' },
   { key: 'reaction', title: 'Реакция', desc: 'Кто нажмет быстрее' },
   { key: 'haptic', title: 'Вибрации', desc: 'Демо Telegram Haptic' },
-  { key: 'support', title: 'Поддержать', desc: 'Telegram Stars' },
   { key: 'bingoShare', title: 'Share в Бинго', desc: 'Share to Story и Share в чат' },
 ]
 

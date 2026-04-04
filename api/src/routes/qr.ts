@@ -1,7 +1,12 @@
 import crypto from 'node:crypto'
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
-import { sendTelegramMessage, validateInitData } from '../lib/telegram.js'
+import { sendTelegramMessage } from '../lib/telegram.js'
+import {
+  getTelegramChatIdForUser,
+  getUserFromPrimaryAuthHeader,
+  replyIfUserAuthMissing,
+} from '../lib/telegram-resolve.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 
@@ -49,21 +54,12 @@ export async function qrRoutes(app: FastifyInstance) {
   app.post<{
     Body: { code: string }
   }>('/api/qr/verify', async (req, reply) => {
-    const initData = getInitData(req.headers['x-telegram-init-data'])
-    if (!initData) {
-      return reply.status(401).send({ error: 'Missing init data' })
+    const auth = await getUserFromPrimaryAuthHeader(req.headers)
+    if (!replyIfUserAuthMissing(reply, auth)) {
+      return
     }
-
-    const tgUser = validateInitData(initData)
-    if (!tgUser) {
-      return reply.status(401).send({ error: 'Invalid init data' })
-    }
-
-    const userId = String(tgUser.id)
-    const user = await prisma.user.findUnique({ where: { id: userId } })
-    if (!user) {
-      return reply.status(403).send({ error: 'User is not registered' })
-    }
+    const user = auth.user
+    const userId = user.id
 
     const code = req.body?.code?.trim()
     if (!code) {
@@ -71,14 +67,17 @@ export async function qrRoutes(app: FastifyInstance) {
     }
 
     if (code === FEEDBACK_FORM_QR_CODE) {
-      await sendTelegramMessage(
-        user.id,
-        [
-          '<b>Спасибо, что были на докладе!</b>',
-          'Буду рад вашей обратной связи.',
-          `<a href="${FEEDBACK_FORM_URL}">Заполнить форму</a>`,
-        ].join('\n')
-      )
+      const chatId = await getTelegramChatIdForUser(user.id)
+      if (chatId) {
+        await sendTelegramMessage(
+          chatId,
+          [
+            '<b>Спасибо, что были на докладе!</b>',
+            'Буду рад вашей обратной связи.',
+            `<a href="${FEEDBACK_FORM_URL}">Заполнить форму</a>`,
+          ].join('\n')
+        )
+      }
 
       await wsBroadcast('qr:verified', {
         code: FEEDBACK_FORM_QR_CODE,

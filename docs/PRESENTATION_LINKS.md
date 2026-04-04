@@ -70,9 +70,8 @@
 4. **HapticFeedback** — вибрации (impact / notification).  
 5. **showPopup / showAlert** — всплывающие уведомления.  
 6. **LaunchParams (startParam)** — глубокие ссылки (?startapp=bingo).  
-7. **openInvoice** — оплата Telegram Stars.  
-8. **openTelegramLink** — открытие ссылки внутри Telegram.  
-9. **shareToStory** — шаринг в Stories с виджетом на Mini App.
+7. **openTelegramLink** — открытие ссылки внутри Telegram.  
+8. **shareToStory** — шаринг в Stories с виджетом на Mini App.
 
 ---
 

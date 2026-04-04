@@ -8,7 +8,7 @@
     "build": "prisma generate && tsc",
     "start": "node dist/index.js",
     "seed:bingo": "tsx src/scripts/seed-bingo-tasks.ts",
-    "test:smoke": "ADMIN_USER_IDS= POSTGRES_USER=${POSTGRES_USER:-stachka} POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-stachka} POSTGRES_HOST=${POSTGRES_HOST:-localhost} POSTGRES_PORT=${POSTGRES_PORT:-5432} POSTGRES_DB=${POSTGRES_DB:-stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest run test/smoke.test.ts",
+    "test:smoke": "TG_ADMIN_USER_IDS= POSTGRES_USER=${POSTGRES_USER:-stachka} POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-stachka} POSTGRES_HOST=${POSTGRES_HOST:-localhost} POSTGRES_PORT=${POSTGRES_PORT:-5432} POSTGRES_DB=${POSTGRES_DB:-stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest run test/smoke.test.ts",
     "test:smoke:watch": "POSTGRES_USER=${POSTGRES_USER:-stachka} POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-stachka} POSTGRES_HOST=${POSTGRES_HOST:-localhost} POSTGRES_PORT=${POSTGRES_PORT:-5432} POSTGRES_DB=${POSTGRES_DB:-stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest test/smoke.test.ts"
   },
   "dependencies": {

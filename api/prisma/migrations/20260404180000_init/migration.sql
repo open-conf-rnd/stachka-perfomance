@@ -1,3 +1,9 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
+-- CreateEnum
+CREATE TYPE "IdentityProvider" AS ENUM ('telegram', 'vk');
+
 -- CreateEnum
 CREATE TYPE "ReactionStatus" AS ENUM ('PENDING', 'ACTIVE', 'FINISHED');
 
@@ -12,6 +18,27 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserIdentity" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "provider" "IdentityProvider" NOT NULL,
+    "externalId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "UserIdentity_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HapticTrigger" (
+    "id" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+    "triggerKey" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "HapticTrigger_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -93,16 +120,23 @@ CREATE TABLE "ReactionTap" (
 );
 
 -- CreateTable
-CREATE TABLE "Payment" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "telegramChargeId" TEXT NOT NULL,
-    "amount" INTEGER NOT NULL,
-    "currency" TEXT NOT NULL DEFAULT 'XTR',
+CREATE TABLE "FeatureGate" (
+    "key" TEXT NOT NULL,
+    "enabled" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Payment_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "FeatureGate_pkey" PRIMARY KEY ("key")
 );
+
+-- CreateIndex
+CREATE INDEX "UserIdentity_userId_idx" ON "UserIdentity"("userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserIdentity_provider_externalId_key" ON "UserIdentity"("provider", "externalId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "HapticTrigger_userId_triggerKey_key" ON "HapticTrigger"("userId", "triggerKey");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Vote_pollId_userId_key" ON "Vote"("pollId", "userId");
@@ -116,8 +150,11 @@ CREATE UNIQUE INDEX "QrCode_code_key" ON "QrCode"("code");
 -- CreateIndex
 CREATE UNIQUE INDEX "ReactionTap_roundId_userId_key" ON "ReactionTap"("roundId", "userId");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Payment_telegramChargeId_key" ON "Payment"("telegramChargeId");
+-- AddForeignKey
+ALTER TABLE "UserIdentity" ADD CONSTRAINT "UserIdentity_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HapticTrigger" ADD CONSTRAINT "HapticTrigger_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Option" ADD CONSTRAINT "Option_pollId_fkey" FOREIGN KEY ("pollId") REFERENCES "Poll"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -145,6 +182,3 @@ ALTER TABLE "ReactionTap" ADD CONSTRAINT "ReactionTap_roundId_fkey" FOREIGN KEY 
 
 -- AddForeignKey
 ALTER TABLE "ReactionTap" ADD CONSTRAINT "ReactionTap_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Payment" ADD CONSTRAINT "Payment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

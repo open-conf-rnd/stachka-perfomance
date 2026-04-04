@@ -1,15 +1,11 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
-import { validateInitData } from '../lib/telegram.js'
+import { getUserFromPrimaryAuthHeader, replyIfUserAuthMissing } from '../lib/telegram-resolve.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
 const TAP_GOAL = Number(process.env.TAP_GOAL || 100) || 100
 const BINGO_TAP10_TASK_ID = process.env.BINGO_TAP10_TASK_ID || 'cmmgvekeb00036po386wfmw90'
-
-function getInitData(headerValue: unknown): string | null {
-  return typeof headerValue === 'string' && headerValue.length > 0 ? headerValue : null
-}
 
 async function getTapTotals(userId: string) {
   const [user, sum] = await Promise.all([
@@ -32,17 +28,11 @@ async function getTapTotals(userId: string) {
 
 export async function tapRoutes(app: FastifyInstance) {
   app.get('/api/tap', async (req, reply) => {
-    const initData = getInitData(req.headers['x-telegram-init-data'])
-    if (!initData) {
-      return reply.status(401).send({ error: 'Missing init data' })
+    const auth = await getUserFromPrimaryAuthHeader(req.headers)
+    if (!replyIfUserAuthMissing(reply, auth)) {
+      return
     }
-
-    const tgUser = validateInitData(initData)
-    if (!tgUser) {
-      return reply.status(401).send({ error: 'Invalid init data' })
-    }
-
-    const userId = String(tgUser.id)
+    const userId = auth.user.id
     const totals = await getTapTotals(userId)
     if (!totals.user) {
       return reply.status(403).send({ error: 'User is not registered' })
@@ -56,17 +46,11 @@ export async function tapRoutes(app: FastifyInstance) {
   })
 
   app.post('/api/tap', async (req, reply) => {
-    const initData = getInitData(req.headers['x-telegram-init-data'])
-    if (!initData) {
-      return reply.status(401).send({ error: 'Missing init data' })
+    const auth = await getUserFromPrimaryAuthHeader(req.headers)
+    if (!replyIfUserAuthMissing(reply, auth)) {
+      return
     }
-
-    const tgUser = validateInitData(initData)
-    if (!tgUser) {
-      return reply.status(401).send({ error: 'Invalid init data' })
-    }
-
-    const userId = String(tgUser.id)
+    const userId = auth.user.id
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: { id: true, tapCount: true },

@@ -1,14 +1,11 @@
 import { apiBase } from '../config'
+import { getApiAuthHeaders } from './authHeaders'
 import {
   notifyTelegramResult,
   type TelegramNotificationType,
 } from './telegramNotifications'
 
 type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'
-
-function getInitData(): string {
-  return window.Telegram?.WebApp?.initData ?? ''
-}
 
 export async function apiRequest<T>(
   path: string,
@@ -24,7 +21,7 @@ export async function apiRequest<T>(
     method,
     headers: {
       'Content-Type': 'application/json',
-      'x-telegram-init-data': getInitData(),
+      ...getApiAuthHeaders(),
     },
     body: bodySerialized,
   })

@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
-import { validateInitData } from '../lib/telegram.js'
 import { requireAdmin } from '../lib/admin.js'
+import { getUserFromPrimaryAuthHeader, replyIfUserAuthMissing } from '../lib/telegram-resolve.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
@@ -153,7 +153,7 @@ export async function reactionRoutes(app: FastifyInstance) {
   })
 
   app.post('/api/reaction/start', async (req, reply) => {
-    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    const auth = requireAdmin(req.headers)
     if (!auth.ok) {
       return reply.status(auth.status).send(auth.body)
     }
@@ -210,23 +210,15 @@ export async function reactionRoutes(app: FastifyInstance) {
   })
 
   app.post('/api/reaction/tap', async (req, reply) => {
-    const initData = getInitData(req.headers['x-telegram-init-data'])
-    if (!initData) {
-      return reply.status(401).send({ error: 'Missing init data' })
+    const auth = await getUserFromPrimaryAuthHeader(req.headers)
+    if (!replyIfUserAuthMissing(reply, auth)) {
+      return
     }
-
-    const tgUser = validateInitData(initData)
-    if (!tgUser) {
-      return reply.status(401).send({ error: 'Invalid init data' })
-    }
-
-    const userId = String(tgUser.id)
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { id: true, firstName: true, username: true },
-    })
-    if (!user) {
-      return reply.status(403).send({ error: 'User is not registered' })
+    const userId = auth.user.id
+    const user = {
+      id: auth.user.id,
+      firstName: auth.user.firstName,
+      username: auth.user.username,
     }
 
     const round = await getCurrentRound()

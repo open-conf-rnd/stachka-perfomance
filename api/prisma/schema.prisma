@@ -7,8 +7,13 @@ datasource db {
   provider = "postgresql"
 }
 
+enum IdentityProvider {
+  telegram
+  vk
+}
+
 model User {
-  id          String            @id
+  id          String            @id @default(cuid())
   username    String?
   firstName   String
   lastName    String?
@@ -18,8 +23,20 @@ model User {
   votes       Vote[]
   reactionTaps   ReactionTap[]
   hapticTriggers HapticTrigger[]
-  payments       Payment[]
+  identities  UserIdentity[]
   createdAt   DateTime          @default(now())
+}
+
+model UserIdentity {
+  id         String           @id @default(cuid())
+  userId     String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider   IdentityProvider
+  externalId String
+  createdAt  DateTime         @default(now())
+
+  @@unique([provider, externalId])
+  @@index([userId])
 }
 
 model HapticTrigger {
@@ -111,16 +128,6 @@ model ReactionTap {
   tapTime DateTime      @default(now())
 
   @@unique([roundId, userId])
-}
-
-model Payment {
-  id               String   @id @default(cuid())
-  userId           String
-  user             User     @relation(fields: [userId], references: [id])
-  telegramChargeId String   @unique
-  amount           Int
-  currency         String   @default("XTR")
-  createdAt        DateTime @default(now())
 }
 
 model FeatureGate {

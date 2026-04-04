@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
-import { validateInitData } from '../lib/telegram.js'
 import { requireAdmin } from '../lib/admin.js'
+import { getUserFromPrimaryAuthHeader, replyIfUserAuthMissing } from '../lib/telegram-resolve.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
@@ -56,21 +56,11 @@ export async function hapticRoutes(app: FastifyInstance) {
   app.post<{ Body: { type: string; style?: string; notificationType?: string } }>(
     '/api/haptic/track',
     async (req, reply) => {
-      const initData = getInitData(req.headers['x-telegram-init-data'])
-      if (!initData) {
-        return reply.status(401).send({ error: 'Missing init data' })
+      const auth = await getUserFromPrimaryAuthHeader(req.headers)
+      if (!replyIfUserAuthMissing(reply, auth)) {
+        return
       }
-
-      const tgUser = validateInitData(initData)
-      if (!tgUser) {
-        return reply.status(401).send({ error: 'Invalid init data' })
-      }
-
-      const userId = String(tgUser.id)
-      const user = await prisma.user.findUnique({ where: { id: userId } })
-      if (!user) {
-        return reply.status(403).send({ error: 'User is not registered' })
-      }
+      const userId = auth.user.id
 
       const payload = normalizePayload(req.body)
       if (!payload) {
@@ -107,7 +97,7 @@ export async function hapticRoutes(app: FastifyInstance) {
   app.post<{ Body: { type: string; style?: string; notificationType?: string } }>(
     '/api/haptic/trigger',
     async (req, reply) => {
-      const auth = requireAdmin(req.headers['x-telegram-init-data'])
+      const auth = requireAdmin(req.headers)
       if (!auth.ok) {
         return reply.status(auth.status).send(auth.body)
       }

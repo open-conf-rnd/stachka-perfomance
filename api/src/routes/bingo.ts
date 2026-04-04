@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
-import { validateInitData } from '../lib/telegram.js'
 import { requireAdmin } from '../lib/admin.js'
+import { getUserFromPrimaryAuthHeader, replyIfUserAuthMissing } from '../lib/telegram-resolve.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
 const BINGO_SHARE_STORIES_TASK_ID = process.env.BINGO_SHARE_STORIES_TASK_ID
@@ -15,7 +15,7 @@ export async function bingoRoutes(app: FastifyInstance) {
   app.post<{
     Body: { title: string; description?: string; order?: number }
   }>('/api/bingo/tasks', async (req, reply) => {
-    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    const auth = requireAdmin(req.headers)
     if (!auth.ok) {
       return reply.status(auth.status).send(auth.body)
     }
@@ -42,25 +42,32 @@ export async function bingoRoutes(app: FastifyInstance) {
   }))
 
   app.get('/api/bingo/tasks', async (req, reply) => {
-    const initData = getInitData(req.headers['x-telegram-init-data'])
+    const initTg = getInitData(req.headers['x-telegram-init-data'])
+    const initVk = getInitData(req.headers['x-vk-launch-params'])
     const tasks = await prisma.bingoTask.findMany({
       orderBy: [{ order: 'asc' }, { createdAt: 'asc' }],
     })
 
-    if (!initData) {
+    if (!initTg && !initVk) {
       return tasks
     }
 
-    const tgUser = validateInitData(initData)
-    if (!tgUser) {
-      return reply.status(401).send({ error: 'Invalid init data' })
-    }
-
-    const userId = String(tgUser.id)
-    const completions = await prisma.bingoCompletion.findMany({
-      where: { userId },
-      select: { taskId: true },
+    const resolved = await getUserFromPrimaryAuthHeader({
+      'x-telegram-init-data': initTg ?? undefined,
+      'x-vk-launch-params': initVk ?? undefined,
     })
+    if (!resolved.ok && resolved.error !== 'not_registered') {
+      const msg =
+        resolved.error === 'missing_init' ? 'Missing init data' : 'Invalid init data'
+      return reply.status(401).send({ error: msg })
+    }
+    const internalUserId = resolved.ok ? resolved.user.id : null
+    const completions = internalUserId
+      ? await prisma.bingoCompletion.findMany({
+          where: { userId: internalUserId },
+          select: { taskId: true },
+        })
+      : []
     const completed = new Set(completions.map((c: { taskId: string }) => c.taskId))
 
     return tasks.map((task: { id: string; [key: string]: unknown }) => ({
@@ -72,21 +79,11 @@ export async function bingoRoutes(app: FastifyInstance) {
   app.post<{
     Params: { id: string }
   }>('/api/bingo/tasks/:id/complete', async (req, reply) => {
-    const initData = getInitData(req.headers['x-telegram-init-data'])
-    if (!initData) {
-      return reply.status(401).send({ error: 'Missing init data' })
+    const auth = await getUserFromPrimaryAuthHeader(req.headers)
+    if (!replyIfUserAuthMissing(reply, auth)) {
+      return
     }
-
-    const tgUser = validateInitData(initData)
-    if (!tgUser) {
-      return reply.status(401).send({ error: 'Invalid init data' })
-    }
-
-    const userId = String(tgUser.id)
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true } })
-    if (!user) {
-      return reply.status(403).send({ error: 'User is not registered' })
-    }
+    const userId = auth.user.id
 
     const task = await prisma.bingoTask.findUnique({ where: { id: req.params.id }, select: { id: true } })
     if (!task) {

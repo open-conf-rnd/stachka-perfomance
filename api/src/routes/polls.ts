@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
-import { validateInitData } from '../lib/telegram.js'
 import { requireAdmin } from '../lib/admin.js'
+import { getUserFromPrimaryAuthHeader, replyIfUserAuthMissing } from '../lib/telegram-resolve.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
@@ -35,7 +35,7 @@ export async function pollRoutes(app: FastifyInstance) {
   app.post<{
     Body: { question: string; options: string[] }
   }>('/api/polls', async (req, reply) => {
-    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    const auth = requireAdmin(req.headers)
     if (!auth.ok) {
       return reply.status(auth.status).send(auth.body)
     }
@@ -86,14 +86,9 @@ export async function pollRoutes(app: FastifyInstance) {
     Params: { id: string }
     Body: { optionId: string }
   }>('/api/polls/:id/vote', async (req, reply) => {
-    const initData = req.headers['x-telegram-init-data'] as string | undefined
-    if (!initData) {
-      return reply.status(401).send({ error: 'Missing init data' })
-    }
-
-    const tgUser = validateInitData(initData)
-    if (!tgUser) {
-      return reply.status(401).send({ error: 'Invalid init data' })
+    const auth = await getUserFromPrimaryAuthHeader(req.headers)
+    if (!replyIfUserAuthMissing(reply, auth)) {
+      return
     }
 
     const { id: pollId } = req.params
@@ -115,7 +110,7 @@ export async function pollRoutes(app: FastifyInstance) {
       return reply.status(400).send({ error: 'Invalid optionId' })
     }
 
-    const userId = String(tgUser.id)
+    const userId = auth.user.id
 
     const existing = await prisma.vote.findUnique({
       where: { pollId_userId: { pollId, userId } },

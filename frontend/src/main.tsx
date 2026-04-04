@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { mockTelegramEnv } from '@telegram-apps/sdk'
 import { SDKProvider } from '@telegram-apps/sdk-react'
 import App from './App'
+import { captureVkLaunchParamsFromUrl, getVkLaunchParamsForHeaders } from './lib/authHeaders'
 import './index.css'
 
 declare global {
@@ -15,10 +16,6 @@ declare global {
           start_param?: string
         }
         ready?: () => void
-        openInvoice?: (
-          url: string,
-          callback?: (status: 'paid' | 'cancelled' | 'failed' | 'pending') => void
-        ) => void
         openTelegramLink?: (url: string) => void
         shareToStory?: (
           mediaUrl: string,
@@ -56,20 +53,41 @@ declare global {
     }
   }
 }
-const isInsideTelegram = typeof window !== 'undefined' && window.Telegram?.WebApp?.initData
+captureVkLaunchParamsFromUrl()
 
+const isInsideTelegram = typeof window !== 'undefined' && !!window.Telegram?.WebApp?.initData
+
+// В VK / обычном браузере нет tg initData, но хуки SDK (useLaunchParams, useThemeParams) всё равно нужны —
+// иначе «Unable to retrieve launch parameters». Реальная авторизация VK идёт через x-vk-launch-params (authHeaders).
 if (!isInsideTelegram) {
-  mockTelegramEnv({
-    version: '7.0',
-    platform: 'web',
-    themeParams: {
-      bgColor: '#1c1c1e',
-      textColor: '#ffffff',
-    },
-  })
+  try {
+    mockTelegramEnv({
+      version: '7.0',
+      platform: 'web',
+      themeParams: {
+        bgColor: '#1c1c1e',
+        textColor: '#ffffff',
+      },
+    })
+  } catch (err) {
+    // В iframe VK родитель — vk.com (cross-origin): SDK пытается присвоить window.parent.postMessage → SecurityError.
+    // До этого mockTelegramEnv уже кладёт tgWebApp* в sessionStorage — этого достаточно для retrieveLaunchParams.
+    if (import.meta.env.DEV && err instanceof Error && err.name !== 'SecurityError') {
+      console.warn('[mockTelegramEnv]', err)
+    }
+  }
 }
 
-window.Telegram?.WebApp?.ready?.()
+const hasVkLaunch = typeof window !== 'undefined' && getVkLaunchParamsForHeaders().length > 0
+if (hasVkLaunch) {
+  void import('@vkontakte/vk-bridge')
+    .then(({ default: bridge }) => bridge.send('VKWebAppInit'))
+    .catch(() => {})
+}
+
+if (isInsideTelegram) {
+  window.Telegram?.WebApp?.ready?.()
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

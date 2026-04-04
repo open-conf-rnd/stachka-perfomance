@@ -19,7 +19,6 @@ const ReactionPage = lazy(() => import('../pages/ReactionPage').then(m => ({ def
 const ReactionRoundsPage = lazy(() => import('../pages/ReactionRoundsPage').then(m => ({ default: m.ReactionRoundsPage })))
 const ReactionRoundDetailPage = lazy(() => import('../pages/ReactionRoundDetailPage').then(m => ({ default: m.ReactionRoundDetailPage })))
 const HapticPage = lazy(() => import('../pages/HapticPage').then(m => ({ default: m.HapticPage })))
-const SupportPage = lazy(() => import('../pages/SupportPage').then(m => ({ default: m.SupportPage })))
 const AdminLayout = lazy(() => import('../components/AdminLayout').then(m => ({ default: m.AdminLayout })))
 const AdminParticipantsPage = lazy(() => import('../pages/admin/AdminParticipantsPage').then(m => ({ default: m.AdminParticipantsPage })))
 const AdminReactionPage = lazy(() => import('../pages/admin/AdminReactionPage').then(m => ({ default: m.AdminReactionPage })))
@@ -86,7 +85,6 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
         <Route path="/reaction/rounds" element={<ReactionRoundsPage />} />
         <Route path="/reaction/rounds/:id" element={<ReactionRoundDetailPage />} />
         <Route path="/haptic" element={<HapticPage />} />
-        <Route path="/support" element={<SupportPage />} />
         <Route path="/presentation" element={<PresentationPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/participants" replace />} />

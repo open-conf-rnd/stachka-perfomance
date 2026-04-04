@@ -27,7 +27,7 @@ function normalizeHapticPayload(input: unknown): { type: 'impact'; style: string
 
 export async function adminRoutes(app: FastifyInstance) {
   app.get('/api/admin/participants', async (req, reply) => {
-    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    const auth = requireAdmin(req.headers)
     if (!auth.ok) {
       return reply.status(auth.status).send(auth.body)
     }
@@ -57,7 +57,7 @@ export async function adminRoutes(app: FastifyInstance) {
   app.post<{
     Body: { userId: string; type: string; style?: string; notificationType?: string }
   }>('/api/admin/haptic/send', async (req, reply) => {
-    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    const auth = requireAdmin(req.headers)
     if (!auth.ok) {
       return reply.status(auth.status).send(auth.body)
     }
@@ -88,7 +88,7 @@ export async function adminRoutes(app: FastifyInstance) {
   })
 
   app.get('/api/admin/check', async (req, reply) => {
-    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    const auth = requireAdmin(req.headers)
     if (!auth.ok) {
       return reply.status(auth.status).send(auth.body)
     }

@@ -7,15 +7,18 @@ import { tapRoutes } from './routes/tap.js'
 import { qrRoutes } from './routes/qr.js'
 import { reactionRoutes } from './routes/reaction.js'
 import { hapticRoutes } from './routes/haptic.js'
-import { paymentRoutes } from './routes/payments.js'
 import { adminRoutes } from './routes/admin.js'
 import { displayRoutes } from './routes/display.js'
 import { featureRoutes } from './routes/features.js'
+import { vkCallbackRoutes } from './routes/vk-callback.js'
 
 export async function createApp() {
   const app = Fastify({ logger: true })
 
-  await app.register(cors, { origin: true })
+  await app.register(cors, {
+    origin: true,
+    allowedHeaders: ['Content-Type', 'x-telegram-init-data', 'x-vk-launch-params'],
+  })
   await app.register(authRoutes)
   await app.register(pollRoutes)
   await app.register(bingoRoutes)
@@ -23,10 +26,10 @@ export async function createApp() {
   await app.register(qrRoutes)
   await app.register(reactionRoutes)
   await app.register(hapticRoutes)
-  await app.register(paymentRoutes)
   await app.register(adminRoutes)
   await app.register(featureRoutes)
   await app.register(displayRoutes)
+  await app.register(vkCallbackRoutes)
 
   app.get('/health', async () => ({ status: 'ok' }))
   app.get('/ready', async () => ({ ready: true }))

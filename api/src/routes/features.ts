@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { requireAdmin } from '../lib/admin.js'
 import { prisma } from '../lib/prisma.js'
 
-const FEATURE_KEYS = ['bingo', 'qr', 'polls', 'tap', 'reaction', 'haptic', 'support', 'bingoShare'] as const
+const FEATURE_KEYS = ['bingo', 'qr', 'polls', 'tap', 'reaction', 'haptic', 'bingoShare'] as const
 
 type FeatureKey = (typeof FEATURE_KEYS)[number]
 
@@ -31,7 +31,7 @@ export async function featureRoutes(app: FastifyInstance) {
   })
 
   app.get('/api/admin/features', async (req, reply) => {
-    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    const auth = requireAdmin(req.headers)
     if (!auth.ok) {
       return reply.status(auth.status).send(auth.body)
     }
@@ -51,7 +51,7 @@ export async function featureRoutes(app: FastifyInstance) {
     Params: { key: string }
     Body: { enabled?: boolean }
   }>('/api/admin/features/:key', async (req, reply) => {
-    const auth = requireAdmin(req.headers['x-telegram-init-data'])
+    const auth = requireAdmin(req.headers)
     if (!auth.ok) {
       return reply.status(auth.status).send(auth.body)
     }

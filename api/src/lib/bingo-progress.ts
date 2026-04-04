@@ -1,6 +1,8 @@
 import { prisma } from './prisma.js'
 import { wsBroadcast } from './ws-broadcast.js'
 import { sendTelegramMessage } from './telegram.js'
+import { getTelegramChatIdForUser, getVkPeerIdForUser } from './telegram-resolve.js'
+import { sendVkUserMessage } from './vk-bot.js'
 
 const BINGO_LINE_TASK_ID = process.env.BINGO_LINE_TASK_ID;
 
@@ -59,10 +61,20 @@ export async function completeBingoTaskForUser(taskId: string, userId: string) {
   })
 
   const escapedTitle = task.title.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  void sendTelegramMessage(
-    user.id,
-    `✅ Задание выполнено: <b>${escapedTitle}</b>\nПрогресс: ${completedCount}/${totalTasks}`
-  )
+  const tgChat = await getTelegramChatIdForUser(userId)
+  if (tgChat) {
+    void sendTelegramMessage(
+      tgChat,
+      `✅ Задание выполнено: <b>${escapedTitle}</b>\nПрогресс: ${completedCount}/${totalTasks}`
+    )
+  }
+  const vkPeer = await getVkPeerIdForUser(userId)
+  if (vkPeer) {
+    void sendVkUserMessage(
+      vkPeer,
+      `✅ Задание выполнено: ${task.title}\nПрогресс: ${completedCount}/${totalTasks}`
+    )
+  }
 
   if (totalTasks > 0 && completedCount === totalTasks) {
     await wsBroadcast('bingo:winner', {
@@ -72,10 +84,15 @@ export async function completeBingoTaskForUser(taskId: string, userId: string) {
         username: user.username,
       },
     })
-    void sendTelegramMessage(
-      user.id,
-      '🎉 <b>Поздравляем!</b> Ты выполнил все задания бинго!'
-    )
+    if (tgChat) {
+      void sendTelegramMessage(
+        tgChat,
+        '🎉 <b>Поздравляем!</b> Ты выполнил все задания бинго!'
+      )
+    }
+    if (vkPeer) {
+      void sendVkUserMessage(vkPeer, '🎉 Поздравляем! Ты выполнил все задания бинго!')
+    }
   }
 
   if (

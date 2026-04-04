@@ -44,7 +44,7 @@ export function validateInitData(initData: string): TelegramUser | null {
 
 /**
  * Sends a Telegram message to a user. Fire-and-forget; errors are logged but not thrown.
- * @param chatId - Telegram user id (from User.id)
+ * @param chatId - Telegram user id (numeric string), same as UserIdentity.externalId for provider telegram
  * @param text - Message text
  */
 export async function sendTelegramMessage(

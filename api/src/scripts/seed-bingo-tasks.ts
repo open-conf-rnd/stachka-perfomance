@@ -19,7 +19,6 @@ const BINGO_TASKS: { envKey: string; title: string; description: string; order: 
   { envKey: 'BINGO_SHARE_STORIES_TASK_ID', title: 'В сторис', description: 'Поделиться в сторис', order: 6 },
   { envKey: 'BINGO_SHARE_CHAT_TASK_ID', title: 'В чат', description: 'Поделиться в чат', order: 7 },
   { envKey: 'BINGO_QR_TASK_ID', title: 'QR-код', description: 'Отсканировать QR-код', order: 8 },
-  { envKey: 'BINGO_STARS_TASK_ID', title: 'Поддержать', description: 'Поддержать организаторов (Stars)', order: 9 },
 ]
 
 const ENV_KEYS_IN_ORDER = BINGO_TASKS.map((t) => t.envKey)
@@ -27,9 +26,9 @@ const ENV_KEYS_IN_ORDER = BINGO_TASKS.map((t) => t.envKey)
 async function main() {
   const existing = await prisma.bingoTask.findMany({ orderBy: [{ order: 'asc' }, { createdAt: 'asc' }] })
 
-  if (existing.length >= 9) {
+  if (existing.length >= 8) {
     console.log('# В базе уже есть задания бинго. Вывод ID по порядку (скопируй в .env):\n')
-    existing.slice(0, 9).forEach((task, i) => {
+    existing.slice(0, 8).forEach((task, i) => {
       console.log(`${ENV_KEYS_IN_ORDER[i] ?? `BINGO_TASK_${i + 1}`}=${task.id}`)
     })
     await prisma.$disconnect()

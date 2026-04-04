@@ -51,7 +51,6 @@ describe('API smoke', () => {
     await prisma.qrCode.deleteMany()
     await prisma.bingoCompletion.deleteMany()
     await prisma.bingoTask.deleteMany()
-    await prisma.payment.deleteMany()
     await prisma.hapticTrigger.deleteMany()
     await prisma.user.deleteMany()
   })
@@ -137,14 +136,6 @@ describe('API smoke', () => {
       success: true,
       payload: { type: 'impact', style: 'medium' },
     })
-  })
-
-  it('payments supporters endpoint responds', async () => {
-    const response = await app.inject({ method: 'GET', url: '/api/payments/supporters' })
-    expect(response.statusCode).toBe(200)
-    const payload = response.json() as { supporters: unknown[]; totalPayments: number }
-    expect(Array.isArray(payload.supporters)).toBe(true)
-    expect(payload.totalPayments).toBe(0)
   })
 
   it('auth register flow works with signed initData', async () => {
