@@ -38,3 +38,14 @@ npm run test:smoke:watch
   ```
   (используются `POSTGRES_*` из `.env`)
 - Проверить статус миграций: `npx prisma migrate status`
+
+## Бинго (задания в БД)
+
+Стабильные id заданий совпадают с переменными `BINGO_*_TASK_ID` в `.env` / `.env.example`.
+
+```bash
+# из папки api (нужны POSTGRES_*)
+npm run seed:bingo
+```
+
+Полный сброс заданий, QR и отметок бинго перед заполнением: `BINGO_SEED_RESET=1 npm run seed:bingo`.

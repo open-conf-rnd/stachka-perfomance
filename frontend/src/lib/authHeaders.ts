@@ -1,9 +1,16 @@
 const VK_LAUNCH_STORAGE_KEY = 'stachka_vk_launch'
 
+/** Префикс токена привязки в ?ref= / vk_ref (два символа + 32 hex), без импорта config — цикл зависимостей. */
+const ACCOUNT_LINK_REF_RE = /(^|[&?])ref=al[a-f0-9]{32}/i
+
 /** Подписанные launch params VK: в query или в hash, набор ключей может отличаться по клиенту. */
 function looksLikeVkLaunchParams(q: string): boolean {
   if (!q) return false
-  return /(^|[&?])vk_/.test(q) || /(^|[&?])sign=/.test(q)
+  return (
+    /(^|[&?])vk_/.test(q) ||
+    /(^|[&?])sign=/.test(q) ||
+    ACCOUNT_LINK_REF_RE.test(q)
+  )
 }
 
 function readVkQueryFromLocation(): string {
@@ -22,9 +29,13 @@ function readVkQueryFromLocation(): string {
 /** Сохранить подписанные параметры из URL (hash или query), чтобы не потерять после навигации. */
 export function captureVkLaunchParamsFromUrl(): void {
   const q = readVkQueryFromLocation()
-  if (q) {
-    sessionStorage.setItem(VK_LAUNCH_STORAGE_KEY, q)
-  }
+  if (!q) return
+  const prev = sessionStorage.getItem(VK_LAUNCH_STORAGE_KEY) ?? ''
+  const nextHasSign = /(^|[&?])sign=/.test(q)
+  const prevHasSign = /(^|[&?])sign=/.test(prev)
+  // Не затираем подписанную строку урезанным вариантом без sign (порядок появления параметров у VK)
+  if (prevHasSign && !nextHasSign && q.length < prev.length) return
+  sessionStorage.setItem(VK_LAUNCH_STORAGE_KEY, q)
 }
 
 export function getVkLaunchParamsForHeaders(): string {

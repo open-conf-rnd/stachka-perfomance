@@ -5,7 +5,7 @@ import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
 const TAP_GOAL = Number(process.env.TAP_GOAL || 100) || 100
-const BINGO_TAP10_TASK_ID = process.env.BINGO_TAP10_TASK_ID || 'cmmgvekeb00036po386wfmw90'
+const BINGO_TAP10_TASK_ID = process.env.BINGO_TAP10_TASK_ID?.trim() ?? ''
 
 async function getTapTotals(userId: string) {
   const [user, sum] = await Promise.all([

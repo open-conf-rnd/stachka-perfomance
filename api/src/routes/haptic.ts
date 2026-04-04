@@ -5,7 +5,7 @@ import { getUserFromPrimaryAuthHeader, replyIfUserAuthMissing } from '../lib/tel
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
-const BINGO_HAPTIC_TASK_ID = process.env.BINGO_HAPTIC_TASK_ID || 'cmmgveyhg00066po3yrtqv57l'
+const BINGO_HAPTIC_TASK_ID = process.env.BINGO_HAPTIC_TASK_ID?.trim() ?? ''
 
 const impactStyles = new Set(['light', 'medium', 'heavy', 'rigid', 'soft'])
 const notificationTypes = new Set(['success', 'warning', 'error'])

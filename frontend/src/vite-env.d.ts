@@ -4,7 +4,8 @@ declare module '@revealjs/react'
 declare module 'reveal.js/plugin/highlight/highlight.esm.js'
 
 interface ImportMetaEnv {
-  // Reserved for future overrides if needed
+  readonly VITE_TG_BOT_USERNAME?: string
+  readonly VITE_VK_MINI_APP_URL?: string
 }
 
 interface ImportMeta {

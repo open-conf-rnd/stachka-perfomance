@@ -1,7 +1,24 @@
 .app {
-  min-height: 100vh;
-  height: 100%;
-  padding: 1rem;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+  padding-top: max(1.25rem, env(safe-area-inset-top, 0px));
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+.app__route {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  /* Отступы внутри прокрутки, чтобы контент не прилипал к краям карточки / клавиатуре */
+  padding-top: 0.75rem;
+  padding-bottom: 1.75rem;
 }

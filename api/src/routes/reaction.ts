@@ -5,7 +5,7 @@ import { getUserFromPrimaryAuthHeader, replyIfUserAuthMissing } from '../lib/tel
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 import { completeBingoTaskForUser } from '../lib/bingo-progress.js'
 
-const BINGO_REACTION_TOP3_TASK_ID = process.env.BINGO_REACTION_TOP3_TASK_ID || 'cmmgveu7f00056po34mmt5zk6'
+const BINGO_REACTION_TOP3_TASK_ID = process.env.BINGO_REACTION_TOP3_TASK_ID?.trim() ?? ''
 
 const COUNTDOWN_SECONDS = Number(process.env.REACTION_COUNTDOWN_SECONDS || 3)
 const LEADERBOARD_DELAY_SECONDS = Number(process.env.REACTION_LEADERBOARD_DELAY_SECONDS || 5)

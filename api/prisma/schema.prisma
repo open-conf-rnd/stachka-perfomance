@@ -136,3 +136,16 @@ model FeatureGate {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+/// Одноразовый токен для привязки Telegram ↔ VK без двух заголовков в одном запросе
+model AccountLinkToken {
+  id        String    @id @default(cuid())
+  token     String    @unique
+  vkUserId  String?
+  tgExtId   String?
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([expiresAt])
+}

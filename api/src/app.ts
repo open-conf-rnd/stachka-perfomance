@@ -12,13 +12,26 @@ import { displayRoutes } from './routes/display.js'
 import { featureRoutes } from './routes/features.js'
 import { vkCallbackRoutes } from './routes/vk-callback.js'
 
+const CORS_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'] as const
+
 export async function createApp() {
   const app = Fastify({ logger: true })
 
   await app.register(cors, {
     origin: true,
+    // по умолчанию в @fastify/cors только GET,HEAD,POST — без PUT preflight админки и др. падает с «CORS error»
+    methods: [...CORS_METHODS],
     allowedHeaders: ['Content-Type', 'x-telegram-init-data', 'x-vk-launch-params'],
   })
+
+  // HTTPS (VK / туннель) → http://localhost:3000: Chromium шлёт Access-Control-Request-Private-Network
+  app.addHook('onSend', async (request, reply, payload) => {
+    if (request.headers['access-control-request-private-network'] === 'true') {
+      reply.header('Access-Control-Allow-Private-Network', 'true')
+    }
+    return payload
+  })
+
   await app.register(authRoutes)
   await app.register(pollRoutes)
   await app.register(bingoRoutes)

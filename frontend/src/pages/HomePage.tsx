@@ -54,7 +54,7 @@ export function HomePage() {
   const visibleMenu = isAdmin ? [adminItem, ...menu] : menu
 
   return (
-    <PageLayout title="Stachka TMA" subtitle="Главная: все активности" enableBackButton={false}>
+    <PageLayout title="Хобби помощник" subtitle="Главная: все активности" enableBackButton={false}>
       {checking && <p className="page__loading">Проверка регистрации...</p>}
       {error && <p className="page__error">Ошибка: {error}</p>}
       <div className="grid">

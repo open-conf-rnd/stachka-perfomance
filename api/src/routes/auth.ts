@@ -1,14 +1,22 @@
+import crypto from 'node:crypto'
 import type { FastifyInstance } from 'fastify'
 import { prisma } from '../lib/prisma.js'
+import { mergeTelegramVkIdentities } from '../lib/account-link-merge.js'
 import { validateInitData } from '../lib/telegram.js'
 import { getUserFromPrimaryAuthHeader } from '../lib/telegram-resolve.js'
 import { verifyAndParseVkLaunch } from '../lib/vk-launch.js'
 import { wsBroadcast } from '../lib/ws-broadcast.js'
 
+const LINK_TOKEN_TTL_MS = 15 * 60 * 1000
+
 function headerStr(value: string | string[] | undefined): string | undefined {
   if (typeof value === 'string' && value.length > 0) return value
   if (Array.isArray(value) && value[0]) return value[0]
   return undefined
+}
+
+function newLinkToken(): string {
+  return crypto.randomBytes(16).toString('hex')
 }
 
 export async function authRoutes(app: FastifyInstance) {
@@ -133,74 +141,100 @@ export async function authRoutes(app: FastifyInstance) {
     return reply.status(401).send({ error: 'Missing init data' })
   })
 
-  app.post('/api/auth/link', async (req, reply) => {
-    const initData = headerStr(req.headers['x-telegram-init-data'])
+  /** Шаг 1 (VK): выдать токен и ссылку в Telegram для завершения привязки */
+  app.post('/api/auth/vk-link-token', async (req, reply) => {
     const vkRaw = headerStr(req.headers['x-vk-launch-params'])
-    if (!initData || !vkRaw) {
-      return reply
-        .status(400)
-        .send({ error: 'Both x-telegram-init-data and x-vk-launch-params are required' })
+    if (!vkRaw) {
+      return reply.status(401).send({ error: 'VK launch params required' })
     }
-
-    const tgUser = validateInitData(initData)
-    if (!tgUser) {
-      return reply.status(401).send({ error: 'Invalid init data' })
-    }
-
     const secret = process.env.VK_APP_SECRET ?? ''
     const appId = process.env.VK_APP_ID?.trim() || undefined
-    const vkParsed = verifyAndParseVkLaunch(vkRaw, secret, appId)
-    if (!vkParsed) {
+    const parsed = verifyAndParseVkLaunch(vkRaw, secret, appId)
+    if (!parsed) {
       return reply.status(401).send({ error: 'Invalid init data' })
     }
 
-    const tgExt = String(tgUser.id)
-    const vkExt = vkParsed.vkUserId
+    await prisma.accountLinkToken.deleteMany({
+      where: { vkUserId: parsed.vkUserId, usedAt: null },
+    })
 
-    const [identityTg, identityVk] = await Promise.all([
-      prisma.userIdentity.findUnique({
-        where: { provider_externalId: { provider: 'telegram', externalId: tgExt } },
-        include: { user: true },
-      }),
-      prisma.userIdentity.findUnique({
-        where: { provider_externalId: { provider: 'vk', externalId: vkExt } },
-        include: { user: true },
-      }),
-    ])
+    const token = newLinkToken()
+    const expiresAt = new Date(Date.now() + LINK_TOKEN_TTL_MS)
+    await prisma.accountLinkToken.create({
+      data: {
+        token,
+        vkUserId: parsed.vkUserId,
+        expiresAt,
+      },
+    })
 
-    if (identityTg && identityVk) {
-      if (identityTg.userId === identityVk.userId) {
-        return { linked: true, alreadyLinked: true, user: identityTg.user }
+    return {
+      token,
+      expiresInMinutes: 15,
+      telegramStartApp: `al${token}`,
+    }
+  })
+
+  /** Завершить привязку (заголовок второй платформы + токен из vk-link-token) */
+  app.post<{
+    Body: { token?: string }
+  }>('/api/auth/complete-account-link', async (req, reply) => {
+    const rawToken = typeof req.body?.token === 'string' ? req.body.token.trim() : ''
+    if (!/^[a-f0-9]{32}$/i.test(rawToken)) {
+      return reply.status(400).send({ error: 'Invalid token' })
+    }
+    const token = rawToken.toLowerCase()
+
+    const row = await prisma.accountLinkToken.findUnique({ where: { token } })
+    if (!row || row.usedAt || row.expiresAt < new Date()) {
+      return reply.status(400).send({ error: 'Invalid or expired token' })
+    }
+
+    const initData = headerStr(req.headers['x-telegram-init-data'])
+    const vkRaw = headerStr(req.headers['x-vk-launch-params'])
+
+    if (initData && row.vkUserId) {
+      const tgUser = validateInitData(initData)
+      if (!tgUser) {
+        return reply.status(401).send({ error: 'Invalid init data' })
       }
-      return reply
-        .status(409)
-        .send({ error: 'Telegram and VK are already linked to different accounts' })
-    }
-
-    if (identityTg && !identityVk) {
-      await prisma.userIdentity.create({
-        data: {
-          userId: identityTg.userId,
-          provider: 'vk',
-          externalId: vkExt,
-        },
+      const merged = await mergeTelegramVkIdentities(String(tgUser.id), row.vkUserId)
+      if (!merged.ok) {
+        return reply.status(merged.code).send({ error: merged.error })
+      }
+      await prisma.accountLinkToken.update({
+        where: { id: row.id },
+        data: { usedAt: new Date() },
       })
-      const user = await prisma.user.findUniqueOrThrow({ where: { id: identityTg.userId } })
-      return { linked: true, alreadyLinked: false, user }
+      return {
+        linked: true,
+        alreadyLinked: merged.alreadyLinked,
+        user: merged.user,
+      }
     }
 
-    if (!identityTg && identityVk) {
-      await prisma.userIdentity.create({
-        data: {
-          userId: identityVk.userId,
-          provider: 'telegram',
-          externalId: tgExt,
-        },
+    if (vkRaw && row.tgExtId) {
+      const secret = process.env.VK_APP_SECRET ?? ''
+      const appId = process.env.VK_APP_ID?.trim() || undefined
+      const vkParsed = verifyAndParseVkLaunch(vkRaw, secret, appId)
+      if (!vkParsed) {
+        return reply.status(401).send({ error: 'Invalid init data' })
+      }
+      const merged = await mergeTelegramVkIdentities(row.tgExtId, vkParsed.vkUserId)
+      if (!merged.ok) {
+        return reply.status(merged.code).send({ error: merged.error })
+      }
+      await prisma.accountLinkToken.update({
+        where: { id: row.id },
+        data: { usedAt: new Date() },
       })
-      const user = await prisma.user.findUniqueOrThrow({ where: { id: identityVk.userId } })
-      return { linked: true, alreadyLinked: false, user }
+      return {
+        linked: true,
+        alreadyLinked: merged.alreadyLinked,
+        user: merged.user,
+      }
     }
 
-    return reply.status(400).send({ error: 'Register in the app on at least one platform first' })
+    return reply.status(400).send({ error: 'Wrong client for this token' })
   })
 }
