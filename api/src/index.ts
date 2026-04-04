@@ -2,7 +2,6 @@ import 'dotenv/config'
 import { createApp } from './app.js'
 
 const API_PORT = Number(process.env.API_PORT) || 3000
-
 async function start() {
   try {
     const app = await createApp()
