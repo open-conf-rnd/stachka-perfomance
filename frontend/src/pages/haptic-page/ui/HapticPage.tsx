@@ -1,91 +1,39 @@
-import { useEffect, useState } from 'react'
-import { PageLayout } from '../../components/PageLayout'
-import { apiRequestWithNotifications } from '../../lib/api'
-import { triggerHaptic } from '../../lib/haptic'
-import { wsUrl } from '../../config'
+import { PageLayout } from '@/components/PageLayout'
+import type { ImpactStyle, NotificationType } from '../model'
+import { useBehavior } from '../model'
 import './HapticPage.css'
 
-type ImpactStyle = 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'
-type NotificationType = 'success' | 'warning' | 'error'
+const impactStyles: ImpactStyle[] = ['light', 'medium', 'heavy', 'rigid', 'soft']
+const impactLabels: Record<ImpactStyle, string> = {
+  light: 'Лёгкая',
+  medium: 'Средняя',
+  heavy: 'Сильная',
+  rigid: 'Жёсткая',
+  soft: 'Мягкая',
+}
+const notificationLabels: Record<NotificationType, string> = {
+  success: 'Успех',
+  warning: 'Предупреждение',
+  error: 'Ошибка',
+}
+const impactColors = [
+  '#22c55e',
+  '#84cc16',
+  '#eab308',
+  '#f97316',
+  '#ef4444',
+] as const
+const impactPaddings = ['0.4rem 0.65rem', '0.55rem 0.8rem', '0.75rem 1rem', '0.9rem 1.2rem', '0.65rem 0.9rem'] as const
+const impactFontSizes = ['0.8rem', '0.88rem', '1rem', '1.1rem', '0.9rem'] as const
 
-interface HapticTriggerMessage {
-  type: 'impact' | 'notification'
-  style?: ImpactStyle
-  notificationType?: NotificationType
+const notificationColors: Record<NotificationType, string> = {
+  success: '#22c55e',
+  warning: '#f59e0b',
+  error: '#ef4444',
 }
 
 export function HapticPage() {
-  const [status, setStatus] = useState<string>('Готово')
-
-  useEffect(() => {
-    const ws = new WebSocket(wsUrl)
-    ws.onmessage = (event) => {
-      try {
-        const msg = JSON.parse(event.data) as { type: string; payload?: HapticTriggerMessage }
-        if (msg.type !== 'haptic:trigger' || !msg.payload) return
-        const ok = triggerHaptic(msg.payload as HapticTriggerMessage)
-        setStatus(ok ? 'Получена массовая вибрация' : 'Haptic недоступен в текущей среде')
-      } catch {
-        // ignore malformed ws messages
-      }
-    }
-    return () => ws.close()
-  }, [])
-
-  const impactStyles: ImpactStyle[] = ['light', 'medium', 'heavy', 'rigid', 'soft']
-  const impactLabels: Record<ImpactStyle, string> = {
-    light: 'Лёгкая',
-    medium: 'Средняя',
-    heavy: 'Сильная',
-    rigid: 'Жёсткая',
-    soft: 'Мягкая',
-  }
-  const notificationLabels: Record<NotificationType, string> = {
-    success: 'Успех',
-    warning: 'Предупреждение',
-    error: 'Ошибка',
-  }
-  const impactColors = [
-    '#22c55e', // light — зелёный
-    '#84cc16', // medium — лайм
-    '#eab308', // heavy — жёлтый
-    '#f97316', // rigid — оранжевый
-    '#ef4444', // soft — красный
-  ] as const
-  const impactPaddings = ['0.4rem 0.65rem', '0.55rem 0.8rem', '0.75rem 1rem', '0.9rem 1.2rem', '0.65rem 0.9rem'] as const
-  const impactFontSizes = ['0.8rem', '0.88rem', '1rem', '1.1rem', '0.9rem'] as const
-
-  const runImpact = (style: ImpactStyle) => {
-    const ok = triggerHaptic({ type: 'impact', style })
-    setStatus(ok ? `Impact: ${style}` : 'Haptic недоступен в текущей среде')
-    void apiRequestWithNotifications('/api/haptic/track', 'POST', { type: 'impact', style }, {
-      notifyOnSuccess: false,
-      notifyOnError: false,
-    }).catch(() => {})
-  }
-
-  const runNotification = (notificationType: NotificationType) => {
-    const ok = triggerHaptic({ type: 'notification', notificationType })
-    setStatus(ok ? `Notification: ${notificationType}` : 'Haptic недоступен в текущей среде')
-    void apiRequestWithNotifications(
-      '/api/haptic/track',
-      'POST',
-      {
-        type: 'notification',
-        notificationType,
-      },
-      {
-        notifyOnSuccess: false,
-        notifyOnError: false,
-      }
-    ).catch(() => {})
-  }
-
-  const notificationColors: Record<NotificationType, string> = {
-    success: '#22c55e',
-    warning: '#f59e0b',
-    error: '#ef4444',
-  }
+  const { status, runImpact, runNotification } = useBehavior()
 
   return (
     <PageLayout title="Вибрации" subtitle="Демо Haptic API Telegram">

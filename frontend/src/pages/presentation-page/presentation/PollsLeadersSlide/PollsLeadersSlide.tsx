@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { apiRequest } from '../../../lib/api'
+import { apiRequest } from '../../../../lib/api'
 import {
   subscribePresentationChannel,
   subscribePresentationWs,
-} from '../../../lib/presentationWs'
+} from '../../../../lib/presentationWs'
 import './PollsLeadersSlide.css'
 
 interface PollOption {

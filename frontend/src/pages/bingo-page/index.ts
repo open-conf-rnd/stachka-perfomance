@@ -1,1 +1,1 @@
-export { BingoPage } from './BingoPage'
+export { BingoPage } from './ui/BingoPage'

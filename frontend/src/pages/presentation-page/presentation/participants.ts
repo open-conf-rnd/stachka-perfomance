@@ -1,5 +1,5 @@
-import { apiBase } from '../../config'
-import { apiRequest } from '../../lib/api'
+import { apiBase } from '../../../config'
+import { apiRequest } from '../../../lib/api'
 
 export interface Participant {
   id: string

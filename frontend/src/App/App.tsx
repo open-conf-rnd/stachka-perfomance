@@ -14,27 +14,35 @@ import { notifyAccountLinkSuccess } from '../lib/accountLinkSuccessNotify'
 import { getBingoStartParamConsumed, setBingoStartParamConsumed } from '../lib/telegramCloudStorage'
 
 // Lazy-загрузка страниц: меньший первый чанк → быстрее грузится при медленном VPN (~7 KB/s)
-const HomePage = lazy(() => import('../pages/HomePage').then(m => ({ default: m.HomePage })))
+const HomePage = lazy(() => import('@/pages/home').then(m => ({ default: m.HomePage })))
 const RegisterPage = lazy(() => import('@/pages/register').then(m => ({ default: m.RegisterPage })))
-const WelcomePage = lazy(() => import('../pages/WelcomePage').then(m => ({ default: m.WelcomePage })))
-const BingoPage = lazy(() => import('../pages/BingoPage').then(m => ({ default: m.BingoPage })))
-const QrVerifyPage = lazy(() => import('../pages/QrVerifyPage').then(m => ({ default: m.QrVerifyPage })))
-const PollsPage = lazy(() => import('../pages/PollsPage').then(m => ({ default: m.PollsPage })))
-const TapPage = lazy(() => import('../pages/TapPage').then(m => ({ default: m.TapPage })))
-const ReactionPage = lazy(() => import('../pages/ReactionPage').then(m => ({ default: m.ReactionPage })))
-const ReactionRoundsPage = lazy(() => import('../pages/ReactionRoundsPage').then(m => ({ default: m.ReactionRoundsPage })))
-const ReactionRoundDetailPage = lazy(() => import('../pages/ReactionRoundDetailPage').then(m => ({ default: m.ReactionRoundDetailPage })))
-const HapticPage = lazy(() => import('../pages/HapticPage').then(m => ({ default: m.HapticPage })))
-const AdminLayout = lazy(() => import('../components/AdminLayout').then(m => ({ default: m.AdminLayout })))
-const AdminParticipantsPage = lazy(() => import('../pages/admin/AdminParticipantsPage').then(m => ({ default: m.AdminParticipantsPage })))
-const AdminReactionPage = lazy(() => import('../pages/admin/AdminReactionPage').then(m => ({ default: m.AdminReactionPage })))
-const AdminPollsPage = lazy(() => import('../pages/admin/AdminPollsPage').then(m => ({ default: m.AdminPollsPage })))
-const AdminHapticPage = lazy(() => import('../pages/admin/AdminHapticPage').then(m => ({ default: m.AdminHapticPage })))
-const AdminBingoPage = lazy(() => import('../pages/admin/AdminBingoPage').then(m => ({ default: m.AdminBingoPage })))
-const AdminPagesAccessPage = lazy(() => import('../pages/admin/AdminPagesAccessPage').then(m => ({ default: m.AdminPagesAccessPage })))
-const PresentationPage = lazy(() => import('../pages/PresentationPage').then(m => ({ default: m.PresentationPage })))
 const AccountLinkTelegramPage = lazy(() =>
-  import('../pages/AccountLinkTelegramPage').then(m => ({ default: m.AccountLinkTelegramPage }))
+  import('@/pages/account-link').then(m => ({ default: m.AccountLinkTelegramPage }))
+)
+const WelcomePage = lazy(() => import('@/pages/welcome').then(m => ({ default: m.WelcomePage })))
+const BingoPage = lazy(() => import('@/pages/bingo-page').then(m => ({ default: m.BingoPage })))
+const QrVerifyPage = lazy(() => import('@/pages/qr-verify-page').then(m => ({ default: m.QrVerifyPage })))
+const PollsPage = lazy(() => import('@/pages/polls').then(m => ({ default: m.PollsPage })))
+const TapPage = lazy(() => import('@/pages/tap').then(m => ({ default: m.TapPage })))
+const ReactionPage = lazy(() => import('@/pages/reaction').then(m => ({ default: m.ReactionPage })))
+const ReactionRoundsPage = lazy(() => import('@/pages/reaction-rounds').then(m => ({ default: m.ReactionRoundsPage })))
+const ReactionRoundDetailPage = lazy(() =>
+  import('@/pages/reaction-round-detail').then(m => ({ default: m.ReactionRoundDetailPage }))
+)
+const HapticPage = lazy(() => import('@/pages/haptic-page').then(m => ({ default: m.HapticPage })))
+const AdminLayout = lazy(() => import('../components/AdminLayout').then(m => ({ default: m.AdminLayout })))
+const AdminParticipantsPage = lazy(() =>
+  import('@/pages/admin/participants').then(m => ({ default: m.AdminParticipantsPage }))
+)
+const AdminReactionPage = lazy(() => import('@/pages/admin/reaction').then(m => ({ default: m.AdminReactionPage })))
+const AdminPollsPage = lazy(() => import('@/pages/admin/polls').then(m => ({ default: m.AdminPollsPage })))
+const AdminHapticPage = lazy(() => import('@/pages/admin/haptic').then(m => ({ default: m.AdminHapticPage })))
+const AdminBingoPage = lazy(() => import('@/pages/admin/bingo').then(m => ({ default: m.AdminBingoPage })))
+const AdminPagesAccessPage = lazy(() =>
+  import('@/pages/admin/pages-access').then(m => ({ default: m.AdminPagesAccessPage }))
+)
+const PresentationPage = lazy(() =>
+  import('@/pages/presentation-page').then(m => ({ default: m.PresentationPage }))
 )
 
 const BINGO_START_PARAM = 'bingo'
@@ -100,7 +108,6 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
         <Route path="/reaction/rounds" element={<ReactionRoundsPage />} />
         <Route path="/reaction/rounds/:id" element={<ReactionRoundDetailPage />} />
         <Route path="/haptic" element={<HapticPage />} />
-        <Route path="/presentation" element={<PresentationPage />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/participants" replace />} />
           <Route path="participants" element={<AdminParticipantsPage />} />
@@ -110,6 +117,8 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
           <Route path="bingo" element={<AdminBingoPage />} />
           <Route path="pages" element={<AdminPagesAccessPage />} />
         </Route>
+
+        <Route path="/presentation" element={<PresentationPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>

@@ -1,0 +1,1 @@
+export { useBehavior } from './useBehavior'

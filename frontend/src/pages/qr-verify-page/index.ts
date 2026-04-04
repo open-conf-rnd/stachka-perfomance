@@ -1,1 +1,1 @@
-export { QrVerifyPage } from './QrVerifyPage'
+export { QrVerifyPage } from './ui/QrVerifyPage'

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { subscribePresentationWs } from '../../../lib/presentationWs'
+import { subscribePresentationWs } from '../../../../lib/presentationWs'
 import './QrVerifiedNotificationsOverlay.css'
 
 interface QrVerifiedPayload {

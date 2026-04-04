@@ -4,7 +4,7 @@ import 'reveal.js/dist/reveal.css'
 import 'reveal.js/dist/theme/white.css'
 import RevealHighlight from 'reveal.js/plugin/highlight/highlight.esm.js'
 import 'reveal.js/plugin/highlight/monokai.css'
-import './presentation/fonts.css'
+import '../presentation/fonts.css'
 import './PresentationPage.css'
 import {
   TitleSlide,
@@ -23,7 +23,7 @@ import {
   SlideCode,
   SlideFlow,
   SlideProsCons,
-} from './presentation'
+} from '../presentation'
 import { QRCodeSVG } from 'qrcode.react'
 
 const PLACEHOLDER_IMG = '/slides/rectangle-3.png'

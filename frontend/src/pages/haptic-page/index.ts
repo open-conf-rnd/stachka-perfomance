@@ -1,1 +1,1 @@
-export { HapticPage } from './HapticPage'
+export { HapticPage } from './ui/HapticPage'

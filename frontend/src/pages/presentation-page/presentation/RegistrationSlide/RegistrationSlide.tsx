@@ -3,7 +3,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import {
   subscribePresentationChannel,
   subscribePresentationWs,
-} from '../../../lib/presentationWs'
+} from '../../../../lib/presentationWs'
 import { fetchParticipants, fetchDisplayParticipants, type Participant } from '../participants'
 import './RegistrationSlide.css'
 
