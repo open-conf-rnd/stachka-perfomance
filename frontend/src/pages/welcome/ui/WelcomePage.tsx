@@ -10,7 +10,7 @@ export function WelcomePage() {
   const showConfetti = state?.celebrate ?? false
 
   return (
-    <PageLayout title="Добро пожаловать" subtitle="Ты в Стачке!">
+    <PageLayout title="Добро пожаловать" subtitle="">
       {showConfetti && (
         <Confetti
           particleCount={200}

@@ -20,57 +20,65 @@ const BINGO_TASKS: {
   {
     id: 'stachka_bingo_polls',
     envKey: 'BINGO_POLLS_TASK_ID',
-    title: 'Опросы',
-    description: 'Проголосовать во всех опросах',
+    title: 'Все опросы',
+    description:
+      'Открой раздел с опросами и проголосуй в каждом активном опросе. Зачёт — когда по всем опросам есть твой голос.',
     order: 1,
   },
   {
     id: 'stachka_bingo_tap10',
     envKey: 'BINGO_TAP10_TASK_ID',
-    title: 'Тап 10',
-    description: 'Набрать 10 тапов в игре',
+    title: '10 тапов',
+    description:
+      'В разделе «Тап» набери 10 личных нажатий — смотри на счётчик своих тапов на экране.',
     order: 2,
   },
   {
     id: 'stachka_bingo_reaction_top3',
     envKey: 'BINGO_REACTION_TOP3_TASK_ID',
-    title: 'Реакция топ-3',
-    description: 'Попасть в топ-3 в раунде реакции',
+    title: 'Топ-3 реакции',
+    description:
+      'В игре «Реакция» попади в тройку самых быстрых нажатий в одном из раундов.',
     order: 3,
   },
   {
     id: 'stachka_bingo_line',
     envKey: 'BINGO_LINE_TASK_ID',
     title: 'Линия',
-    description: 'Собрать линию из 3 заданий в бинго',
+    description:
+      'Собери горизонталь из трёх выполненных клеток: верхний ряд сетки или средний (три карточки по центру). Отметка появится сама, когда условие выполнено.',
     order: 4,
   },
   {
     id: 'stachka_bingo_haptic',
     envKey: 'BINGO_HAPTIC_TASK_ID',
-    title: 'Вибрация',
-    description: 'Попробовать все типы вибрации',
+    title: 'Весь хаптик',
+    description:
+      'В разделе «Хаптик» один раз вызови каждый доступный паттерн: все impact (light, medium, heavy, rigid, soft) и все notification (success, warning, error).',
     order: 5,
   },
   {
     id: 'stachka_bingo_share_stories',
     envKey: 'BINGO_SHARE_STORIES_TASK_ID',
-    title: 'В сторис',
-    description: 'Поделиться в сторис',
+    title: 'Сторис',
+    description:
+      'На этой странице бинго нажми «Share to Story» и опубликуй карточку в истории Telegram.',
     order: 6,
   },
   {
     id: 'stachka_bingo_share_chat',
     envKey: 'BINGO_SHARE_CHAT_TASK_ID',
     title: 'В чат',
-    description: 'Поделиться в чат',
+    description:
+      'Здесь же нажми «Share в чат» и отправь сообщение с прогрессом бинго.',
     order: 7,
   },
   {
     id: 'stachka_bingo_qr',
     envKey: 'BINGO_QR_TASK_ID',
-    title: 'QR-код',
-    description: 'Отсканировать QR-код',
+    title: 'QR доклада',
+    description:
+      'Отсканируй QR с экрана доклада или введи код на экране проверки — так отмечается демо-задание.',
     order: 8,
   },
 ]
