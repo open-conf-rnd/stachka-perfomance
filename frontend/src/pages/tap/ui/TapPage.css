@@ -1,0 +1,136 @@
+.tap-page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tap-page__footer {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.tap-dino-button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  margin: 0;
+  padding: clamp(1rem, 3vh, 1.75rem) 1rem;
+  border: none;
+  border-radius: 28px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  color: #0f3d2e;
+  background:
+    radial-gradient(120% 90% at 30% 15%, rgba(255, 255, 255, 0.45), transparent 55%),
+    linear-gradient(165deg, #7ecf9a 0%, #3d9a6a 42%, #2a7a52 100%);
+  box-shadow:
+    0 4px 0 #1e5c3d,
+    0 8px 24px rgba(15, 61, 46, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transform: scale(1);
+  transform-origin: center;
+  transition:
+    transform 0.1s cubic-bezier(0.34, 1.2, 0.64, 1),
+    box-shadow 0.1s ease,
+    filter 0.1s ease;
+}
+
+.tap-dino-button:hover:not(:disabled) {
+  filter: brightness(1.03);
+}
+
+.tap-dino-button:active:not(:disabled) {
+  transform: scale(0.92);
+  box-shadow:
+    0 2px 0 #1e5c3d,
+    0 4px 14px rgba(15, 61, 46, 0.3),
+    inset 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.tap-dino-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: scale(1);
+  box-shadow:
+    0 3px 0 #2d6b4a,
+    0 6px 16px rgba(15, 61, 46, 0.22);
+}
+
+.tap-dino-button__emoji {
+  display: block;
+  line-height: 1;
+  font-size: clamp(4rem, min(32vw, 28dvh), 11rem);
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18));
+  pointer-events: none;
+}
+
+.tap-dino-button__label {
+  font-size: clamp(1rem, 4vw, 1.25rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.tap-dino-button--busy .tap-dino-button__emoji {
+  animation: tap-dino-busy 0.9s ease-in-out infinite;
+}
+
+@keyframes tap-dino-busy {
+  0%,
+  100% {
+    transform: translateY(0);
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.18));
+  }
+  50% {
+    transform: translateY(-3px);
+    filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.2));
+  }
+}
+
+.tap-page__stat {
+  margin: 0;
+}
+
+.tap-page__stat--total {
+  margin: 0;
+}
+
+.tap-page__progress {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.tap-page__progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.2s ease;
+}
+
+.tap-page__progress-fill--active {
+  background: #3b82f6;
+}
+
+.tap-page__progress-fill--done {
+  background: #22c55e;
+}
+
+.tap-page__goal-msg {
+  margin: 0.35rem 0 0;
+  font-weight: 700;
+}

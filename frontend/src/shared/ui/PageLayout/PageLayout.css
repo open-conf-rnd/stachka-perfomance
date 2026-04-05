@@ -21,6 +21,7 @@
 
 .page__card {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   border-radius: 12px;
