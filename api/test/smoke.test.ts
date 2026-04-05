@@ -214,4 +214,30 @@ describe('API smoke', () => {
     expect(reactionTap.statusCode).toBe(200)
     expect(reactionTap.json()).toMatchObject({ success: true, alreadyTapped: false, roundId })
   })
+
+  it('public tap aggregate returns total after tap', async () => {
+    const initData = buildInitData({
+      id: 2003,
+      first_name: 'TapDisplay',
+      username: 'tapdisplay',
+    })
+    await app.inject({
+      method: 'POST',
+      url: '/api/register',
+      headers: { 'x-telegram-init-data': initData },
+    })
+    await app.inject({
+      method: 'POST',
+      url: '/api/tap',
+      headers: { 'x-telegram-init-data': initData },
+    })
+    const res = await app.inject({
+      method: 'GET',
+      url: '/api/tap/aggregate',
+    })
+    expect(res.statusCode).toBe(200)
+    const body = res.json() as { total: number; goal: number }
+    expect(body).toMatchObject({ total: 1 })
+    expect(typeof body.goal).toBe('number')
+  })
 })

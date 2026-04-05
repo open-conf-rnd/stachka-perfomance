@@ -27,6 +27,17 @@ async function getTapTotals(userId: string) {
 }
 
 export async function tapRoutes(app: FastifyInstance) {
+  /** Общий счётчик для экрана презентации (без авторизации; только сумма и цель). */
+  app.get('/api/tap/aggregate', async () => {
+    const sum = await prisma.user.aggregate({
+      _sum: { tapCount: true },
+    })
+    return {
+      total: sum._sum.tapCount ?? 0,
+      goal: TAP_GOAL,
+    }
+  })
+
   app.get('/api/tap', async (req, reply) => {
     const auth = await getUserFromPrimaryAuthHeader(req.headers)
     if (!replyIfUserAuthMissing(reply, auth)) {

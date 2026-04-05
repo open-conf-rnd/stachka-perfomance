@@ -13,6 +13,7 @@ import {
   QrTaskSlide,
   QrVerifiedNotificationsOverlay,
   PollHistogramSlides,
+  TapTotalSlide,
   SlideFrame,
   SlideLogoBottom,
   SlideImageText,
@@ -549,23 +550,6 @@ export function triggerHaptic(payload) {
 
       <PollHistogramSlides />
 
-      {/* 3. BackButton — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="BackButton: где используется"
-            subtitle="Нативная кнопка «Назад» в шапке Mini App"
-            revealByClick
-            blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
-            steps={[
-              { label: 'Все страницы', description: 'по умолчанию true' },
-              { label: 'Когда скрываем', description: 'Главная — false' },
-              { label: 'По клику', description: '.onClick → возврат на главную' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
       {/* 5. showPopup — использование */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
@@ -607,6 +591,12 @@ webApp.showPopup({
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText title="Мини-игры" description="Играем и получаем награды" imageSrc="/slides/games.png" />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <TapTotalSlide />
         </SlideLogoBottom>
       </Slide>
 

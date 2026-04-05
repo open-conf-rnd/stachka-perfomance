@@ -1,0 +1,1 @@
+export { TapTotalSlide } from './TapTotalSlide'

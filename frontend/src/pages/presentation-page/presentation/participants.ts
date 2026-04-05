@@ -31,3 +31,16 @@ export async function fetchDisplayParticipants(token: string): Promise<Participa
   if (!res.ok) throw new Error('Display token invalid or missing')
   return res.json() as Promise<Participant[]>
 }
+
+export interface TapAggregate {
+  total: number
+  goal: number
+}
+
+/** Суммарные тапы для слайда презентации (публично, без display-токена). */
+export async function fetchTapAggregate(): Promise<TapAggregate> {
+  const base = apiBase || ''
+  const res = await fetch(`${base}/api/tap/aggregate`)
+  if (!res.ok) throw new Error('Не удалось загрузить счётчик тапов')
+  return res.json() as Promise<TapAggregate>
+}
