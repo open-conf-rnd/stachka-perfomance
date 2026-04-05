@@ -62,10 +62,15 @@ function App() {
   )
 }
 
+function telegramStartParamFromInitData(): string | undefined {
+  return typeof window !== 'undefined' ? window.Telegram?.WebApp?.initDataUnsafe?.start_param : undefined
+}
+
 function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemeParams> }) {
   const location = useLocation()
   const navigate = useNavigate()
   const launchParams = useLaunchParams()
+  const startParam = launchParams.startParam ?? telegramStartParamFromInitData()
   const isPresentation = location.pathname === '/presentation'
   const bg = isPresentation ? '#f8f8f8' : (themeParams?.bgColor ?? '#1c1c1e')
   const fg = isPresentation ? '#1a1a1a' : (themeParams?.textColor ?? '#ffffff')
@@ -74,7 +79,7 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
   useTgToVkAccountLinkFromVkHashAndBridge({ onLinkedSuccess: notifyAccountLinkSuccess })
 
   useEffect(() => {
-    const shouldOpenBingo = launchParams.startParam === BINGO_START_PARAM && location.pathname === '/'
+    const shouldOpenBingo = startParam === BINGO_START_PARAM && location.pathname === '/'
     if (!shouldOpenBingo) return
 
     let cancelled = false
@@ -90,7 +95,7 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
     return () => {
       cancelled = true
     }
-  }, [launchParams.startParam, location.pathname, navigate])
+  }, [startParam, location.pathname, navigate])
 
   return (
     <div className="app__route" style={{ backgroundColor: bg, color: fg }}>

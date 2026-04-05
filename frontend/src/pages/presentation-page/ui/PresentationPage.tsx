@@ -312,12 +312,12 @@ share(mediaUrl, {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideFlow
-            title="startParam и Cloud Storage: где используется"
+            title="startParam: где используется"
             subtitle=""
             revealByClick
             steps={[
               { label: 'Ссылка из бота/рекламы', description: '?startapp=bingo' },
-              { label: 'При открытии TMA', description: 'start_param → флаг в Cloud Storage → /bingo' },
+              { label: 'При открытии TMA', description: 'start_param → флаг в sessionStorage (сессия WebView) → /bingo' },
             ]}
           />
         </SlideLogoBottom>
@@ -326,19 +326,16 @@ share(mediaUrl, {
       {/* 6. LaunchParams / startParam — код (AppContent, App.tsx) */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
-          title="LaunchParams и Telegram Cloud Storage"
+          title="LaunchParams и флаг в sessionStorage"
           code={`
-const cloud = window.Telegram?.WebApp?.CloudStorage
-const launchParams = window.Telegram?.WebApp?.initDataUnsafe?.start_param
+const startParam =
+  useLaunchParams().startParam
+  ?? window.Telegram?.WebApp?.initDataUnsafe?.start_param
 
-if (launchParams === 'bingo') {
-  cloud.getItem('bingoParam', (err, value) => {
-    if (err || value === '1') return
-
-    cloud.setItem('bingoParam', '1', () => {
-      navigate('/bingo', { replace: true })
-    })
-  })
+if (startParam === 'bingo' && location.pathname === '/') {
+  if (sessionStorage.getItem('bingo-start-param-consumed') === '1') return
+  sessionStorage.setItem('bingo-start-param-consumed', '1')
+  navigate('/bingo', { replace: true })
 }
 `}
           language="typescript"
