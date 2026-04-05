@@ -50,19 +50,22 @@ model HapticTrigger {
 }
 
 model Poll {
-  id        String   @id @default(cuid())
-  question  String
-  options   Option[]
-  votes     Vote[]
-  createdAt DateTime @default(now())
+  id              String   @id @default(cuid())
+  question        String
+  correctOptionId String? @unique
+  options         Option[] @relation("PollOptions")
+  votes           Vote[]
+  createdAt       DateTime @default(now())
+  correctOption   Option?  @relation("PollCorrectOption", fields: [correctOptionId], references: [id], onDelete: SetNull)
 }
 
 model Option {
-  id     String @id @default(cuid())
-  pollId String
-  poll   Poll   @relation(fields: [pollId], references: [id])
-  label  String
-  votes  Vote[]
+  id               String @id @default(cuid())
+  pollId           String
+  poll             Poll   @relation("PollOptions", fields: [pollId], references: [id])
+  label            String
+  votes            Vote[]
+  correctAnswerFor Poll?  @relation("PollCorrectOption")
 }
 
 model Vote {

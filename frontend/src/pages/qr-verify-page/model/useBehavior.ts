@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useQRScanner } from '@telegram-apps/sdk-react'
 import { apiRequest } from '@/shared/lib/api'
-import { notifyTelegramResult } from '@/shared/lib/telegramNotifications'
+import { notifyTelegramResultDeferred } from '@/shared/lib/telegramNotifications'
 import { setBingoStartParamConsumed } from '@/shared/lib/telegramCloudStorage'
 
 function clearLaunchParamsFromUrl() {
@@ -46,14 +46,14 @@ export function useBehavior() {
         { code: content.trim() }
       )
       if (response.feedbackSent) {
-        notifyTelegramResult(
+        notifyTelegramResultDeferred(
           'success',
           'Ссылка на форму отправлена вам в бота',
           'Обратная связь'
         )
         setStatus('Отправили ссылку на форму в бот')
       } else {
-        notifyTelegramResult('success', 'QR задание бинго засчитано', 'Бинго')
+        notifyTelegramResultDeferred('success', 'QR задание бинго засчитано', 'Бинго')
         setStatus('Задание отмечено')
       }
       await setBingoStartParamConsumed()
@@ -61,7 +61,7 @@ export function useBehavior() {
     } catch (err) {
       setScanning(false)
       setError(err instanceof Error ? err.message : 'Не удалось проверить QR')
-      notifyTelegramResult('error', 'Не удалось проверить QR', 'Бинго')
+      notifyTelegramResultDeferred('error', 'Не удалось проверить QR', 'Бинго')
       setStatus('')
     }
   }

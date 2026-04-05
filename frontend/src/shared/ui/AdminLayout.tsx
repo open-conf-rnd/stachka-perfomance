@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { PageLayout } from './PageLayout'
 import { apiRequest } from '@/shared/lib/api'
+import { getApiAuthHeaders } from '@/shared/lib/authHeaders'
 
 const adminMenu = [
   { path: '/admin/participants', title: 'Участники', desc: 'Рейтинг по бинго' },
@@ -20,6 +21,17 @@ export function AdminLayout() {
 
   useEffect(() => {
     let active = true
+    if (Object.keys(getApiAuthHeaders()).length === 0) {
+      setError(
+        'Нет данных авторизации. Откройте приложение из Telegram или VK Mini App, затем перейдите в админку.'
+      )
+      setAuthorized(false)
+      setChecking(false)
+      return () => {
+        active = false
+      }
+    }
+
     void apiRequest<{ admin: boolean }>('/api/admin/check')
       .then((data) => {
         if (!active) return
@@ -28,7 +40,12 @@ export function AdminLayout() {
       })
       .catch((err) => {
         if (!active) return
-        setError(err instanceof Error ? err.message : 'Доступ запрещён')
+        const raw = err instanceof Error ? err.message : 'Доступ запрещён'
+        const message =
+          raw === 'Missing init data' || raw === 'Invalid init data'
+            ? 'Нет данных авторизации. Откройте приложение из Telegram или VK Mini App, затем перейдите в админку.'
+            : raw
+        setError(message)
         setAuthorized(false)
       })
       .finally(() => {

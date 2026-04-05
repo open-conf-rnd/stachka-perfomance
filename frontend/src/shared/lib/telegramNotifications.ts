@@ -61,3 +61,18 @@ export function notifyTelegramResult(type: TelegramNotificationType, message: st
     window.alert(message)
   }
 }
+
+/**
+ * То же, что notifyTelegramResult, но с задержкой. Нужно после закрытия нативного UI Telegram
+ * (сканер QR и т.п.): иначе showAlert/showPopup даёт ошибку WebAppPopupOpened.
+ */
+export function notifyTelegramResultDeferred(
+  type: TelegramNotificationType,
+  message: string,
+  title?: string,
+  delayMs = 280
+): void {
+  window.setTimeout(() => {
+    notifyTelegramResult(type, message, title)
+  }, delayMs)
+}

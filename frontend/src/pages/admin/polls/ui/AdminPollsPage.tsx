@@ -5,6 +5,8 @@ export function AdminPollsPage() {
     question,
     setQuestion,
     options,
+    correctOptionIndex,
+    setCorrectOptionIndex,
     loading,
     result,
     error,
@@ -49,8 +51,37 @@ export function AdminPollsPage() {
               + добавить
             </button>
           </div>
+          <p style={{ margin: '0 0 0.35rem', fontSize: '0.85rem', opacity: 0.85 }}>
+            Верный ответ (для слайдов презентации: зелёный / красный)
+          </p>
+          <label
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              marginBottom: '0.5rem',
+              fontSize: '0.88rem',
+              cursor: 'pointer',
+            }}
+          >
+            <input
+              type="radio"
+              name="correct-poll-option"
+              checked={correctOptionIndex === null}
+              onChange={() => setCorrectOptionIndex(null)}
+            />
+            Не указывать (все столбцы нейтральные)
+          </label>
           {options.map((opt, i) => (
-            <div key={i} style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.4rem' }}>
+            <div key={i} style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.4rem', alignItems: 'center' }}>
+              <input
+                type="radio"
+                name="correct-poll-option"
+                checked={correctOptionIndex === i}
+                onChange={() => setCorrectOptionIndex(i)}
+                title="Верный ответ"
+                style={{ flexShrink: 0 }}
+              />
               <input
                 type="text"
                 value={opt}

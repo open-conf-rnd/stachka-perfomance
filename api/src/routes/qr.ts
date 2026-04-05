@@ -13,7 +13,9 @@ import { wsBroadcast } from '../lib/ws-broadcast.js'
 const BINGO_QR_TASK_ID = process.env.BINGO_QR_TASK_ID
 const PRESENTATION_TASK_QR_CODE = 'stachka-bingo-presentation-qr'
 const FEEDBACK_FORM_QR_CODE = 'stachka-feedback-form-qr'
-const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf2CQmnNT05BuBYyFNd5mkKsbCLrqLNZ73Eph-neA-6UoliWQ/viewform?usp=publish-editor'
+const FEEDBACK_FORM_URL =
+  process.env.FEEDBACK_FORM_URL?.trim() ||
+  'https://forms.yandex.ru/cloud/698dbe0f6d2d734220a9f7bc/?stachka_ul26=62'
 
 function getInitData(headerValue: unknown): string | null {
   return typeof headerValue === 'string' && headerValue.length > 0 ? headerValue : null

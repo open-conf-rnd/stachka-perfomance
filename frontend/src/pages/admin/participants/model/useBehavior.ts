@@ -21,7 +21,12 @@ export function useBehavior() {
       const data = await apiRequest<Participant[]>('/api/admin/participants')
       setParticipants(data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Не удалось загрузить')
+      const raw = err instanceof Error ? err.message : 'Не удалось загрузить'
+      const message =
+        raw === 'Missing init data' || raw === 'Invalid init data'
+          ? 'Нет данных авторизации. Откройте админку из Telegram или VK Mini App (не из обычного браузера).'
+          : raw
+      setError(message)
     } finally {
       setLoading(false)
     }

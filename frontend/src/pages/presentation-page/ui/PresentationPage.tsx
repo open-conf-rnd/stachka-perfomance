@@ -12,9 +12,7 @@ import {
   RegistrationSlide,
   QrTaskSlide,
   QrVerifiedNotificationsOverlay,
-  PollsStatsSlide,
-  PollsLeadersSlide,
-  PollsSummarySlide,
+  PollHistogramSlides,
   SlideFrame,
   SlideLogoBottom,
   SlideImageText,
@@ -307,6 +305,33 @@ share(mediaUrl, {
         <SlideFullImage objectFit='contain' imageSrc="/slides/dogovor.png" />
       </Slide>
 
+            {/* 3. BackButton — код */}
+            <Slide className="slide-fullsize" data-align="topleft">
+        <SlideCode
+          title="BackButton"
+          code={`
+// Telegram.WebApp.BackButton — Bot API 6.1+
+const back = window.Telegram?.WebApp?.BackButton
+
+const onBack = () => {
+  // Router: navigate('/')
+}
+
+back?.show()
+back?.onClick(onBack)
+
+// перед уходом со «внутренней» страницы:
+back?.offClick(onBack)
+back?.hide()
+`}
+          language="typescript"
+          revealByClick={false}
+          preFullWidth
+          codeVerticalAlign="center"
+          codeFontSize="clamp(2.8rem, 2.2vmin, 38px)"
+        />
+      </Slide>
+
 
       {/* 6. LaunchParams — использование */}
       <Slide className="slide-fullsize" data-align="topleft">
@@ -374,10 +399,10 @@ if (startParam === 'bingo' && location.pathname === '/') {
         <SlideCode
           title="2. QR Scanner — открытие камеры"
           code={`
-const webApp = window.Telegram?.WebApp
+const show = window.Telegram?.WebApp?.showScanQrPopup
 
 const content = await new Promise((resolve) => {
-  webApp?.showScanQrPopup(
+  show(
     { text: 'Наведи на QR-код задания' },
     (qrText) => {
       resolve(qrText ?? null)
@@ -522,23 +547,7 @@ export function triggerHaptic(payload) {
         />
       </Slide>
 
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <PollsStatsSlide />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <PollsLeadersSlide />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <PollsSummarySlide />
-        </SlideLogoBottom>
-      </Slide>
+      <PollHistogramSlides />
 
       {/* 3. BackButton — использование */}
       <Slide className="slide-fullsize" data-align="topleft">
@@ -555,33 +564,6 @@ export function triggerHaptic(payload) {
             ]}
           />
         </SlideLogoBottom>
-      </Slide>
-
-      {/* 3. BackButton — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="BackButton"
-          code={`
-// Telegram.WebApp.BackButton — Bot API 6.1+
-const back = window.Telegram?.WebApp?.BackButton
-
-const onBack = () => {
-  // Router: navigate('/')
-}
-
-back?.show()
-back?.onClick(onBack)
-
-// перед уходом со «внутренней» страницы:
-back?.offClick(onBack)
-back?.hide()
-`}
-          language="typescript"
-          revealByClick={false}
-          preFullWidth
-          codeVerticalAlign="center"
-          codeFontSize="clamp(2.8rem, 2.2vmin, 38px)"
-        />
       </Slide>
 
       {/* 5. showPopup — использование */}

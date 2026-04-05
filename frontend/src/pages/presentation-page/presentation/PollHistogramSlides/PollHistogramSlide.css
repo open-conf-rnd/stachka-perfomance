@@ -1,0 +1,99 @@
+.poll-histogram {
+  width: 100%;
+  max-width: min(1600px, 96vw);
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.poll-histogram__question {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.75rem, 3.2vmin, 2.75rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.poll-histogram__hint {
+  margin: 0 0 1rem;
+  font-size: clamp(1rem, 1.8vmin, 1.35rem);
+  opacity: 0.72;
+}
+
+.poll-histogram__chart {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(0.5rem, 1.8vmin, 1.5rem);
+  min-height: min(44vmin, 420px);
+  margin: 0 auto;
+}
+
+.poll-histogram__col {
+  flex: 1;
+  max-width: min(220px, 18vw);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.poll-histogram__count {
+  font-size: clamp(1.4rem, 2.8vmin, 2.25rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+  min-height: 1.2em;
+}
+
+.poll-histogram__bar-track {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: min(32vmin, 300px);
+  width: 100%;
+}
+
+.poll-histogram__bar {
+  width: 100%;
+  min-height: 0;
+  border-radius: 10px 10px 4px 4px;
+  transition: height 0.35s ease;
+}
+
+.poll-histogram__bar--correct {
+  background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.35);
+}
+
+.poll-histogram__bar--wrong {
+  background: linear-gradient(180deg, #f87171 0%, #dc2626 100%);
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.28);
+}
+
+.poll-histogram__bar--neutral {
+  background: linear-gradient(180deg, color-mix(in srgb, #1a1a1a 28%, #94a3b8) 0%, color-mix(in srgb, #1a1a1a 45%, #64748b) 100%);
+}
+
+.poll-histogram__label {
+  margin-top: 0.5rem;
+  font-size: clamp(0.95rem, 1.7vmin, 1.25rem);
+  font-weight: 600;
+  line-height: 1.25;
+  hyphens: auto;
+  word-break: break-word;
+}
+
+.poll-histogram__total {
+  margin: 1rem 0 0;
+  font-size: clamp(1rem, 1.6vmin, 1.2rem);
+  opacity: 0.75;
+}
+
+.poll-histogram__status {
+  font-size: clamp(1.2rem, 2vmin, 1.6rem);
+  opacity: 0.8;
+  margin: 2rem 0;
+}

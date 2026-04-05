@@ -12,6 +12,7 @@ interface Poll {
   options: PollOption[]
   counts: Record<string, number>
   total: number
+  correctOptionId?: string | null
 }
 
 export function useBehavior() {

@@ -1,5 +1,6 @@
 import { apiBase } from '@/config'
 import { apiRequest } from '@/shared/lib/api'
+import { getApiAuthHeaders } from '@/shared/lib/authHeaders'
 
 export interface Participant {
   id: string
@@ -10,8 +11,11 @@ export interface Participant {
   completionsCount?: number
 }
 
-/** Участники для админки (требует x-telegram-init-data). */
+/** Участники для админки (требует x-telegram-init-data или x-vk-launch-params). */
 export async function fetchParticipants(): Promise<Participant[]> {
+  if (typeof window !== 'undefined' && Object.keys(getApiAuthHeaders()).length === 0) {
+    return []
+  }
   try {
     return await apiRequest<Participant[]>('/api/admin/participants')
   } catch {

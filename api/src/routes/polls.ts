@@ -25,6 +25,7 @@ async function buildPollStats(pollId: string) {
   return {
     pollId: poll.id,
     question: poll.question,
+    correctOptionId: poll.correctOptionId ?? null,
     options: poll.options.map((o: { id: string; label: string }) => ({ id: o.id, label: o.label })),
     counts,
     total: poll.votes.length,
@@ -33,29 +34,52 @@ async function buildPollStats(pollId: string) {
 
 export async function pollRoutes(app: FastifyInstance) {
   app.post<{
-    Body: { question: string; options: string[] }
+    Body: { question: string; options: string[]; correctOptionIndex?: number }
   }>('/api/polls', async (req, reply) => {
     const auth = requireAdmin(req.headers)
     if (!auth.ok) {
       return reply.status(auth.status).send(auth.body)
     }
 
-    const { question, options } = req.body ?? ({} as any)
+    const { question, options, correctOptionIndex } = req.body ?? ({} as Record<string, unknown>)
     if (!question || !Array.isArray(options) || options.length < 2) {
+      return reply.status(400).send({ error: 'question and at least 2 options required' })
+    }
+
+    const labels = options.map((l: string) => String(l).trim()).filter(Boolean)
+    if (labels.length < 2) {
       return reply.status(400).send({ error: 'question and at least 2 options required' })
     }
 
     const poll = await prisma.poll.create({
       data: {
-        question,
+        question: String(question).trim(),
         options: {
-          create: options.map((label) => ({ label })),
+          create: labels.map((label) => ({ label })),
         },
       },
       include: { options: true },
     })
 
-    return poll
+    if (
+      typeof correctOptionIndex === 'number' &&
+      Number.isInteger(correctOptionIndex) &&
+      correctOptionIndex >= 0 &&
+      correctOptionIndex < poll.options.length
+    ) {
+      const correctId = poll.options[correctOptionIndex]?.id
+      if (correctId) {
+        await prisma.poll.update({
+          where: { id: poll.id },
+          data: { correctOptionId: correctId },
+        })
+      }
+    }
+
+    return prisma.poll.findUnique({
+      where: { id: poll.id },
+      include: { options: true },
+    })
   })
 
   app.get('/api/polls', async () => {
@@ -67,19 +91,78 @@ export async function pollRoutes(app: FastifyInstance) {
       orderBy: { createdAt: 'asc' },
     })
 
-    return polls.map((poll: { id: string; question: string; options: Array<{ id: string; label: string }>; votes: Array<{ optionId: string }> }) => {
-      const counts: Record<string, number> = {}
-      for (const option of poll.options) {
-        counts[option.id] = poll.votes.filter((v: { optionId: string }) => v.optionId === option.id).length
+    return polls.map(
+      (poll: {
+        id: string
+        question: string
+        correctOptionId: string | null
+        options: Array<{ id: string; label: string }>
+        votes: Array<{ optionId: string }>
+      }) => {
+        const counts: Record<string, number> = {}
+        for (const option of poll.options) {
+          counts[option.id] = poll.votes.filter((v: { optionId: string }) => v.optionId === option.id).length
+        }
+        return {
+          id: poll.id,
+          question: poll.question,
+          correctOptionId: poll.correctOptionId ?? null,
+          options: poll.options.map((o: { id: string; label: string }) => ({ id: o.id, label: o.label })),
+          counts,
+          total: poll.votes.length,
+        }
       }
-      return {
-        id: poll.id,
-        question: poll.question,
-        options: poll.options.map((o: { id: string; label: string }) => ({ id: o.id, label: o.label })),
-        counts,
-        total: poll.votes.length,
-      }
+    )
+  })
+
+  app.patch<{
+    Params: { id: string }
+    Body: { correctOptionId: string | null }
+  }>('/api/polls/:id', async (req, reply) => {
+    const auth = requireAdmin(req.headers)
+    if (!auth.ok) {
+      return reply.status(auth.status).send(auth.body)
+    }
+
+    const pollId = req.params.id
+    const body = req.body ?? {}
+    if (!('correctOptionId' in body)) {
+      return reply.status(400).send({ error: 'correctOptionId is required (string or null)' })
+    }
+
+    const correctOptionId = body.correctOptionId
+    if (correctOptionId !== null && (typeof correctOptionId !== 'string' || !correctOptionId)) {
+      return reply.status(400).send({ error: 'correctOptionId must be a non-empty string or null' })
+    }
+
+    const poll = await prisma.poll.findUnique({
+      where: { id: pollId },
+      select: { id: true },
     })
+    if (!poll) {
+      return reply.status(404).send({ error: 'Poll not found' })
+    }
+
+    if (correctOptionId !== null) {
+      const option = await prisma.option.findFirst({
+        where: { id: correctOptionId, pollId },
+      })
+      if (!option) {
+        return reply.status(400).send({ error: 'correctOptionId must belong to this poll' })
+      }
+    }
+
+    await prisma.poll.update({
+      where: { id: pollId },
+      data: { correctOptionId },
+    })
+
+    const stats = await buildPollStats(pollId)
+    if (stats) {
+      await wsBroadcast('poll:stats', stats, `poll:${pollId}`)
+    }
+
+    return stats ?? { pollId, updated: true }
   })
 
   app.post<{
