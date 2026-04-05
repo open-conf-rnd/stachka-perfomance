@@ -67,11 +67,6 @@ function PollHistogramChart({ poll }: { poll: PresentationPoll }) {
   return (
     <div className="poll-histogram">
       <h2 className="poll-histogram__question">{poll.question}</h2>
-      {hasAnswerKey ? (
-        <p className="poll-histogram__hint">Зелёный — верный ответ, красный — остальные варианты</p>
-      ) : (
-        <p className="poll-histogram__hint">Распределение голосов по вариантам</p>
-      )}
       <div className="poll-histogram__chart">
         {poll.options.map((option) => {
           const count = getOptionVotes(poll, option.id)
@@ -91,7 +86,9 @@ function PollHistogramChart({ poll }: { poll: PresentationPoll }) {
                   aria-label={`${option.label}: ${count} голосов`}
                 />
               </div>
-              <div className="poll-histogram__label">{option.label}</div>
+              <div className="poll-histogram__label-foot">
+                <span className="poll-histogram__label">{option.label}</span>
+              </div>
             </div>
           )
         })}

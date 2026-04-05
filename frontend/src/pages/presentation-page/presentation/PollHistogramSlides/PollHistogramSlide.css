@@ -1,58 +1,69 @@
 .poll-histogram {
   width: 100%;
-  max-width: min(1600px, 96vw);
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 clamp(0.35rem, 1.2vmin, 0.75rem);
   text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .poll-histogram__question {
-  margin: 0 0 0.35rem;
-  font-size: clamp(1.75rem, 3.2vmin, 2.75rem);
+  flex-shrink: 0;
+  margin: 0 0 0.5rem;
+  /* было ~1.5× крупнее; уменьшено в 1.5 раза */
+  font-size: clamp(1.05rem, 2vmin, 1.75rem);
   font-weight: 800;
   line-height: 1.2;
   letter-spacing: -0.02em;
-}
-
-.poll-histogram__hint {
-  margin: 0 0 1rem;
-  font-size: clamp(1rem, 1.8vmin, 1.35rem);
-  opacity: 0.72;
+  overflow-wrap: anywhere;
+  padding: 0 0.25rem;
 }
 
 .poll-histogram__chart {
+  flex: 1 1 0;
+  min-height: 0;
   display: flex;
   align-items: stretch;
-  justify-content: center;
-  gap: clamp(0.5rem, 1.8vmin, 1.5rem);
-  min-height: min(44vmin, 420px);
-  margin: 0 auto;
+  justify-content: stretch;
+  width: 100%;
+  gap: clamp(0.35rem, 1.2vmin, 1rem);
+  margin: 0;
+  overflow: hidden;
 }
 
 .poll-histogram__col {
-  flex: 1;
-  max-width: min(220px, 18vw);
+  flex: 1 1 0;
   min-width: 0;
+  min-height: 0;
+  max-width: none;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  overflow: hidden;
 }
 
 .poll-histogram__count {
-  font-size: clamp(1.4rem, 2.8vmin, 2.25rem);
+  flex-shrink: 0;
+  font-size: clamp(1.5rem, 4.2vmin, 3.25rem);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   line-height: 1.1;
-  margin-bottom: 0.35rem;
-  min-height: 1.2em;
+  margin-bottom: 0.25rem;
+  min-height: 1.1em;
 }
 
 .poll-histogram__bar-track {
-  flex: 1;
+  flex: 1 1 0;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: min(32vmin, 300px);
   width: 100%;
 }
 
@@ -77,19 +88,41 @@
   background: linear-gradient(180deg, color-mix(in srgb, #1a1a1a 28%, #94a3b8) 0%, color-mix(in srgb, #1a1a1a 45%, #64748b) 100%);
 }
 
+/* Одна «линия» снизу: короткие подписи опускаем к низу, как последняя строка длинных (2+ строк) */
+.poll-histogram__label-foot {
+  margin-top: 0.35rem;
+  flex-shrink: 0;
+  width: 100%;
+  max-height: 3.75em;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+  font-size: clamp(1rem, 2.4vmin, 1.85rem);
+  line-height: 1.2;
+  min-height: 2.4em;
+  box-sizing: border-box;
+  padding: 0 0.15rem;
+  overflow: hidden;
+}
+
 .poll-histogram__label {
-  margin-top: 0.5rem;
-  font-size: clamp(0.95rem, 1.7vmin, 1.25rem);
+  margin: 0;
   font-weight: 600;
-  line-height: 1.25;
-  hyphens: auto;
+  hyphens: manual;
+  overflow-wrap: anywhere;
   word-break: break-word;
+  max-width: 100%;
 }
 
 .poll-histogram__total {
-  margin: 1rem 0 0;
-  font-size: clamp(1rem, 1.6vmin, 1.2rem);
-  opacity: 0.75;
+  flex-shrink: 0;
+  margin: 0.5rem 0 0;
+  padding-bottom: 0.25rem;
+  font-size: clamp(1.75rem, 3.2vmin, 2.85rem);
+  font-weight: 700;
+  opacity: 0.78;
+  overflow-wrap: anywhere;
 }
 
 .poll-histogram__status {
