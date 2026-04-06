@@ -10,7 +10,6 @@ export function BingoPage() {
     tasks,
     loading,
     error,
-    status,
     shareEnabled,
     completedCount,
     tooltipTask,
@@ -31,7 +30,6 @@ export function BingoPage() {
       <p style={{ margin: '0 0 0.5rem' }}>
         Выполнено: {completedCount} / {tasks.length}
       </p>
-      <p style={{ margin: '0 0 0.75rem' }}>Статус: {status}</p>
 
       {shareEnabled && (
         <div className="page__actions" style={{ marginTop: 0, marginBottom: '0.75rem' }}>

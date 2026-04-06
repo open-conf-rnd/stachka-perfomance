@@ -14,6 +14,7 @@ import {
   QrVerifiedNotificationsOverlay,
   PollHistogramSlides,
   TapTotalSlide,
+  ReactionPresentationSlide,
   SlideFrame,
   SlideLogoBottom,
   SlideImageText,
@@ -287,7 +288,7 @@ export function PresentationPage() {
             {/* 9. shareToStory — код */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
-          title="1. shareToStory — шаринг в Stories"
+          title="shareToStory — шаринг в Stories"
           code={`
 const share = window.Telegram?.WebApp?.shareToStory
 
@@ -399,7 +400,7 @@ if (startParam === 'bingo' && location.pathname === '/') {
       {/* 10. Telegram QR Scanner — код */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
-          title="2. QR Scanner — открытие камеры"
+          title="QR Scanner — открытие камеры"
           code={`
 const show = window.Telegram?.WebApp?.showScanQrPopup
 
@@ -598,6 +599,12 @@ webApp.showPopup({
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <TapTotalSlide />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <ReactionPresentationSlide />
         </SlideLogoBottom>
       </Slide>
 

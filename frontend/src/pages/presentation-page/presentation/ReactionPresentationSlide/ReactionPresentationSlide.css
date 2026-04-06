@@ -1,0 +1,148 @@
+.reaction-pres-slide {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  gap: clamp(12px, 2vmin, 24px);
+  padding: clamp(20px, 3.5vmin, 40px) clamp(28px, 4.5vmin, 48px);
+  text-align: center;
+  background:
+    radial-gradient(1000px 560px at 10% 18%, rgba(118, 117, 255, 0.18), transparent 55%),
+    radial-gradient(880px 480px at 90% 10%, rgba(255, 120, 98, 0.16), transparent 52%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(244, 246, 255, 0.98) 100%);
+  border-radius: 24px;
+  box-shadow: inset 0 0 0 1px rgba(118, 117, 255, 0.12);
+}
+
+.reaction-pres-slide__title {
+  margin: 0;
+  font-size: clamp(4rem, 9vmin, 140px);
+  font-weight: 800;
+  color: #2d2a5c;
+  letter-spacing: -0.02em;
+}
+
+.reaction-pres-slide__meta {
+  margin: 0;
+  font-size: clamp(2.2rem, 3.8vmin, 48px);
+  font-weight: 600;
+  color: #4a4680;
+}
+
+.reaction-pres-slide__countdown {
+  margin: clamp(8px, 1.5vmin, 20px) 0 0;
+  font-size: clamp(12rem, 28vmin, 360px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: #3d3acb;
+  font-variant-numeric: tabular-nums;
+}
+
+.reaction-pres-slide__hint {
+  margin: 0;
+  font-size: clamp(2.6rem, 4.2vmin, 56px);
+  font-weight: 600;
+  color: #4a4680;
+  line-height: 1.3;
+  max-width: 50ch;
+  align-self: center;
+}
+
+.reaction-pres-slide__active-title {
+  margin: clamp(12px, 2vmin, 28px) 0 0;
+  font-size: clamp(5rem, 10vmin, 160px);
+  font-weight: 800;
+  color: #c43d2e;
+  line-height: 1.1;
+}
+
+.reaction-pres-slide__list-wrap {
+  margin-top: clamp(12px, 2vmin, 24px);
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  text-align: left;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: inset 0 0 0 1px rgba(45, 42, 92, 0.08);
+  padding: clamp(16px, 2.5vmin, 28px) clamp(20px, 3vmin, 36px);
+}
+
+.reaction-pres-slide__list-title {
+  margin: 0 0 clamp(12px, 2vmin, 20px);
+  font-size: clamp(2.4rem, 4vmin, 44px);
+  font-weight: 700;
+  color: #2d2a5c;
+  text-align: center;
+}
+
+.reaction-pres-slide__row {
+  display: grid;
+  grid-template-columns: minmax(4.5rem, 8vw) 1fr minmax(10rem, 18vw);
+  gap: clamp(8px, 1.5vmin, 16px);
+  align-items: baseline;
+  padding: clamp(10px, 1.4vmin, 14px) 0;
+  border-bottom: 1px solid rgba(45, 42, 92, 0.08);
+  font-size: clamp(2rem, 3.2vmin, 36px);
+  font-weight: 600;
+  color: #2d2a5c;
+}
+
+.reaction-pres-slide__row:last-child {
+  border-bottom: none;
+}
+
+.reaction-pres-slide__place {
+  font-variant-numeric: tabular-nums;
+  color: #5c57a6;
+}
+
+.reaction-pres-slide__name {
+  min-width: 0;
+  word-break: break-word;
+}
+
+.reaction-pres-slide__delta {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #4a4680;
+  font-weight: 600;
+}
+
+.reaction-pres-slide__podium {
+  margin-top: clamp(16px, 2.5vmin, 28px);
+  padding: clamp(12px, 2vmin, 20px);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(196, 61, 46, 0.12);
+}
+
+.reaction-pres-slide__podium-title {
+  margin: 0 0 clamp(8px, 1.2vmin, 14px);
+  font-size: clamp(2rem, 3.4vmin, 40px);
+  font-weight: 700;
+  color: #8b2e24;
+}
+
+.reaction-pres-slide__podium-row {
+  font-size: clamp(1.9rem, 3vmin, 34px);
+  font-weight: 600;
+  color: #5b2a22;
+  margin: 0.25em 0;
+}
+
+.reaction-pres-slide__status,
+.reaction-pres-slide__error {
+  margin: 0;
+  font-size: clamp(2.4rem, 4vmin, 44px);
+  font-weight: 600;
+  color: #4a4680;
+}
+
+.reaction-pres-slide__error {
+  color: #b42318;
+}
