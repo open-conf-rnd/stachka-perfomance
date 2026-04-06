@@ -2,7 +2,7 @@ import type { FastifyInstance } from 'fastify'
 import { requireAdmin } from '../lib/admin.js'
 import { prisma } from '../lib/prisma.js'
 
-const FEATURE_KEYS = ['bingo', 'qr', 'polls', 'tap', 'reaction', 'haptic', 'bingoShare'] as const
+const FEATURE_KEYS = ['bingo', 'qr', 'polls', 'tap', 'reaction', 'haptic', 'merge2048', 'bingoShare'] as const
 
 type FeatureKey = (typeof FEATURE_KEYS)[number]
 

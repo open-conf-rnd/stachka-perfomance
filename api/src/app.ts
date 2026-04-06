@@ -7,6 +7,7 @@ import { tapRoutes } from './routes/tap.js'
 import { qrRoutes } from './routes/qr.js'
 import { reactionRoutes } from './routes/reaction.js'
 import { hapticRoutes } from './routes/haptic.js'
+import { merge2048Routes } from './routes/merge2048.js'
 import { adminRoutes } from './routes/admin.js'
 import { displayRoutes } from './routes/display.js'
 import { featureRoutes } from './routes/features.js'
@@ -40,6 +41,7 @@ export async function createApp() {
   await app.register(qrRoutes)
   await app.register(reactionRoutes)
   await app.register(hapticRoutes)
+  await app.register(merge2048Routes)
   await app.register(adminRoutes)
   await app.register(featureRoutes)
   await app.register(displayRoutes)

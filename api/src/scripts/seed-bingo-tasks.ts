@@ -28,6 +28,7 @@ const DEFAULT_IDS = {
   shareStories: 'stachka_bingo_share_stories',
   shareChat: 'stachka_bingo_share_chat',
   qr: 'stachka_bingo_qr',
+  merge2048: 'stachka_bingo_merge2048',
 } as const
 
 function envId(name: keyof typeof DEFAULT_IDS, envName: string): string {
@@ -57,6 +58,7 @@ function printEnvBlock(ids: ResolvedIds) {
     'BINGO_SHARE_STORIES_TASK_ID=' + ids.shareStories,
     'BINGO_SHARE_CHAT_TASK_ID=' + ids.shareChat,
     'BINGO_QR_TASK_ID=' + ids.qr,
+    'BINGO_MERGE2048_TASK_ID=' + ids.merge2048,
   ]
   console.log('')
   console.log('========== Скопируйте в .env / .env.prod (блок BINGO_*) ==========')
@@ -77,6 +79,7 @@ function randomIdBundle(): ResolvedIds {
     shareStories: randomUUID(),
     shareChat: randomUUID(),
     qr: randomUUID(),
+    merge2048: randomUUID(),
   }
 }
 
@@ -94,6 +97,7 @@ async function main() {
         shareStories: envId('shareStories', 'BINGO_SHARE_STORIES_TASK_ID'),
         shareChat: envId('shareChat', 'BINGO_SHARE_CHAT_TASK_ID'),
         qr: envId('qr', 'BINGO_QR_TASK_ID'),
+        merge2048: envId('merge2048', 'BINGO_MERGE2048_TASK_ID'),
       }
 
   const rows: SeedRow[] = [
@@ -144,6 +148,12 @@ async function main() {
       title: 'Линия',
       description: 'Закрой любой горизонтальный ряд из трёх других заданий на карточке.',
       order: 7,
+    },
+    {
+      id: ids.merge2048,
+      title: '2048',
+      description: 'На экране «2048» собери плитку 512 (или больше) свайпами.',
+      order: 8,
     },
   ]
 

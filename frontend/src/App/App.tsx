@@ -31,6 +31,7 @@ const ReactionRoundDetailPage = lazy(() =>
   import('@/pages/reaction-round-detail').then(m => ({ default: m.ReactionRoundDetailPage }))
 )
 const HapticPage = lazy(() => import('@/pages/haptic-page').then(m => ({ default: m.HapticPage })))
+const Merge2048Page = lazy(() => import('@/pages/merge-2048-page').then(m => ({ default: m.Merge2048Page })))
 const AdminLayout = lazy(() => import('@/shared/ui/AdminLayout').then(m => ({ default: m.AdminLayout })))
 const AdminParticipantsPage = lazy(() =>
   import('@/pages/admin/participants').then(m => ({ default: m.AdminParticipantsPage }))
@@ -116,6 +117,7 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
         <Route path="/reaction/rounds" element={<ReactionRoundsPage />} />
         <Route path="/reaction/rounds/:id" element={<ReactionRoundDetailPage />} />
         <Route path="/haptic" element={<HapticPage />} />
+        <Route path="/merge2048" element={<Merge2048Page />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<Navigate to="/admin/participants" replace />} />
           <Route path="participants" element={<AdminParticipantsPage />} />
