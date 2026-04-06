@@ -111,6 +111,7 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
   const launchParams = useLaunchParams()
   const startParam = launchParams.startParam ?? telegramStartParamFromInitData()
   const isPresentation = location.pathname === '/presentation'
+  const isMerge2048 = location.pathname === '/merge2048'
   const bg = isPresentation ? '#f8f8f8' : (themeParams?.bgColor ?? '#1c1c1e')
   const fg = isPresentation ? '#1a1a1a' : (themeParams?.textColor ?? '#ffffff')
 
@@ -148,7 +149,10 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
   }, [startParam, location.pathname, navigate])
 
   return (
-    <div className="app__route" style={{ backgroundColor: bg, color: fg }}>
+    <div
+      className={`app__route${isMerge2048 ? ' app__route--merge2048' : ''}`}
+      style={{ backgroundColor: bg, color: fg }}
+    >
       <Suspense fallback={null}>
         <Routes>
         <Route path="/" element={<HomePage />} />

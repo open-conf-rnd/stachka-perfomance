@@ -1,4 +1,4 @@
-import { PageLayout } from '@/shared/ui/PageLayout'
+import { useTelegramBackButton } from '@/shared/ui/PageLayout/useTelegramBackButton'
 import { useMerge2048Page } from '../model/useMerge2048Page'
 import './Merge2048Page.css'
 
@@ -9,6 +9,8 @@ function tileClass(v: number | null): string {
 }
 
 export function Merge2048Page() {
+  useTelegramBackButton(true)
+
   const {
     grid,
     score,
@@ -21,9 +23,15 @@ export function Merge2048Page() {
   } = useMerge2048Page()
 
   return (
-    <PageLayout title="2048" subtitle="Свайпни в сторону — сливаются одинаковые плитки">
+    <main className="merge2048-shell">
       <div className="merge2048">
-        <div className="merge2048__top">
+        <header className="merge2048__header">
+          <div className="merge2048__header-row">
+            <h1 className="merge2048__title">2048</h1>
+            <button type="button" className="btn merge2048__btn-sm" onClick={reset}>
+              {gameOver ? 'Ещё раз' : 'Новая игра'}
+            </button>
+          </div>
           <div className="merge2048__meta">
             <div className="merge2048__score-box">
               <span className="merge2048__score-label">Счёт</span>
@@ -37,7 +45,7 @@ export function Merge2048Page() {
           <p className="merge2048__hint">
             Задание бинго: собери плитку {bingoMinTile}. На клавиатуре можно стрелками.
           </p>
-        </div>
+        </header>
         <div className="merge2048__stage">
           <div
             className="merge2048__board"
@@ -58,19 +66,11 @@ export function Merge2048Page() {
             {gameOver ? (
               <div className="merge2048__overlay" role="status">
                 <p className="merge2048__overlay-title">Нет ходов</p>
-                <button type="button" className="btn merge2048__again" onClick={reset}>
-                  Ещё раз
-                </button>
               </div>
             ) : null}
           </div>
         </div>
-        <div className="merge2048__actions">
-          <button type="button" className="btn" onClick={reset}>
-            Новая игра
-          </button>
-        </div>
       </div>
-    </PageLayout>
+    </main>
   )
 }

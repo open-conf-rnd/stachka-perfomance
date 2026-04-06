@@ -1,32 +1,64 @@
-.merge2048 {
-  flex: 1 1 auto;
+.merge2048-shell {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  /* Высота под экран: поле тянется даже когда родитель — скролл-контейнер без явной высоты */
-  min-height: calc(100dvh - 10.5rem);
+  overflow: hidden;
 }
 
-.merge2048__top {
+.merge2048 {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.merge2048__header {
   flex-shrink: 0;
+}
+
+.merge2048__header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.35rem;
+}
+
+.merge2048__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.merge2048__btn-sm {
+  flex-shrink: 0;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
+  line-height: 1.2;
+  border-radius: 0.45rem;
 }
 
 .merge2048__meta {
   display: flex;
-  gap: 0.75rem;
-  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .merge2048__score-box {
   flex: 1;
   background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #2c2c2e) 85%, transparent);
-  border-radius: 0.5rem;
-  padding: 0.45rem 0.65rem;
+  border-radius: 0.45rem;
+  padding: 0.35rem 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
 .merge2048__score-label {
@@ -37,13 +69,13 @@
 }
 
 .merge2048__score-value {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 700;
 }
 
 .merge2048__hint {
-  margin: 0 0 0.25rem;
-  font-size: 0.85rem;
+  margin: 0;
+  font-size: 0.78rem;
   opacity: 0.85;
   line-height: 1.35;
 }
@@ -160,25 +192,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 1rem;
+  padding: 0.75rem;
 }
 
 .merge2048__overlay-title {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 700;
-}
-
-.merge2048__actions {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-  padding-top: 0.25rem;
-}
-
-.merge2048__again {
-  min-width: 8rem;
 }
 
 /* Браузеры без container query units: квадрат по ширине карточки */

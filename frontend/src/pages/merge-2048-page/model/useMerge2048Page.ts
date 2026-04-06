@@ -9,6 +9,12 @@ import {
   type Direction,
   type Grid,
 } from './merge2048Game'
+import {
+  clearMerge2048PersistedState,
+  createInitialMerge2048State,
+  loadMerge2048PersistedState,
+  saveMerge2048PersistedState,
+} from './merge2048Persistence'
 
 const BINGO_MIN_TILE = 512
 
@@ -41,11 +47,11 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 }
 
 export function useMerge2048Page() {
-  const [state, dispatch] = useReducer(gameReducer, undefined, () => ({
-    grid: createStartingGrid(),
-    score: 0,
-    gameOver: false,
-  }))
+  const [state, dispatch] = useReducer(gameReducer, undefined, () => {
+    const restored = loadMerge2048PersistedState()
+    if (restored) return restored
+    return createInitialMerge2048State()
+  })
   const bingoAttemptedRef = useRef(false)
 
   const maxTile = gridMaxTile(state.grid)
@@ -78,12 +84,17 @@ export function useMerge2048Page() {
     void tryReportBingo(maxTile)
   }, [maxTile, tryReportBingo])
 
+  useEffect(() => {
+    saveMerge2048PersistedState(state)
+  }, [state])
+
   const applyMove = useCallback((dir: Direction) => {
     dispatch({ type: 'move', dir })
   }, [])
 
   const reset = useCallback(() => {
     bingoAttemptedRef.current = false
+    clearMerge2048PersistedState()
     dispatch({ type: 'reset' })
   }, [])
 
