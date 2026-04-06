@@ -159,6 +159,10 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ github.repository }}-web:${{ github.sha }}
             ${{ env.REGISTRY }}/${{ github.repository }}-web:latest
+          build-args: |
+            VITE_YANDEX_MAPS_API_KEY=${{ secrets.VITE_YANDEX_MAPS_API_KEY }}
+            VITE_TG_BOT_USERNAME=${{ secrets.VITE_TG_BOT_USERNAME }}
+            VITE_VK_MINI_APP_URL=${{ secrets.VITE_VK_MINI_APP_URL }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

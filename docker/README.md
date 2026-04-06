@@ -41,6 +41,12 @@ docker compose --env-file .env -f docker/docker-compose.prod.yml up --build -d
 - **web** — образ из `frontend/Dockerfile` (сборка frontend + nginx со статикой и прокси).
 - Сеть **app**: только внутренние порты, наружу открыт 80 (контейнер web).
 
+### Переменные `VITE_*` (карта Яндекса, бот в ссылках)
+
+Они подставляются **только при `npm run build`** внутри образа `web`. В `docker-compose.prod.yml` для сервиса `web` заданы `build.args`; значения возьмите из `.env` / `.env.prod` при локальной сборке (`docker compose ... up --build`).
+
+В **GitHub Actions** (`deploy-prod.yml`, job `build-and-push-web`) те же значения передаются через **Secrets** репозитория: обязательно `VITE_YANDEX_MAPS_API_KEY` для слайда маршрута; при необходимости `VITE_TG_BOT_USERNAME`, `VITE_VK_MINI_APP_URL` (если не заданы — в коде останутся значения по умолчанию).
+
 ## SSL (dev)
 
 Сертификаты лежат в `docker/nginx/ssl/` (файлы в `.gitignore`). Скрипт `./scripts/gen-ssl.sh` читает `DOMAIN` из `.env` и генерирует `cert.pem`, `key.pem`. Подробнее — в `nginx/ssl/README.md`.
