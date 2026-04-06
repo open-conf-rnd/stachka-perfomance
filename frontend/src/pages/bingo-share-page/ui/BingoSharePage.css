@@ -1,0 +1,18 @@
+.bingo-share-page__actions {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.bingo-share-page__action-btn {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  border-radius: 14px;
+  min-height: 3.75rem;
+}

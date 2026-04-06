@@ -16,7 +16,9 @@ export function PageLayout({ title, subtitle, children, enableBackButton = true 
     <main className="page">
       <h1 className="page__title">{title}</h1>
       <p className="page__subtitle">{subtitle}</p>
-      <section className="page__card">{children}</section>
+      <section className="page__card">
+        <div className="page__card-body">{children}</div>
+      </section>
     </main>
   )
 }

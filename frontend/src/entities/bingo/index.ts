@@ -1,1 +1,1 @@
-export { useBingoPageBehavior, type BingoTask } from './model'
+export { useBingoPageBehavior, useBingoSharePageBehavior, type BingoTask } from './model'

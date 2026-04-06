@@ -22,6 +22,9 @@ const AccountLinkTelegramPage = lazy(() =>
 )
 const WelcomePage = lazy(() => import('@/pages/welcome').then(m => ({ default: m.WelcomePage })))
 const BingoPage = lazy(() => import('@/pages/bingo-page').then(m => ({ default: m.BingoPage })))
+const BingoSharePage = lazy(() =>
+  import('@/pages/bingo-share-page').then(m => ({ default: m.BingoSharePage }))
+)
 const QrVerifyPage = lazy(() => import('@/pages/qr-verify-page').then(m => ({ default: m.QrVerifyPage })))
 const PollsPage = lazy(() => import('@/pages/polls').then(m => ({ default: m.PollsPage })))
 const TapPage = lazy(() => import('@/pages/tap').then(m => ({ default: m.TapPage })))
@@ -151,6 +154,7 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
         <Route path="/provacy" element={<Navigate to="/privacy" replace />} />
         <Route path="/account-link" element={<AccountLinkTelegramPage />} />
         <Route path="/welcome" element={<WelcomePage />} />
+        <Route path="/bingo/share" element={<BingoSharePage />} />
         <Route path="/bingo" element={<BingoPage />} />
         <Route path="/qr" element={<QrVerifyPage />} />
         <Route path="/polls" element={<PollsPage />} />

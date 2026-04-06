@@ -235,50 +235,11 @@ export function PresentationPage() {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="LaunchParams и флаг в sessionStorage"
-          code={`
-const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param
-
-if (startParam === 'bingo' && location.pathname === '/') {
-  if (sessionStorage.getItem('bingo-start-param-consumed') === '1') return
-  sessionStorage.setItem('bingo-start-param-consumed', '1')
-  navigate('/bingo', { replace: true })
-}
-`}
-          language="typescript"
-          revealByClick={false}
-          preFullWidth
-          codeVerticalAlign="center"
-          codeFontSize="clamp(2.4rem, 2.2vmin, 38px)"
-        />
+        <SlideFullImage objectFit="contain" imageSrc="/slides/carbon.png" />
       </Slide>
 
-                        {/* 3. BackButton — код */}
-                        <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="BackButton"
-          code={`
-// Telegram.WebApp.BackButton — Bot API 6.1+
-const back = window.Telegram?.WebApp?.BackButton
-
-const onBack = () => {
-  // Router: navigate('/')
-}
-
-back?.show()
-back?.onClick(onBack)
-
-// перед уходом со «внутренней» страницы:
-back?.offClick(onBack)
-back?.hide()
-`}
-          language="typescript"
-          revealByClick={false}
-          preFullWidth
-          codeVerticalAlign="center"
-          codeFontSize="clamp(2.8rem, 2.2vmin, 38px)"
-        />
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFullImage objectFit="contain" imageSrc="/slides/carbon_2.png" />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -288,37 +249,19 @@ back?.hide()
         </SlideFrame>
       </Slide>
 
-            <Slide className="slide-fullsize" data-align="topleft">
+      <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideFlow
-            title="shareToStory: где используется"
-            subtitle=""
-            revealByClick
-            blockDescFontSize="clamp(1.6rem, 2.8vmin, 42px)"
-            steps={[
-              { label: 'Бинго', description: 'Кнопка «Share to Story»' },
-              { label: 'Stories', description: 'Медиа + текст + ссылка' },
-            ]}
+          <SlideImageText
+            title="Шарим в сторис"
+            description=""
+            imageSrc="/slides/share_to.png"
+            objectFit="contain"
           />
         </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="shareToStory — шаринг в Stories"
-          code={`
-const share = window.Telegram?.WebApp?.shareToStory
-
-share(mediaUrl, {
-  text: 'Прохожу бинго на докладе!',
-  widget_link: { url: location.href, name: 'Открыть TMA' }
-})`}
-          language="javascript"
-          revealByClick={false}
-          preFullWidth
-          codeVerticalAlign="center"
-          codeFontSize="clamp(3rem, 3vmin, 64px)"
-        />
+        <SlideFullImage objectFit="contain" imageSrc="/slides/carbon_3.png" />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -344,28 +287,19 @@ share(mediaUrl, {
         </SlideLogoBottom>
       </Slide>
 
-      {/* 10. Telegram QR Scanner — код */}
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="QR Scanner — открытие камеры"
-          code={`
-const show = window.Telegram?.WebApp?.showScanQrPopup
+        <SlideLogoBottom>
+          <SlideImageText
+            title="Шарим в сторис"
+            description=""
+            imageSrc="/slides/scan.png"
+            objectFit="contain"
+          />
+        </SlideLogoBottom>
+      </Slide>
 
-const content = await new Promise((resolve) => {
-  show(
-    { text: 'Наведи на QR-код задания' },
-    (qrText) => {
-      resolve(qrText ?? null)
-      return true // true = закрыть сканер после чтения
-    }
-  )
-})`}
-          language="typescript"
-          revealByClick={false}
-          preFullWidth
-          codeVerticalAlign="center"
-          codeFontSize="clamp(2.2rem, 2.8vmin, 52px)"
-        />
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFullImage objectFit="contain" imageSrc="/slides/carbon_4.png" />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -386,7 +320,7 @@ const content = await new Promise((resolve) => {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideBlocks descriptionScale={2} title="Навигация и уведомления" blockHeight={200} blocks={[
+          <SlideBlocks descriptionScale={1.9} title="Навигация и уведомления" blockHeight={200} blocks={[
             { imageSrc: "/slides/notification1.png", description: 'Уведомления о начале доклада' },
             { imageSrc: "/slides/notification-2.png", description: 'Уведомления о начале активности' },
           ]} />
@@ -423,28 +357,7 @@ const content = await new Promise((resolve) => {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="Отправка сообщения"
-          code={`
-await fetch(
-  \`https://api.telegram.org/bot\${botToken}/sendMessage\`,
-  {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id,
-      text,
-      parse_mode: 'HTML',
-      disable_web_page_preview: true,
-    }),
-  },
-)`}
-          language="typescript"
-          revealByClick={false}
-          preFullWidth
-          codeVerticalAlign="center"
-          codeFontSize="clamp(2.7rem, 2.2vmin, 38px)"
-        />
+        <SlideFullImage objectFit="contain" imageSrc="/slides/carbon_5.png" />
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -464,97 +377,21 @@ await fetch(
         </SlideFrame>
       </Slide>
 
-      {/* 4. HapticFeedback — использование */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideFlow
-            title="HapticFeedback: где используется"
-            subtitle=""
-            revealByClick
-            blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
-            steps={[
-              { label: 'Вибрации', description: 'разные части приложения' },
-              { label: 'Бинго, тап, реакции', description: 'вызываем вибрации' },
-            ]}
-          />
+          <SlideImageText title="Вибрации" description="" imageSrc="/slides/haptic.png" />
         </SlideLogoBottom>
       </Slide>
 
-      {/* 4. HapticFeedback — код */}
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="HapticFeedback"
-          code={`
-const haptic = window.Telegram?.WebApp?.HapticFeedback
+        <SlideFullImage objectFit="contain" imageSrc="/slides/carbon_6.png" />
+      </Slide>
 
-type ImpactStyle = 'light' | 'medium' | 'heavy' | 'rigid' | 'soft'
-type NotificationType = 'success' | 'warning' | 'error'
-
-export function triggerHaptic(payload) {
-
-  if (payload.type === 'impact') {
-    haptic.impactOccurred?.(payload.style ?? 'medium')
-    return
-  }
-
-  if (payload.type === 'notification') {
-    haptic.notificationOccurred?.(payload.notificationType ?? 'success')
-    return
-  }
-}`}
-          language="typescript"
-          revealByClick={false}
-          preFullWidth
-          codeVerticalAlign="center"
-          codeFontSize="clamp(1.8rem, 2.2vmin, 38px)"
-        />
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFullImage objectFit="contain" imageSrc="/slides/carbon_7.png" />
       </Slide>
 
       <PollHistogramSlides />
-
-      {/* 5. showPopup — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="showPopup / showAlert: где используется"
-            subtitle=""
-            revealByClick
-            blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
-            steps={[
-              { label: 'Мини-игры', description: 'Ошибки и успехи' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      {/* 5. showPopup / showAlert — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideCode
-          title="Уведомления"
-          code={`
-const webApp = window.Telegram?.WebApp
-
-webApp.showAlert(message)
-
-webApp.showPopup({
-  title: 'Уведомление',
-  message,
-  buttons: [{ type: 'close' }],
-})
-            `}
-          language="typescript"
-          revealByClick={false}
-          preFullWidth
-          codeVerticalAlign="center"
-          codeFontSize="clamp(3.8rem, 2.2vmin, 38px)"
-        />
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText title="Мини-игры" description="Играем и получаем награды" imageSrc="/slides/games.png" />
-        </SlideLogoBottom>
-      </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>

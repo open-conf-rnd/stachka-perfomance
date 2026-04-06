@@ -33,12 +33,10 @@ const notificationColors: Record<NotificationType, string> = {
 }
 
 export function HapticPage() {
-  const { status, runImpact, runNotification } = useBehavior()
+  const { runImpact, runNotification } = useBehavior()
 
   return (
-    <PageLayout title="Вибрации" subtitle="Демо Haptic API Telegram">
-      <p style={{ margin: '0 0 0.75rem' }}>Статус: {status}</p>
-
+    <PageLayout title="Вибрации" subtitle="">
       <div style={{ marginBottom: '1rem' }}>
         <div style={{ fontWeight: 700, marginBottom: '0.45rem' }}>Impact</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
