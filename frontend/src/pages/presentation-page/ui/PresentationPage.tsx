@@ -141,16 +141,6 @@ export function PresentationPage() {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText
-            title="На самом деле"
-            description="мини ап как быстрый доступ к веб приложению с встроенной авторизацией"
-            imageSrc="/slides/mind.png"
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
         <SlideFullImage imageSrc="/slides/openconf-banner.png" />
       </Slide>
 
@@ -196,6 +186,13 @@ export function PresentationPage() {
             imageSrc="/slides/activity.png"
           />
         </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFrame>
+          <h2>Минутка на активацию</h2>
+          <p>Подождите, пока спикер откроет вам функционал в мини-приложении.</p>
+        </SlideFrame>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -269,6 +266,13 @@ export function PresentationPage() {
         </SlideLogoBottom>
       </Slide>
 
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFrame>
+          <h2>Минутка на активацию</h2>
+          <p>Подождите, пока спикер откроет вам функционал в мини-приложении.</p>
+        </SlideFrame>
+      </Slide>
+
             {/* 9. shareToStory — использование */}
             <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
@@ -335,6 +339,31 @@ back?.hide()
         />
       </Slide>
 
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '2rem',
+              width: '100%',
+            }}
+          >
+            <h2 style={{ margin: 0, fontSize: 'clamp(5rem, 10vmin, 180px)', color: '#1a1a1a', textAlign: 'left' }}>
+              Бинго
+            </h2>
+            <QRCodeSVG
+              value={botBingoLink}
+              size={900}
+              level="M"
+              bgColor="transparent"
+              fgColor="#1a1a1a"
+            />
+          </div>
+        </SlideLogoBottom>
+      </Slide>
+
 
       {/* 6. LaunchParams — использование */}
       <Slide className="slide-fullsize" data-align="topleft">
@@ -375,9 +404,10 @@ if (startParam === 'bingo' && location.pathname === '/') {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <QrTaskSlide />
-        </SlideLogoBottom>
+        <SlideFrame>
+          <h2>Минутка на активацию</h2>
+          <p>Подождите, пока спикер откроет вам функционал в мини-приложении.</p>
+        </SlideFrame>
       </Slide>
 
       {/* 10. Telegram QR Scanner — использование */}
@@ -419,6 +449,12 @@ const content = await new Promise((resolve) => {
           codeVerticalAlign="center"
           codeFontSize="clamp(2.2rem, 2.8vmin, 52px)"
         />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <QrTaskSlide />
+        </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -502,6 +538,13 @@ await fetch(
         <SlideLogoBottom>
           <SlideImageText title="Мини-игры" description="Играем и получаем награды" imageSrc="/slides/games.png" />
         </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFrame>
+          <h2>Минутка на активацию</h2>
+          <p>Подождите, пока спикер откроет вам функционал в мини-приложении.</p>
+        </SlideFrame>
       </Slide>
 
       {/* 4. HapticFeedback — использование */}
@@ -808,6 +851,16 @@ webApp.showPopup({
             <li>Делать мини-приложения под Telegram не сложно и полезно</li>
           </ul>
         </SlideFrame>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideImageText
+            title="На самом деле"
+            description="мини ап как быстрый доступ к веб приложению с встроенной авторизацией"
+            imageSrc="/slides/mind.png"
+          />
+        </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
