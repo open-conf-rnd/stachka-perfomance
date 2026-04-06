@@ -1,3 +1,17 @@
+.merge2048 {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  /* Высота под экран: поле тянется даже когда родитель — скролл-контейнер без явной высоты */
+  min-height: calc(100dvh - 10.5rem);
+}
+
+.merge2048__top {
+  flex-shrink: 0;
+}
+
 .merge2048__meta {
   display: flex;
   gap: 0.75rem;
@@ -28,42 +42,63 @@
 }
 
 .merge2048__hint {
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.25rem;
   font-size: 0.85rem;
   opacity: 0.85;
   line-height: 1.35;
+}
+
+/* Квадратное поле максимального размера в оставшейся высоте карточки */
+.merge2048__stage {
+  container-type: size;
+  container-name: merge2048-stage;
+  flex: 1;
+  min-height: 12rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.15rem;
+  box-sizing: border-box;
 }
 
 .merge2048__board {
   position: relative;
   touch-action: none;
   user-select: none;
+  box-sizing: border-box;
+  aspect-ratio: 1;
+  width: min(100cqw, 100cqh);
+  max-width: 100%;
+  max-height: 100%;
+  height: auto;
   background: color-mix(in srgb, var(--tg-theme-secondary-bg-color, #3a3a3c) 70%, transparent);
   border-radius: 0.65rem;
-  padding: 0.5rem;
-  max-width: 20rem;
-  margin: 0 auto 1rem;
+  padding: clamp(0.35rem, 1.2cqmin, 0.65rem);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: clamp(0.2rem, 0.9cqmin, 0.45rem);
 }
 
+/* Строки только группируют ячейки в общую сетку поля */
 .merge2048__row {
-  display: flex;
-  gap: 0.35rem;
-  margin-bottom: 0.35rem;
-}
-
-.merge2048__row:last-child {
-  margin-bottom: 0;
+  display: contents;
 }
 
 .merge2048__cell {
-  flex: 1;
-  aspect-ratio: 1;
+  min-width: 0;
+  min-height: 0;
   border-radius: 0.35rem;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: clamp(0.85rem, 4.5vw, 1.35rem);
+  /* Одна шкала для всех плиток; влезает «2048» в квадрат */
+  font-size: clamp(0.65rem, 18cqmin, 2.1rem);
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .merge2048__cell--empty {
@@ -98,27 +133,22 @@
 .merge2048__cell--128 {
   background: #edcf72;
   color: #f9f6f2;
-  font-size: clamp(0.75rem, 4vw, 1.15rem);
 }
 .merge2048__cell--256 {
   background: #edcc61;
   color: #f9f6f2;
-  font-size: clamp(0.75rem, 4vw, 1.15rem);
 }
 .merge2048__cell--512 {
   background: #edc850;
   color: #f9f6f2;
-  font-size: clamp(0.75rem, 4vw, 1.1rem);
 }
 .merge2048__cell--1024 {
   background: #edc53f;
   color: #f9f6f2;
-  font-size: clamp(0.65rem, 3.5vw, 1rem);
 }
 .merge2048__cell--2048 {
   background: #edc22e;
   color: #f9f6f2;
-  font-size: clamp(0.6rem, 3.2vw, 0.95rem);
 }
 
 .merge2048__overlay {
@@ -141,10 +171,25 @@
 }
 
 .merge2048__actions {
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
+  padding-top: 0.25rem;
 }
 
 .merge2048__again {
   min-width: 8rem;
+}
+
+/* Браузеры без container query units: квадрат по ширине карточки */
+@supports not (width: 1cqw) {
+  .merge2048__board {
+    width: 100%;
+    max-width: min(100%, 92vmin);
+    max-height: min(70dvh, 92vmin);
+  }
+
+  .merge2048__cell {
+    font-size: clamp(0.65rem, 4.2vmin, 1.75rem);
+  }
 }
