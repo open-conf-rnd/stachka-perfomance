@@ -114,6 +114,9 @@ services:
         VITE_YANDEX_MAPS_API_KEY: ${VITE_YANDEX_MAPS_API_KEY:-}
         VITE_TG_BOT_USERNAME: ${VITE_TG_BOT_USERNAME:-}
         VITE_VK_MINI_APP_URL: ${VITE_VK_MINI_APP_URL:-}
+    environment:
+      # Ключ для env.js при старте контейнера (из .env / PROD_ENV при деплое)
+      - VITE_YANDEX_MAPS_API_KEY=${VITE_YANDEX_MAPS_API_KEY:-}
     expose:
       - "80"
     networks:
