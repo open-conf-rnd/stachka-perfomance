@@ -28,7 +28,8 @@ const DEFAULT_IDS = {
   shareStories: 'stachka_bingo_share_stories',
   shareChat: 'stachka_bingo_share_chat',
   qr: 'stachka_bingo_qr',
-  merge2048: 'stachka_bingo_merge2048',
+  /** Стабильный uuid по умолчанию (как на проде с внешними id); переопределяется BINGO_MERGE2048_TASK_ID. */
+  merge2048: 'c3e7f1a4-8b2d-4c9e-a3f6-1d8e7b2c4a9f',
 } as const
 
 function envId(name: keyof typeof DEFAULT_IDS, envName: string): string {
