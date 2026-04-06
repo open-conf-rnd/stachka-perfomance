@@ -23,6 +23,8 @@ import {
   SlideCode,
   SlideFlow,
   SlideProsCons,
+  SlideLogisticsRoute,
+  SlideRouteStats,
 } from '../presentation'
 import { QRCodeSVG } from 'qrcode.react'
 
@@ -82,6 +84,23 @@ export function PresentationPage() {
           <WhoAmISlide />
         </SlideLogoBottom>
       </Slide>
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFullImage imageSrc="/slides/rostov.png" />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogisticsRoute />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideRouteStats />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFullImage objectFit="contain" imageSrc="/slides/cat.jpg" />
+      </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
@@ -112,22 +131,6 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <RegistrationSlide />
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideBlocks
-            title="Структура"
-            blockHeight={220}
-            descriptionScale={1.8}
-            revealByClick
-            blocks={[
-              { imageSrc: "/slides/business.png", description: 'Много бизнеса' },
-              { imageSrc: "/slides/interactive.png", description: 'Много интерактива' },
-              { imageSrc: "/slides/code.png", description: 'Много кода' },
-            ]}
-          />
-        </SlideLogoBottom>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -237,19 +240,6 @@ export function PresentationPage() {
             title="Всё ещё Бинго"
             description="для вниманательных"
             imageSrc="/slides/bingo-share.png"
-            objectFit="contain"
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText
-            title="Как будем взаимодействовать"
-            titleScale={0.8}
-            descriptionScale={1.2}
-            description="Удобно и просто"
-            imageSrc="/slides/pilot.png"
             objectFit="contain"
           />
         </SlideLogoBottom>
@@ -867,7 +857,7 @@ webApp.showPopup({
         <SlideLogoBottom>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '24px', width: '100%', height: '100%' }}>
             <h2 style={{ margin: 0, fontSize: 'clamp(2.2rem, 4.5vmin, 72px)', fontWeight: 700, color: '#1a1a1a' }}>
-              Обратная связь
+              Обратная связь (сканировать обычной камерой)
             </h2>
             <p style={{ margin: 0, fontSize: 'clamp(1.2rem, 2.4vmin, 32px)', color: '#555' }}>
               Отсканируйте QR-код

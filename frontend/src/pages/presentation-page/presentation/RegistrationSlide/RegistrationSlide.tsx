@@ -85,6 +85,16 @@ function arrangeFromCenter<T>(arr: T[]): T[] {
   return indices.map((i) => arr[i])
 }
 
+/** Серверный refetch не должен затирать участников, уже пришедших по WS раньше ответа API. */
+function mergeParticipantLists(server: Participant[], prev: Participant[]): Participant[] {
+  const byId = new Map<string, Participant>()
+  for (const p of server) byId.set(p.id, p)
+  for (const p of prev) {
+    if (!byId.has(p.id)) byId.set(p.id, p)
+  }
+  return Array.from(byId.values())
+}
+
 function getInitials(firstName: string, lastName: string | null): string {
   const first = firstName?.charAt(0)?.toUpperCase() ?? ''
   const last = lastName?.charAt(0)?.toUpperCase() ?? ''
@@ -163,7 +173,9 @@ export function RegistrationSlide() {
         ? fetchDisplayParticipants(displayToken)
         : fetchParticipants()
     load
-      .then(setParticipants)
+      .then((server) =>
+        setParticipants((prev) => mergeParticipantLists(server, prev))
+      )
       .catch((err) => setError(err instanceof Error ? err.message : 'Ошибка'))
       .finally(() => setLoading(false))
   }, [displayToken])
@@ -197,7 +209,11 @@ export function RegistrationSlide() {
         displayToken.length > 0
           ? fetchDisplayParticipants(displayToken)
           : fetchParticipants()
-      load.then(setParticipants).catch(() => {})
+      load
+        .then((server) =>
+          setParticipants((prev) => mergeParticipantLists(server, prev))
+        )
+        .catch(() => {})
     }, 15000)
     return () => clearInterval(interval)
   }, [displayToken])

@@ -18,3 +18,5 @@ export { QrVerifiedNotificationsOverlay } from './QrVerifiedNotificationsOverlay
 export { PollHistogramSlides } from './PollHistogramSlides/PollHistogramSlides'
 export { TapTotalSlide } from './TapTotalSlide'
 export { ReactionPresentationSlide } from './ReactionPresentationSlide/ReactionPresentationSlide'
+export { SlideLogisticsRoute } from './SlideLogisticsRoute'
+export { SlideRouteStats } from './SlideRouteStats'

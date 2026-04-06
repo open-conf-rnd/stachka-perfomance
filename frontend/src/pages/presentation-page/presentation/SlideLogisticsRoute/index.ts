@@ -1,0 +1,1 @@
+export { SlideLogisticsRoute } from './SlideLogisticsRoute'
