@@ -603,7 +603,7 @@ webApp.showPopup({
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Стартер" description="Сейчас разберёмся, как стартовать" imageSrc="/slides/starter.png" />
+          <SlideImageText title="Локальная разработка" description="" imageSrc="/slides/image.png" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
           </div>
         </SlideLogoBottom>

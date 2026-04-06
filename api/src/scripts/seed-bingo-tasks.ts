@@ -1,13 +1,16 @@
 /**
- * Создаёт задания бинго с фиксированными id (как в BINGO_*_TASK_ID).
+ * Создаёт задания бинго; id должны совпадать с BINGO_*_TASK_ID в окружении API.
  *
  * Локально: npm run seed:bingo (из папки api)
- * Прод (после build образа api): npm run seed:bingo:prod
+ * Прод: node dist/scripts/seed-bingo-tasks.js
  *
- * Сброс заданий, QR и отметок: BINGO_SEED_RESET=1
- *
- * Если BINGO_*_TASK_ID не заданы — используются значения как в .env.example.
+ * Режимы:
+ * - По умолчанию: стабильные id из env или префикс stachka_bingo_* (.env.example), upsert без удаления.
+ * - BINGO_SEED_RESET=1 — перед upsert удалить completions, QR и задания.
+ * - BINGO_SEED_RANDOM_IDS=1 — новые uuid v4 на каждый запуск; сначала полная очистка бинго
+ *   (как reset). Скопируйте выведенный блок в .env и перезапустите api.
  */
+import { randomUUID } from 'node:crypto'
 import { config } from 'dotenv'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -64,17 +67,34 @@ function printEnvBlock(ids: ResolvedIds) {
   console.log('')
 }
 
-async function main() {
-  const ids = {
-    polls: envId('polls', 'BINGO_POLLS_TASK_ID'),
-    tap10: envId('tap10', 'BINGO_TAP10_TASK_ID'),
-    reactionTop3: envId('reactionTop3', 'BINGO_REACTION_TOP3_TASK_ID'),
-    line: envId('line', 'BINGO_LINE_TASK_ID'),
-    haptic: envId('haptic', 'BINGO_HAPTIC_TASK_ID'),
-    shareStories: envId('shareStories', 'BINGO_SHARE_STORIES_TASK_ID'),
-    shareChat: envId('shareChat', 'BINGO_SHARE_CHAT_TASK_ID'),
-    qr: envId('qr', 'BINGO_QR_TASK_ID'),
+function randomIdBundle(): ResolvedIds {
+  return {
+    polls: randomUUID(),
+    tap10: randomUUID(),
+    reactionTop3: randomUUID(),
+    line: randomUUID(),
+    haptic: randomUUID(),
+    shareStories: randomUUID(),
+    shareChat: randomUUID(),
+    qr: randomUUID(),
   }
+}
+
+async function main() {
+  const useRandomIds = process.env.BINGO_SEED_RANDOM_IDS === '1'
+
+  const ids: ResolvedIds = useRandomIds
+    ? randomIdBundle()
+    : {
+        polls: envId('polls', 'BINGO_POLLS_TASK_ID'),
+        tap10: envId('tap10', 'BINGO_TAP10_TASK_ID'),
+        reactionTop3: envId('reactionTop3', 'BINGO_REACTION_TOP3_TASK_ID'),
+        line: envId('line', 'BINGO_LINE_TASK_ID'),
+        haptic: envId('haptic', 'BINGO_HAPTIC_TASK_ID'),
+        shareStories: envId('shareStories', 'BINGO_SHARE_STORIES_TASK_ID'),
+        shareChat: envId('shareChat', 'BINGO_SHARE_CHAT_TASK_ID'),
+        qr: envId('qr', 'BINGO_QR_TASK_ID'),
+      }
 
   const rows: SeedRow[] = [
     {
@@ -131,11 +151,12 @@ async function main() {
 
   const { prisma } = await import('../lib/prisma.js')
 
-  if (process.env.BINGO_SEED_RESET === '1') {
+  if (useRandomIds || process.env.BINGO_SEED_RESET === '1') {
     await prisma.bingoCompletion.deleteMany()
     await prisma.qrCode.deleteMany()
     await prisma.bingoTask.deleteMany()
-    console.log('[seed-bingo] reset: completions, qr codes, tasks cleared')
+    const reason = useRandomIds ? 'BINGO_SEED_RANDOM_IDS=1' : 'BINGO_SEED_RESET=1'
+    console.log('[seed-bingo] cleared completions, qr codes, tasks (' + reason + ')')
   }
 
   for (const row of rows) {
@@ -156,6 +177,9 @@ async function main() {
   }
 
   console.log('[seed-bingo] upserted', rows.length, 'tasks')
+  if (useRandomIds) {
+    console.log('[seed-bingo] сгенерированы новые uuid; без обновления .env api не совпадёт с БД')
+  }
   printEnvBlock(ids)
   console.log(
     '[seed-bingo] Вставьте блок выше в .env, перезапустите api (и ws при необходимости), чтобы автозачёт совпадал с id в БД.'

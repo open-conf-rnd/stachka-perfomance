@@ -50,6 +50,14 @@ npm run seed:bingo
 
 Полный сброс заданий, QR и отметок бинго перед заполнением: `BINGO_SEED_RESET=1 npm run seed:bingo`.
 
+**Новые уникальные id (uuid)** на каждый запуск — чтобы пересоздать бинго и получить свежий блок для `.env`:
+
+```bash
+BINGO_SEED_RANDOM_IDS=1 npm run seed:bingo
+```
+
+В этом режиме сначала выполняется полная очистка заданий, QR и отметок бинго, затем создаются 8 заданий с новыми uuid. Обязательно скопируйте вывод в `.env` и перезапустите api.
+
 ### Прод (Docker Compose)
 
 После деплоя, из корня репозитория (подставьте свой путь к compose-файлу):
@@ -64,4 +72,10 @@ docker compose -f docker/docker-compose.prod.yml exec api sh -c 'cd /app && node
 
 ```bash
 docker compose -f docker/docker-compose.prod.yml exec -e BINGO_SEED_RESET=1 api sh -c 'cd /app && node dist/scripts/seed-bingo-tasks.js'
+```
+
+С новыми uuid (перегенерация id + сброс бинго):
+
+```bash
+docker compose -f docker/docker-compose.prod.yml exec -e BINGO_SEED_RANDOM_IDS=1 api sh -c 'cd /app && node dist/scripts/seed-bingo-tasks.js'
 ```
