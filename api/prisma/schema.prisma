@@ -18,6 +18,8 @@ model User {
   firstName   String
   lastName    String?
   photoUrl    String?
+  /// Согласие на обработку ПДн при регистрации (152-ФЗ)
+  personalDataConsentAt DateTime?
   tapCount    Int               @default(0)
   completions BingoCompletion[]
   votes       Vote[]

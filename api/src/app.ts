@@ -11,6 +11,7 @@ import { adminRoutes } from './routes/admin.js'
 import { displayRoutes } from './routes/display.js'
 import { featureRoutes } from './routes/features.js'
 import { vkCallbackRoutes } from './routes/vk-callback.js'
+import { telegramWebhookRoutes } from './routes/telegram-webhook.js'
 
 const CORS_METHODS = ['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'] as const
 
@@ -43,6 +44,7 @@ export async function createApp() {
   await app.register(featureRoutes)
   await app.register(displayRoutes)
   await app.register(vkCallbackRoutes)
+  await app.register(telegramWebhookRoutes)
 
   app.get('/health', async () => ({ status: 'ok' }))
   app.get('/ready', async () => ({ ready: true }))

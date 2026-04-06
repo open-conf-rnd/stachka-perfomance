@@ -8,6 +8,32 @@
   text-align: center;
 }
 
+.register__consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  max-width: 22rem;
+  text-align: left;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  cursor: pointer;
+  user-select: none;
+}
+
+.register__consent input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+  width: 1.05rem;
+  height: 1.05rem;
+  accent-color: #3b82f6;
+}
+
+.register__consent-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .register__illustration {
   font-size: 5.5rem;
   line-height: 1;

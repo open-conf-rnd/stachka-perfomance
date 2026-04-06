@@ -16,6 +16,7 @@ import { getBingoStartParamConsumed, setBingoStartParamConsumed } from '@/shared
 // Lazy-загрузка страниц: меньший первый чанк → быстрее грузится при медленном VPN (~7 KB/s)
 const HomePage = lazy(() => import('@/pages/home').then(m => ({ default: m.HomePage })))
 const RegisterPage = lazy(() => import('@/pages/register').then(m => ({ default: m.RegisterPage })))
+const PrivacyPolicyPage = lazy(() => import('@/pages/privacy').then(m => ({ default: m.PrivacyPolicyPage })))
 const AccountLinkTelegramPage = lazy(() =>
   import('@/pages/account-link').then(m => ({ default: m.AccountLinkTelegramPage }))
 )
@@ -103,6 +104,8 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
         <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/provacy" element={<Navigate to="/privacy" replace />} />
         <Route path="/account-link" element={<AccountLinkTelegramPage />} />
         <Route path="/welcome" element={<WelcomePage />} />
         <Route path="/bingo" element={<BingoPage />} />

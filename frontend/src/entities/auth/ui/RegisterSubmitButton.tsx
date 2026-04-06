@@ -7,17 +7,24 @@ type Props = {
   activity: RegisterActivityState
   setActivity: Dispatch<SetStateAction<RegisterActivityState>>
   setFeedback: Dispatch<SetStateAction<RegisterFeedbackState>>
+  personalDataConsentAccepted: boolean
 }
 
-export function RegisterSubmitButton({ activity, setActivity, setFeedback }: Props) {
+export function RegisterSubmitButton({
+  activity,
+  setActivity,
+  setFeedback,
+  personalDataConsentAccepted,
+}: Props) {
   const navigate = useNavigate()
-  const disabled = activity.submitting || activity.rechecking || activity.linkBusy
+  const disabled =
+    activity.submitting || activity.rechecking || activity.linkBusy || !personalDataConsentAccepted
 
   const onRegister = async () => {
     setActivity((a) => ({ ...a, submitting: true }))
     setFeedback((f) => ({ ...f, error: null }))
     try {
-      const result = await registerUser()
+      const result = await registerUser(true)
       setFeedback((f) => ({ ...f, showConfetti: true }))
       setTimeout(
         () =>

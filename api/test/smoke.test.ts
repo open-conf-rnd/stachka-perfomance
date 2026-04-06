@@ -153,10 +153,19 @@ describe('API smoke', () => {
     expect(meBefore.statusCode).toBe(200)
     expect(meBefore.json()).toMatchObject({ registered: false })
 
+    const registerDenied = await app.inject({
+      method: 'POST',
+      url: '/api/register',
+      headers: { 'x-telegram-init-data': initData },
+      payload: {},
+    })
+    expect(registerDenied.statusCode).toBe(400)
+
     const register = await app.inject({
       method: 'POST',
       url: '/api/register',
       headers: { 'x-telegram-init-data': initData },
+      payload: { personalDataConsent: true },
     })
     expect(register.statusCode).toBe(200)
     expect(register.json()).toMatchObject({ registered: true, isNew: true })
@@ -181,6 +190,7 @@ describe('API smoke', () => {
       method: 'POST',
       url: '/api/register',
       headers: { 'x-telegram-init-data': initData },
+      payload: { personalDataConsent: true },
     })
     expect(register.statusCode).toBe(200)
 
@@ -225,6 +235,7 @@ describe('API smoke', () => {
       method: 'POST',
       url: '/api/register',
       headers: { 'x-telegram-init-data': initData },
+      payload: { personalDataConsent: true },
     })
     await app.inject({
       method: 'POST',

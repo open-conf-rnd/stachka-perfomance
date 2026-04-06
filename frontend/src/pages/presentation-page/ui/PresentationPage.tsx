@@ -556,7 +556,7 @@ export function triggerHaptic(payload) {
         <SlideLogoBottom>
           <SlideFlow
             title="showPopup / showAlert: где используется"
-            subtitle="Сообщение пользователю и тактильный отклик"
+            subtitle=""
             revealByClick
             blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
             steps={[
@@ -603,7 +603,7 @@ webApp.showPopup({
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="TMA-стартер" description="Сейчас разберёмся, как стартовать" imageSrc="/slides/starter.png" />
+          <SlideImageText title="Стартер" description="Сейчас разберёмся, как стартовать" imageSrc="/slides/starter.png" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
           </div>
         </SlideLogoBottom>
@@ -611,7 +611,7 @@ webApp.showPopup({
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideBlocks title="Идеальный мир" blockHeight={200} blocks={[
+          <SlideBlocks descriptionScale={2} title="Идеальный мир" blockHeight={200} blocks={[
             { imageSrc: "/slides/code-1.png", description: 'Устанавливаем' },
             { imageSrc: "/slides/code-2.png", description: 'Запускаем' },
           ]} />
@@ -632,27 +632,6 @@ webApp.showPopup({
             ]} />
           </SlideLogoBottom>
         </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText title="Как поднять локальный HTTPS" description="" imageSrc="/slides/ngrok.png" />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="Шаги настройки"
-            revealByClick
-            steps={[
-              { label: '1. Dev-сервер', description: 'npm run dev → :5173' },
-              { label: '2. ngrok', description: 'ngrok http 5173 → https URL' },
-              { label: '3. Бот', description: 'URL → web_app.url' },
-              { label: '4. Готово', description: 'TG → ngrok → localhost' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
 
       {/* Плюсы и минусы подходов */}
       <Slide className="slide-fullsize" data-align="topleft">
@@ -689,22 +668,6 @@ webApp.showPopup({
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideFlow
-            title="Docker + Nginx + Self-Signed SSL для Telegram Mini App"
-            subtitle="Как Telegram доходит до вашего приложения через /etc/hosts и Nginx"
-            revealByClick
-            steps={[
-              { label: 'Telegram', description: 'Пользователь жмёт кнопку → WebView' },
-              { label: 'Bot API', description: 'web_app.url = https://DOMAIN', arrowLabel: 'HTTPS' },
-              { label: '/etc/hosts', description: 'DOMAIN → 127.0.0.1', arrowLabel: 'DNS' },
-              { label: 'Nginx (Docker)', description: 'SSL терминация (cert.pem + key.pem). / → :5173, /api/ → :3000, /ws → :3001', arrowLabel: ':443' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
           <SlideProsCons
             title="Docker + Nginx (локальный HTTPS)"
             titleFontSize="clamp(2.6rem, 5vmin, 80px)"
@@ -725,72 +688,10 @@ webApp.showPopup({
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText description="" title="Проблемы и их решения" imageSrc="/slides/problems.png" />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText title="Проблема самоподписанного сертификата" description="Нельзя просто так сгенерировать сертификат" imageSrc="/slides/cert.png" />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText title="Открываем Keyscan" description="" imageSrc="/slides/keyscan.png" />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText title="Ищем локальный домен" description="" imageSrc="/slides/local-domain.png" />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText title="Нажимаем на доверие" description="" imageSrc="/slides/trust.png" />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%', minHeight: 0 }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '32px', alignItems: 'center', textAlign: 'center' }}>
-              <h2 style={{ margin: 0, fontSize: 'clamp(2.5rem, 5vmin, 80px)', fontWeight: 700, color: '#1a1a1a' }}>
-                Выводы
-              </h2>
-              <p style={{ margin: 0, fontSize: 'clamp(2rem, 4.2vmin, 64px)', lineHeight: 1.4, color: '#334155', maxWidth: '90%' }}>
-                Если возьмёте мой стартер или похожее решение — вот такой простой старт можете сделать.
-              </p>
-              <pre
-                style={{
-                  margin: 0,
-                  padding: '24px 32px',
-                  background: '#1a1b26',
-                  color: '#c0caf5',
-                  borderRadius: 16,
-                  fontSize: 'clamp(1.4rem, 2.8vmin, 44px)',
-                  fontFamily: "'JetBrains Mono', 'Fira Code', Consolas, monospace",
-                  overflow: 'auto',
-                }}
-              >
-                <code>docker compose -f docker/docker-compose.dev.yml up --build -d</code>
-              </pre>
-            </div>
-          </div>
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', height: '100%', minHeight: 0 }}>
             <h2 style={{ margin: 0, fontSize: 'clamp(2.2rem, 4.5vmin, 72px)', fontWeight: 700, color: '#1a1a1a', flexShrink: 0 }}>
               Немного про отладку
             </h2>
-            <p style={{ margin: 0, fontSize: 'clamp(1.1rem, 2.2vmin, 28px)', lineHeight: 1.4, color: '#334155', flexShrink: 0 }}>
-              Нужно скачать бета-версию Telegram Desktop: обновления приходят быстрее, новые фичи доступны раньше. Стабильная версия обновляется реже, но лучше протестирована. Установите бета поверх текущего Telegram Desktop.
-            </p>
             <div style={{ flex: 1, minHeight: 0, display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
               <img src="/slides/beta.png" alt="Beta version и Old system versions на desktop.telegram.org" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', borderRadius: 8 }} />
             </div>
@@ -820,8 +721,74 @@ webApp.showPopup({
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideImageText title="Нажимаем правой кнопкой мыши" description="" imageSrc="/slides/rightclick.png" />
+          <SlideImageText title="Нажимаем правой кнопкой мыши" description="" objectFit="fill" imageSrc="/slides/rightclick.png" />
         </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFrame>
+          <h2 style={{ margin: 0, fontSize: 'clamp(2.2rem, 4.5vmin, 72px)', fontWeight: 700, color: '#1a1a1a' }}>
+            Особенности отладки
+          </h2>
+          <ul
+            style={{
+              margin: '1.25rem 0 0',
+              paddingLeft: '1.35em',
+              fontSize: 'clamp(2.2rem, 3vmin, 48px)',
+              lineHeight: 1.55,
+              color: '#333',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'clamp(1.35rem, 3vmin, 48px)',
+            }}
+          >
+            <li className="fragment" data-fragment-index={0}>
+              Если смотреть логи только из самого бота — помните о жёсткой привязке к Safari на Mac.
+            </li>
+            <li className="fragment" data-fragment-index={1}>
+              Приложения могут подстраиваться под разные экраны; в вебе окно можно растянуть и вести себя как
+              десктоп-сайт или приложение.
+            </li>
+            <li className="fragment" data-fragment-index={2}>
+              Не забывайте про CORS: мини-приложение может открываться в браузере (например, виджет в
+              Яндекс.Браузере).
+            </li>
+            <li className="fragment" data-fragment-index={3}>
+              Тестировать можно и в Telegram Desktop.
+            </li>
+            <li className="fragment" data-fragment-index={4}>
+              И в веб-версии Telegram — там часто удобнее привычные DevTools Chrome.
+            </li>
+          </ul>
+        </SlideFrame>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFrame>
+          <h2 style={{ margin: 0, fontSize: 'clamp(2.2rem, 4.5vmin, 72px)', fontWeight: 700, color: '#1a1a1a' }}>
+            Домашнее задание
+          </h2>
+          <ul
+            style={{
+              margin: '1.25rem 0 0',
+              paddingLeft: '1.35em',
+              fontSize: 'clamp(2.2rem, 3vmin, 48px)',
+              lineHeight: 1.55,
+              color: '#333',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'clamp(1.35rem, 3vmin, 48px)',
+            }}
+          >
+            <li className="fragment" data-fragment-index={0}>
+              Для локальных TLS-сертификатов попробуйте что-то вроде <strong>mkcert</strong>.
+            </li>
+            <li className="fragment" data-fragment-index={1}>
+              На бесплатном <strong>ngrok</strong> бывает заглушка с предложением включить куки — она может
+              помешать загрузке ресурсов.
+            </li>
+          </ul>
+        </SlideFrame>
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
@@ -835,7 +802,6 @@ webApp.showPopup({
           </ul>
         </SlideFrame>
       </Slide>
-
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>

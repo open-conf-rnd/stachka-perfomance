@@ -19,6 +19,11 @@ function newLinkToken(): string {
   return crypto.randomBytes(16).toString('hex')
 }
 
+function readPersonalDataConsent(body: unknown): boolean {
+  if (typeof body !== 'object' || body === null) return false
+  return (body as { personalDataConsent?: unknown }).personalDataConsent === true
+}
+
 export async function authRoutes(app: FastifyInstance) {
   app.get('/api/me', async (req, reply) => {
     const tg = headerStr(req.headers['x-telegram-init-data'])
@@ -37,9 +42,12 @@ export async function authRoutes(app: FastifyInstance) {
     return { registered: false, user: null }
   })
 
-  app.post('/api/register', async (req, reply) => {
+  app.post<{
+    Body: { personalDataConsent?: boolean }
+  }>('/api/register', async (req, reply) => {
     const initData = headerStr(req.headers['x-telegram-init-data'])
     const vkRaw = headerStr(req.headers['x-vk-launch-params'])
+    const personalDataConsent = readPersonalDataConsent(req.body)
 
     if (initData) {
       const tgUser = validateInitData(initData)
@@ -59,12 +67,20 @@ export async function authRoutes(app: FastifyInstance) {
         return { registered: true, isNew: false, user: existingIdentity.user }
       }
 
+      if (!personalDataConsent) {
+        return reply.status(400).send({
+          error: 'Нужно согласие на обработку персональных данных',
+        })
+      }
+
+      const consentAt = new Date()
       const user = await prisma.user.create({
         data: {
           username: tgUser.username ?? null,
           firstName: tgUser.first_name,
           lastName: tgUser.last_name ?? null,
           photoUrl: tgUser.photo_url ?? null,
+          personalDataConsentAt: consentAt,
           identities: {
             create: {
               provider: 'telegram',
@@ -108,12 +124,20 @@ export async function authRoutes(app: FastifyInstance) {
         return { registered: true, isNew: false, user: existingIdentity.user }
       }
 
+      if (!personalDataConsent) {
+        return reply.status(400).send({
+          error: 'Нужно согласие на обработку персональных данных',
+        })
+      }
+
+      const consentAt = new Date()
       const user = await prisma.user.create({
         data: {
           username: null,
           firstName: 'Участник',
           lastName: null,
           photoUrl: null,
+          personalDataConsentAt: consentAt,
           identities: {
             create: {
               provider: 'vk',

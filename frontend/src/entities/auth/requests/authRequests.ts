@@ -5,8 +5,8 @@ export function fetchMe(signal?: AbortSignal): Promise<MeResponse> {
   return apiRequest<MeResponse>('/api/me', 'GET', undefined, { signal })
 }
 
-export function registerUser(): Promise<RegisterResponse> {
-  return apiRequest<RegisterResponse>('/api/register', 'POST')
+export function registerUser(personalDataConsent: true): Promise<RegisterResponse> {
+  return apiRequest<RegisterResponse>('/api/register', 'POST', { personalDataConsent })
 }
 
 export function createVkLinkToken(): Promise<VkLinkTokenResponse> {

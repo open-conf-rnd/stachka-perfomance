@@ -42,6 +42,10 @@ export function validateInitData(initData: string): TelegramUser | null {
   }
 }
 
+export type SendTelegramMessageOptions = {
+  replyMarkup?: Record<string, unknown>
+}
+
 /**
  * Sends a Telegram message to a user. Fire-and-forget; errors are logged but not thrown.
  * @param chatId - Telegram user id (numeric string), same as UserIdentity.externalId for provider telegram
@@ -49,10 +53,21 @@ export function validateInitData(initData: string): TelegramUser | null {
  */
 export async function sendTelegramMessage(
   chatId: string,
-  text: string
+  text: string,
+  options?: SendTelegramMessageOptions
 ): Promise<void> {
   const botToken = process.env.TG_BOT_API ?? ''
   if (!botToken) return
+
+  const payload: Record<string, unknown> = {
+    chat_id: chatId,
+    text,
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
+  }
+  if (options?.replyMarkup) {
+    payload.reply_markup = options.replyMarkup
+  }
 
   try {
     const res = await fetch(
@@ -60,12 +75,7 @@ export async function sendTelegramMessage(
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text,
-          parse_mode: 'HTML',
-          disable_web_page_preview: true,
-        }),
+        body: JSON.stringify(payload),
       }
     )
     if (!res.ok) {

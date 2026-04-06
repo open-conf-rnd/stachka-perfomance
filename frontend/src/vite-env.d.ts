@@ -1,5 +1,10 @@
 /// <reference types="vite/client" />
 
+declare module '*.html?raw' {
+  const content: string
+  export default content
+}
+
 declare module '@revealjs/react'
 declare module 'reveal.js/plugin/highlight/highlight.esm.js'
 

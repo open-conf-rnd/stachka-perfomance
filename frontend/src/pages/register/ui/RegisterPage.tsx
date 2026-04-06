@@ -1,3 +1,5 @@
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Confetti } from '@neoconfetti/react'
 import { PageLayout } from '@/shared/ui/PageLayout'
 import {
@@ -10,6 +12,7 @@ import { useBehavior } from '../model'
 import './RegisterPage.css'
 
 export function RegisterPage() {
+  const [personalDataConsent, setPersonalDataConsent] = useState(false)
   const {
     platform,
     activity,
@@ -47,10 +50,24 @@ export function RegisterPage() {
           {accountLink.showTgToVkLinkHelp && platform === 'telegram' && (
             <RegisterTelegramToVkLinkPanel page={linkPanelsPage} />
           )}
+          <label className="register__consent">
+            <input
+              type="checkbox"
+              checked={personalDataConsent}
+              onChange={(e) => setPersonalDataConsent(e.target.checked)}
+            />
+            <span>
+              Согласен(на) с{' '}
+              <Link className="register__consent-link" to="/privacy">
+                политикой обработки персональных данных
+              </Link>
+            </span>
+          </label>
           <RegisterSubmitButton
             activity={activity}
             setActivity={setActivity}
             setFeedback={setFeedback}
+            personalDataConsentAccepted={personalDataConsent}
           />
           <RegisterAlreadyHaveAccountButton
             activity={activity}
