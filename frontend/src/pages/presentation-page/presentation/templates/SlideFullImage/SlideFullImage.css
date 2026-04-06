@@ -11,4 +11,5 @@
   height: 100%;
   display: block;
   object-position: center;
+  border-radius: 16px;
 }

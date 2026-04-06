@@ -68,6 +68,37 @@ function telegramStartParamFromInitData(): string | undefined {
   return typeof window !== 'undefined' ? window.Telegram?.WebApp?.initDataUnsafe?.start_param : undefined
 }
 
+type TelegramWebAppInsets = {
+  safeAreaInset?: { top: number; bottom: number; left: number; right: number }
+  contentSafeAreaInset?: { top: number; bottom: number; left: number; right: number }
+  onEvent?: (eventType: string, eventHandler: () => void) => void
+  offEvent?: (eventType: string, eventHandler: () => void) => void
+}
+
+function applyTelegramViewportInsetsToCss() {
+  const wa = window.Telegram?.WebApp as TelegramWebAppInsets | undefined
+  if (!wa) return
+  const s = wa.safeAreaInset
+  const c = wa.contentSafeAreaInset
+  const top =
+    (typeof s?.top === 'number' ? s.top : 0) +
+    (typeof c?.top === 'number' ? c.top : 0)
+  const bottom =
+    (typeof s?.bottom === 'number' ? s.bottom : 0) +
+    (typeof c?.bottom === 'number' ? c.bottom : 0)
+  const root = document.documentElement
+  if (top > 0) {
+    root.style.setProperty('--app-telegram-top-inset', `${top}px`)
+  } else {
+    root.style.removeProperty('--app-telegram-top-inset')
+  }
+  if (bottom > 0) {
+    root.style.setProperty('--app-telegram-bottom-inset', `${bottom}px`)
+  } else {
+    root.style.removeProperty('--app-telegram-bottom-inset')
+  }
+}
+
 function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemeParams> }) {
   const location = useLocation()
   const navigate = useNavigate()
@@ -79,6 +110,17 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
 
   useTelegramVkAccountLinkFromStartParam({ onLinkedSuccess: notifyAccountLinkSuccess })
   useTgToVkAccountLinkFromVkHashAndBridge({ onLinkedSuccess: notifyAccountLinkSuccess })
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.Telegram?.WebApp?.initData) return
+    applyTelegramViewportInsetsToCss()
+    const wa = window.Telegram.WebApp as TelegramWebAppInsets
+    const handler = () => applyTelegramViewportInsetsToCss()
+    wa.onEvent?.('safeAreaChanged', handler)
+    return () => {
+      wa.offEvent?.('safeAreaChanged', handler)
+    }
+  }, [])
 
   useEffect(() => {
     const shouldOpenBingo = startParam === BINGO_START_PARAM && location.pathname === '/'

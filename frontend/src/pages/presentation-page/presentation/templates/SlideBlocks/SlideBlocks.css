@@ -36,6 +36,7 @@
   flex: 1;
   min-height: 0;
   object-fit: contain;
+  border-radius: 16px;
 }
 
 .slide-blocks__block-description {

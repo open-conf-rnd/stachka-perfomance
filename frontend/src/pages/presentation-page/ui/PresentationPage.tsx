@@ -235,75 +235,27 @@ export function PresentationPage() {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText
-            title="Всё ещё Бинго"
-            description="для вниманательных"
-            imageSrc="/slides/bingo-share.png"
-            objectFit="contain"
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideImageText
-            title="Шаринг"
-            description=""
-            imageSrc="/slides/bingo-share.png"
-            objectFit="contain"
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideFrame>
-          <h2>Минутка на активацию</h2>
-          <p>Подождите, пока спикер откроет вам функционал в мини-приложении.</p>
-        </SlideFrame>
-      </Slide>
-
-            {/* 9. shareToStory — использование */}
-            <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <SlideFlow
-            title="shareToStory: где используется"
-            subtitle=""
-            revealByClick
-            blockDescFontSize="clamp(1.6rem, 2.8vmin, 42px)"
-            steps={[
-              { label: 'Бинго', description: 'Кнопка «Share to Story»' },
-              { label: 'Stories', description: 'Медиа + текст + ссылка' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-            {/* 9. shareToStory — код */}
-      <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
-          title="shareToStory — шаринг в Stories"
+          title="LaunchParams и флаг в sessionStorage"
           code={`
-const share = window.Telegram?.WebApp?.shareToStory
+const startParam = window.Telegram?.WebApp?.initDataUnsafe?.start_param
 
-share(mediaUrl, {
-  text: 'Прохожу бинго на докладе!',
-  widget_link: { url: location.href, name: 'Открыть TMA' }
-})`}
-          language="javascript"
+if (startParam === 'bingo' && location.pathname === '/') {
+  if (sessionStorage.getItem('bingo-start-param-consumed') === '1') return
+  sessionStorage.setItem('bingo-start-param-consumed', '1')
+  navigate('/bingo', { replace: true })
+}
+`}
+          language="typescript"
           revealByClick={false}
           preFullWidth
           codeVerticalAlign="center"
-          codeFontSize="clamp(3rem, 3vmin, 64px)"
+          codeFontSize="clamp(2.4rem, 2.2vmin, 38px)"
         />
       </Slide>
 
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideFullImage objectFit='contain' imageSrc="/slides/dogovor.png" />
-      </Slide>
-
-            {/* 3. BackButton — код */}
-            <Slide className="slide-fullsize" data-align="topleft">
+                        {/* 3. BackButton — код */}
+                        <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
           title="BackButton"
           code={`
@@ -330,66 +282,42 @@ back?.hide()
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '2rem',
-              width: '100%',
-            }}
-          >
-            <h2 style={{ margin: 0, fontSize: 'clamp(5rem, 10vmin, 180px)', color: '#1a1a1a', textAlign: 'left' }}>
-              Бинго
-            </h2>
-            <QRCodeSVG
-              value={botBingoLink}
-              size={900}
-              level="M"
-              bgColor="transparent"
-              fgColor="#1a1a1a"
-            />
-          </div>
-        </SlideLogoBottom>
+        <SlideFrame>
+          <h2>Минутка на активацию</h2>
+          <p>Подождите, пока спикер откроет вам функционал в мини-приложении.</p>
+        </SlideFrame>
       </Slide>
 
-
-      {/* 6. LaunchParams — использование */}
-      <Slide className="slide-fullsize" data-align="topleft">
+            <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideFlow
-            title="startParam: где используется"
+            title="shareToStory: где используется"
             subtitle=""
             revealByClick
+            blockDescFontSize="clamp(1.6rem, 2.8vmin, 42px)"
             steps={[
-              { label: 'Ссылка из бота/рекламы', description: '?startapp=bingo' },
-              { label: 'При открытии TMA', description: 'start_param → флаг в sessionStorage (сессия WebView) → /bingo' },
+              { label: 'Бинго', description: 'Кнопка «Share to Story»' },
+              { label: 'Stories', description: 'Медиа + текст + ссылка' },
             ]}
           />
         </SlideLogoBottom>
       </Slide>
 
-      {/* 6. LaunchParams / startParam — код (AppContent, App.tsx) */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideCode
-          title="LaunchParams и флаг в sessionStorage"
+          title="shareToStory — шаринг в Stories"
           code={`
-const startParam =
-  useLaunchParams().startParam
-  ?? window.Telegram?.WebApp?.initDataUnsafe?.start_param
+const share = window.Telegram?.WebApp?.shareToStory
 
-if (startParam === 'bingo' && location.pathname === '/') {
-  if (sessionStorage.getItem('bingo-start-param-consumed') === '1') return
-  sessionStorage.setItem('bingo-start-param-consumed', '1')
-  navigate('/bingo', { replace: true })
-}
-`}
-          language="typescript"
+share(mediaUrl, {
+  text: 'Прохожу бинго на докладе!',
+  widget_link: { url: location.href, name: 'Открыть TMA' }
+})`}
+          language="javascript"
           revealByClick={false}
           preFullWidth
           codeVerticalAlign="center"
-          codeFontSize="clamp(2.4rem, 2.2vmin, 38px)"
+          codeFontSize="clamp(3rem, 3vmin, 64px)"
         />
       </Slide>
 
@@ -400,7 +328,6 @@ if (startParam === 'bingo' && location.pathname === '/') {
         </SlideFrame>
       </Slide>
 
-      {/* 10. Telegram QR Scanner — использование */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideFlow
