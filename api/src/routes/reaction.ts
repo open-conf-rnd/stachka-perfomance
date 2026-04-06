@@ -91,12 +91,20 @@ export async function reactionRoutes(app: FastifyInstance) {
 
     const tapsCount = await prisma.reactionTap.count({ where: { roundId: round.id } })
     const roundNumber = await getRoundNumberById(round.id)
+
+    let secondsRemaining: number | undefined
+    if (round.status === 'PENDING') {
+      const elapsedMs = Date.now() - round.createdAt.getTime()
+      secondsRemaining = Math.max(0, Math.ceil((COUNTDOWN_SECONDS * 1000 - elapsedMs) / 1000))
+    }
+
     return {
       round: {
         id: round.id,
         roundNumber,
         status: round.status,
         createdAt: round.createdAt,
+        ...(secondsRemaining !== undefined ? { secondsRemaining } : {}),
       },
       tapsCount,
     }

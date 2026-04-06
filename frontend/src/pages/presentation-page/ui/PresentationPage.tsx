@@ -20,7 +20,6 @@ import {
   SlideImageText,
   SlideBlocks,
   SlideFullImage,
-  SlideCode,
   SlideFlow,
   SlideProsCons,
   SlideLogisticsRoute,

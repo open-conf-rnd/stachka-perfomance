@@ -37,9 +37,15 @@ export function useReactionPageBehavior() {
         if (data.round) {
           setRoundNumber(data.round.roundNumber ?? null)
           setStatus(data.round.status)
+          if (data.round.status === 'PENDING' && typeof data.round.secondsRemaining === 'number') {
+            setCountdown(data.round.secondsRemaining)
+          } else {
+            setCountdown(null)
+          }
         } else {
           setRoundNumber(null)
           setStatus('IDLE')
+          setCountdown(null)
         }
       } catch (err) {
         if (!active) return

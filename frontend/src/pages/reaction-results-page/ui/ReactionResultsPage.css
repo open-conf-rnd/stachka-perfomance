@@ -1,0 +1,46 @@
+.reaction-results-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reaction-results-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.reaction-results-page__actions .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-width: min(100%, 12rem);
+  text-align: center;
+}
+
+.reaction-results-page__meta {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.reaction-results-page__note {
+  margin: 0;
+  font-weight: 600;
+}
+
+.reaction-results-page__block {
+  margin-top: 0.25rem;
+}
+
+.reaction-results-page__block-title {
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.reaction-results-page__empty {
+  margin: 0.5rem 0 0;
+  opacity: 0.85;
+  line-height: 1.4;
+}

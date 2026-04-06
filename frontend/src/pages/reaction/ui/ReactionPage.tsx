@@ -1,15 +1,12 @@
 import { Link } from 'react-router-dom'
 import { PageLayout } from '@/shared/ui/PageLayout'
 import { useBehavior } from '../model'
-import { ReactionPlaceEntry } from './ReactionPlaceEntry'
+import './ReactionPage.css'
 
 export function ReactionPage() {
   const {
-    roundNumber,
     status,
     countdown,
-    podium,
-    leaderboard,
     alreadyTapped,
     submitting,
     loading,
@@ -19,57 +16,27 @@ export function ReactionPage() {
   } = useBehavior()
 
   return (
-    <PageLayout title="Реакция" subtitle="CountDown, старт и рейтинг">
-      {loading ? <p className="page__loading">Загружаем состояние раунда...</p> : null}
-      {error ? <p className="page__error">Ошибка: {error}</p> : null}
-      <p style={{ margin: '0 0 0.75rem' }}>
-        {roundNumber != null ? `Раунд №${roundNumber}` : 'Раунда нет'} · статус: {status}
-      </p>
-      <Link to="/reaction/rounds" className="btn" style={{ display: 'inline-block', marginBottom: '0.75rem' }}>
-        Посмотреть все раунды
-      </Link>
-      {countdown !== null && status === 'PENDING' ? (
-        <p style={{ margin: '0 0 0.75rem', fontSize: '1.2rem', fontWeight: 700 }}>Старт через: {countdown}</p>
-      ) : null}
-
-      <button
-        type="button"
-        className="btn"
-        onClick={onTap}
-        disabled={!canTap}
-        style={{ width: '100%', minHeight: '120px', fontSize: '1.7rem', marginBottom: '0.75rem' }}
-      >
-        {submitting ? '...' : 'НАЖАТЬ'}
-      </button>
-      {alreadyTapped ? <p style={{ margin: '0 0 0.75rem' }}>Твой результат зафиксирован.</p> : null}
-
-      {podium.length > 0 ? (
-        <div style={{ marginBottom: '0.75rem' }}>
-          <div style={{ fontWeight: 700, marginBottom: '0.35rem' }}>Первые три:</div>
-          {podium.map((item) => (
-            <ReactionPlaceEntry
-              key={`${item.place}-${item.user.id}`}
-              place={item.place}
-              firstName={item.user.firstName}
-              username={item.user.username}
-            />
-          ))}
+    <PageLayout title="Реакция" subtitle="">
+      <div className="reaction-page">
+        <div className="reaction-page__top">
+          {loading ? <p className="page__loading">Загружаем состояние раунда...</p> : null}
+          {error ? <p className="page__error">Ошибка: {error}</p> : null}
+          <Link to="/reaction/rounds" className="btn" style={{ display: 'inline-flex' }}>
+            Посмотреть результаты
+          </Link>
+          {countdown !== null && status === 'PENDING' ? (
+            <p style={{ margin: 0, fontSize: '1.2rem', fontWeight: 700 }}>Старт через: {countdown}</p>
+          ) : null}
         </div>
-      ) : null}
 
-      {leaderboard.length > 0 ? (
-        <div>
-          <div style={{ fontWeight: 700, marginBottom: '0.35rem' }}>Финальный рейтинг:</div>
-          {leaderboard.map((item) => (
-            <ReactionPlaceEntry
-              key={`${item.place}-${item.user.id}`}
-              place={item.place}
-              firstName={item.user.firstName}
-              username={item.user.username}
-            />
-          ))}
+        <button type="button" className="btn reaction-page__tap" onClick={() => void onTap()} disabled={!canTap}>
+          {submitting ? '…' : canTap ? 'НАЖАТЬ' : alreadyTapped ? 'Уже нажал' : 'Ждите старта'}
+        </button>
+
+        <div className="reaction-page__after">
+          {alreadyTapped ? <p style={{ margin: 0 }}>Твой результат зафиксирован.</p> : null}
         </div>
-      ) : null}
+      </div>
     </PageLayout>
   )
 }

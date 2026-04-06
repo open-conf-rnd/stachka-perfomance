@@ -9,7 +9,9 @@ export function useTelegramBackButton(enabled = true) {
   useEffect(() => {
     if (!enabled || !backButton) return
 
-    const onBack = () => navigate('/')
+    const onBack = () => {
+      navigate(-1)
+    }
     backButton.show()
     backButton.on('click', onBack)
 

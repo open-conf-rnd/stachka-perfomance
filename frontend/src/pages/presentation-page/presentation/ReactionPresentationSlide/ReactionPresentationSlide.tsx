@@ -37,9 +37,18 @@ export function ReactionPresentationSlide() {
       {!loading && !error && status === 'PENDING' ? (
         <>
           {roundLabel ? <p className="reaction-pres-slide__meta">{roundLabel}</p> : null}
-          <p className="reaction-pres-slide__hint">Старт через</p>
-          <div className="reaction-pres-slide__countdown" aria-live="polite">
-            {countdown != null && countdown > 0 ? countdown : '…'}
+          <p className="reaction-pres-slide__hint">Обратный отсчёт до старта</p>
+          <div className="reaction-pres-slide__countdown-block" aria-live="polite">
+            <div
+              className={`reaction-pres-slide__countdown ${
+                countdown === 0 ? 'reaction-pres-slide__countdown--go' : ''
+              }`}
+            >
+              {countdown === null ? '…' : countdown > 0 ? countdown : 'Старт!'}
+            </div>
+            {countdown != null && countdown > 0 ? (
+              <div className="reaction-pres-slide__countdown-unit">секунд</div>
+            ) : null}
           </div>
         </>
       ) : null}

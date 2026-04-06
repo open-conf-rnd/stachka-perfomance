@@ -32,14 +32,35 @@
   color: #4a4680;
 }
 
-.reaction-pres-slide__countdown {
+.reaction-pres-slide__countdown-block {
   margin: clamp(8px, 1.5vmin, 20px) 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(4px, 1vmin, 12px);
+}
+
+.reaction-pres-slide__countdown {
   font-size: clamp(12rem, 28vmin, 360px);
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.04em;
   color: #3d3acb;
   font-variant-numeric: tabular-nums;
+}
+
+.reaction-pres-slide__countdown--go {
+  font-size: clamp(6.5rem, 15vmin, 220px);
+  letter-spacing: -0.02em;
+  color: #c43d2e;
+}
+
+.reaction-pres-slide__countdown-unit {
+  font-size: clamp(2.4rem, 4.5vmin, 52px);
+  font-weight: 700;
+  color: #5c57a6;
+  letter-spacing: 0.02em;
+  text-transform: lowercase;
 }
 
 .reaction-pres-slide__hint {

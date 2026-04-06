@@ -17,6 +17,8 @@ export interface ReactionCurrentRoundResponse {
     id: string
     roundNumber?: number
     status: ReactionRoundStatus
+    /** Остаток обратного отсчёта до старта (только для PENDING), чтобы слайд/клиент подхватывали без WS */
+    secondsRemaining?: number
   } | null
   tapsCount?: number
 }

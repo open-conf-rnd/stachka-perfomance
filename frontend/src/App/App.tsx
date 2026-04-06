@@ -29,6 +29,9 @@ const QrVerifyPage = lazy(() => import('@/pages/qr-verify-page').then(m => ({ de
 const PollsPage = lazy(() => import('@/pages/polls').then(m => ({ default: m.PollsPage })))
 const TapPage = lazy(() => import('@/pages/tap').then(m => ({ default: m.TapPage })))
 const ReactionPage = lazy(() => import('@/pages/reaction').then(m => ({ default: m.ReactionPage })))
+const ReactionResultsPage = lazy(() =>
+  import('@/pages/reaction-results-page').then(m => ({ default: m.ReactionResultsPage }))
+)
 const ReactionRoundsPage = lazy(() => import('@/pages/reaction-rounds').then(m => ({ default: m.ReactionRoundsPage })))
 const ReactionRoundDetailPage = lazy(() =>
   import('@/pages/reaction-round-detail').then(m => ({ default: m.ReactionRoundDetailPage }))
@@ -159,6 +162,7 @@ function AppContent({ themeParams }: { themeParams: ReturnType<typeof useThemePa
         <Route path="/qr" element={<QrVerifyPage />} />
         <Route path="/polls" element={<PollsPage />} />
         <Route path="/tap" element={<TapPage />} />
+        <Route path="/reaction/results" element={<ReactionResultsPage />} />
         <Route path="/reaction" element={<ReactionPage />} />
         <Route path="/reaction/rounds" element={<ReactionRoundsPage />} />
         <Route path="/reaction/rounds/:id" element={<ReactionRoundDetailPage />} />

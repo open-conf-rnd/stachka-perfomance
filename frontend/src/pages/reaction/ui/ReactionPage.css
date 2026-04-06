@@ -1,0 +1,41 @@
+.reaction-page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.reaction-page__top {
+  flex-shrink: 0;
+}
+
+.reaction-page__tap {
+  flex: 1 1 0;
+  min-height: min(52dvh, 420px);
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 14px;
+  padding: 1rem;
+  font-size: clamp(1.75rem, 6vmin, 2.75rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: filter 0.15s ease, transform 0.12s ease;
+}
+
+.reaction-page__tap:not(:disabled):active {
+  transform: scale(0.99);
+  filter: brightness(0.95);
+}
+
+.reaction-page__tap:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.reaction-page__after {
+  flex-shrink: 0;
+}
