@@ -6,11 +6,13 @@ import { sendVkUserMessage } from './vk-bot.js'
 
 const BINGO_LINE_TASK_ID = process.env.BINGO_LINE_TASK_ID;
 
+/** Горизонтальные линии сетки 3×N: (0,1,2), (3,4,5), (6,7,8), … */
 function hasBingoLine(orders: number[]): boolean {
   const set = new Set(orders)
-  for (const o of set) {
-    const end = o + 2
-    if (end % 3 === 0 && set.has(o + 1) && set.has(end)) return true
+  for (let rowStart = 0; rowStart <= 6; rowStart += 3) {
+    if (set.has(rowStart) && set.has(rowStart + 1) && set.has(rowStart + 2)) {
+      return true
+    }
   }
   return false
 }

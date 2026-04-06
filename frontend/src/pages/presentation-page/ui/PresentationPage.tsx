@@ -118,6 +118,7 @@ export function PresentationPage() {
           <SlideBlocks
             title="Структура"
             blockHeight={220}
+            descriptionScale={1.8}
             revealByClick
             blocks={[
               { imageSrc: "/slides/business.png", description: 'Много бизнеса' },
@@ -161,7 +162,7 @@ export function PresentationPage() {
           <SlideBlocks
             title="Типичные задачи"
             blockHeight={220}
-            descriptionScale={1.4}
+            descriptionScale={1.8}
             revealByClick
             blocks={[
               { imageSrc: "/slides/navigation.png", description: 'Как сделать удобную навигацию?' },
@@ -272,7 +273,7 @@ export function PresentationPage() {
         <SlideLogoBottom>
           <SlideFlow
             title="shareToStory: где используется"
-            subtitle="Кнопка «Share to Story» в Бинго"
+            subtitle=""
             revealByClick
             blockDescFontSize="clamp(1.6rem, 2.8vmin, 42px)"
             steps={[
@@ -383,7 +384,7 @@ if (startParam === 'bingo' && location.pathname === '/') {
         <SlideLogoBottom>
           <SlideFlow
             title="QR-сканирование: где используется"
-            subtitle="Telegram открывает нативную камеру внутри Mini App"
+            subtitle=""
             revealByClick
             blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
             steps={[
@@ -452,7 +453,7 @@ const content = await new Promise((resolve) => {
         <SlideLogoBottom>
           <SlideImageText
             title="Сбор обратной связи после доклада"
-            description=""
+            description="Сканируй QR в мини-аппе"
             imageSrc={PLACEHOLDER_IMG}
             imageContent={(
               <QRCodeSVG
@@ -507,7 +508,7 @@ await fetch(
         <SlideLogoBottom>
           <SlideFlow
             title="HapticFeedback: где используется"
-            subtitle="Тактильный отклик Telegram WebApp"
+            subtitle=""
             revealByClick
             blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
             steps={[

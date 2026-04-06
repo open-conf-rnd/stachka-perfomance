@@ -49,3 +49,19 @@ npm run seed:bingo
 ```
 
 Полный сброс заданий, QR и отметок бинго перед заполнением: `BINGO_SEED_RESET=1 npm run seed:bingo`.
+
+### Прод (Docker Compose)
+
+После деплоя, из корня репозитория (подставьте свой путь к compose-файлу):
+
+```bash
+docker compose -f docker/docker-compose.prod.yml exec api sh -c 'cd /app && node dist/scripts/seed-bingo-tasks.js'
+```
+
+Скрипт допишет задания в БД и выведет в консоль готовый блок `BINGO_*_TASK_ID=...` — его можно вставить в `.env` / `.env.prod` и перезапустить `api` (и при необходимости остальные сервисы), если на проде id должны отличаться от значений по умолчанию.
+
+С полным сбросом бинго перед заливкой:
+
+```bash
+docker compose -f docker/docker-compose.prod.yml exec -e BINGO_SEED_RESET=1 api sh -c 'cd /app && node dist/scripts/seed-bingo-tasks.js'
+```
