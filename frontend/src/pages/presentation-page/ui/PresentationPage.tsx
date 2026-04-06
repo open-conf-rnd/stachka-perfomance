@@ -741,7 +741,7 @@ webApp.showPopup({
             style={{
               margin: '1.25rem 0 0',
               paddingLeft: '1.35em',
-              fontSize: 'clamp(2.2rem, 3vmin, 48px)',
+              fontSize: 'clamp(1.8rem, 2.3vmin, 48px)',
               lineHeight: 1.55,
               color: '#333',
               display: 'flex',
