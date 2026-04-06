@@ -21,7 +21,6 @@ import {
   SlideImageText,
   SlideBlocks,
   SlideFullImage,
-  SlideFlow,
   SlideProsCons,
   SlideLogisticsRoute,
   SlideRouteStats,

@@ -5,8 +5,8 @@ import { PageLayout } from '@/shared/ui/PageLayout'
 import {
   RegisterAlreadyHaveAccountButton,
   RegisterSubmitButton,
-  RegisterTelegramToVkLinkPanel,
-  RegisterVkToTelegramLinkPanel,
+  // RegisterTelegramToVkLinkPanel,
+  // RegisterVkToTelegramLinkPanel,
 } from '@/entities/auth/ui'
 import { useBehavior } from '../model'
 import './RegisterPage.css'
@@ -19,9 +19,9 @@ export function RegisterPage() {
     setActivity,
     feedback,
     setFeedback,
-    accountLink,
+    // accountLink,
     setAccountLink,
-    linkPanelsPage,
+    // linkPanelsPage,
   } = useBehavior()
 
   return (
@@ -44,12 +44,12 @@ export function RegisterPage() {
             ✨
           </div>
           {feedback.error && <p className="page__error">{feedback.error}</p>}
-          {accountLink.showLinkHelp && platform === 'vk' && (
+          {/* {accountLink.showLinkHelp && platform === 'vk' && (
             <RegisterVkToTelegramLinkPanel page={linkPanelsPage} />
           )}
           {accountLink.showTgToVkLinkHelp && platform === 'telegram' && (
             <RegisterTelegramToVkLinkPanel page={linkPanelsPage} />
-          )}
+          )} */}
           <label className="register__consent">
             <input
               type="checkbox"

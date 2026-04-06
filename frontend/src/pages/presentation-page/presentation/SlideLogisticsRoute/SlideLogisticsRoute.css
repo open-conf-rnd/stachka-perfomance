@@ -23,30 +23,41 @@
   background: #dfe3e8;
 }
 
-.slide-logistics-route__leaflet {
+.slide-logistics-route__ymap {
   font-family: 'Montserrat', sans-serif;
-  z-index: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.slide-logistics-route__leaflet .leaflet-control-attribution {
-  font-size: 10px;
-  background: rgba(255, 255, 255, 0.82);
-  padding: 2px 6px;
-  border-radius: 4px 0 0 0;
+/* Первый узел, который создаёт API (версия в классе меняется) */
+.slide-logistics-route__ymap > * {
+  width: 100% !important;
+  height: 100% !important;
 }
 
-.slide-logistics-route .slide-logistics-route__city-tooltip.leaflet-tooltip {
-  padding: 6px 12px;
-  border: none;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.96);
-  color: #1e293b;
-  font-family: 'Montserrat', sans-serif;
-  font-size: clamp(11px, 1.4vmin, 15px);
-  font-weight: 700;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.15);
+.slide-logistics-route__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 3vmin, 32px);
+  text-align: center;
 }
 
-.slide-logistics-route .slide-logistics-route__city-tooltip.leaflet-tooltip-top::before {
-  border-top-color: rgba(255, 255, 255, 0.96);
+.slide-logistics-route__placeholder p {
+  margin: 0;
+  max-width: 42ch;
+  font-size: clamp(14px, 1.8vmin, 18px);
+  line-height: 1.5;
+  color: #334155;
+}
+
+.slide-logistics-route__placeholder code {
+  font-size: 0.92em;
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.slide-logistics-route__placeholder a {
+  color: #2563eb;
 }
