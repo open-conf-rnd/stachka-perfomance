@@ -131,6 +131,50 @@
   line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
+  transform-origin: center center;
+}
+
+.merge2048__cell-face {
+  pointer-events: none;
+}
+
+@keyframes merge2048-tile-spawn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes merge2048-tile-merge {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.merge2048__cell--spawn {
+  animation: merge2048-tile-spawn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.merge2048__cell--merge {
+  animation: merge2048-tile-merge 0.26s ease-out both;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .merge2048__cell--spawn,
+  .merge2048__cell--merge {
+    animation: none;
+  }
 }
 
 .merge2048__cell--empty {

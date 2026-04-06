@@ -1,18 +1,20 @@
 import { canMove, createStartingGrid, type Grid } from './merge2048Game'
 
 const STORAGE_KEY = 'stachka-merge2048-v1'
-const VERSION = 1
+const VERSION = 2
 
 export interface Merge2048PersistedPayload {
   v: number
   grid: Grid
   score: number
+  moveCount?: number
 }
 
 export interface Merge2048GameStateSnapshot {
   grid: Grid
   score: number
   gameOver: boolean
+  moveCount: number
 }
 
 function isValidGrid(g: unknown): g is Grid {
@@ -32,10 +34,12 @@ export function loadMerge2048PersistedState(): Merge2048GameStateSnapshot | null
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
     const data = JSON.parse(raw) as Merge2048PersistedPayload
-    if (data.v !== VERSION || !isValidGrid(data.grid)) return null
+    if ((data.v !== VERSION && data.v !== 1) || !isValidGrid(data.grid)) return null
     const score = typeof data.score === 'number' && data.score >= 0 ? data.score : 0
     if (!canMove(data.grid)) return null
-    return { grid: data.grid, score, gameOver: false }
+    const moveCount =
+      data.v >= 2 && typeof data.moveCount === 'number' && data.moveCount >= 0 ? data.moveCount : 0
+    return { grid: data.grid, score, gameOver: false, moveCount }
   } catch {
     return null
   }
@@ -52,6 +56,7 @@ export function saveMerge2048PersistedState(state: Merge2048GameStateSnapshot): 
       v: VERSION,
       grid: state.grid,
       score: state.score,
+      moveCount: state.moveCount,
     }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload))
   } catch {
@@ -69,9 +74,11 @@ export function clearMerge2048PersistedState(): void {
 }
 
 export function createInitialMerge2048State(): Merge2048GameStateSnapshot {
+  const { grid } = createStartingGrid()
   return {
-    grid: createStartingGrid(),
+    grid,
     score: 0,
     gameOver: false,
+    moveCount: 0,
   }
 }

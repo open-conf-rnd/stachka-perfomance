@@ -217,6 +217,77 @@ describe('API smoke', () => {
     expect(reactionTap.json()).toMatchObject({ success: true, alreadyTapped: false, roundId })
   })
 
+  it('tap false start penalizes when session is closed', async () => {
+    const userInit = buildInitData({
+      id: 2004,
+      first_name: 'TapFalse',
+      username: 'tapfalse',
+    })
+
+    await app.inject({
+      method: 'POST',
+      url: '/api/register',
+      headers: { 'x-telegram-init-data': userInit },
+      payload: { personalDataConsent: true },
+    })
+
+    const closeFirst = await app.inject({
+      method: 'POST',
+      url: '/api/tap/session',
+      headers: { 'x-telegram-init-data': adminInitData() },
+      payload: { open: false },
+    })
+    expect(closeFirst.statusCode).toBe(200)
+
+    const early = await app.inject({
+      method: 'POST',
+      url: '/api/tap',
+      headers: { 'x-telegram-init-data': userInit },
+    })
+    expect(early.statusCode).toBe(200)
+    expect(early.json()).toMatchObject({
+      success: false,
+      falseStart: true,
+      userCount: 0,
+    })
+
+    const openSession = await app.inject({
+      method: 'POST',
+      url: '/api/tap/session',
+      headers: { 'x-telegram-init-data': adminInitData() },
+      payload: { open: true },
+    })
+    expect(openSession.statusCode).toBe(200)
+
+    const legit = await app.inject({
+      method: 'POST',
+      url: '/api/tap',
+      headers: { 'x-telegram-init-data': userInit },
+    })
+    expect(legit.statusCode).toBe(200)
+    expect(legit.json()).toMatchObject({ success: true, userCount: 1 })
+
+    const closeAgain = await app.inject({
+      method: 'POST',
+      url: '/api/tap/session',
+      headers: { 'x-telegram-init-data': adminInitData() },
+      payload: { open: false },
+    })
+    expect(closeAgain.statusCode).toBe(200)
+
+    const penalized = await app.inject({
+      method: 'POST',
+      url: '/api/tap',
+      headers: { 'x-telegram-init-data': userInit },
+    })
+    expect(penalized.statusCode).toBe(200)
+    expect(penalized.json()).toMatchObject({
+      success: false,
+      falseStart: true,
+      userCount: 0,
+    })
+  })
+
   it('public tap aggregate returns total after tap', async () => {
     const initData = buildInitData({
       id: 2003,

@@ -26,6 +26,7 @@ export async function wipeApplicationDatabase(
     await tx.bingoCompletion.deleteMany()
     await tx.bingoTask.deleteMany()
     await tx.hapticTrigger.deleteMany()
+    await tx.tapSessionState.deleteMany()
     await tx.user.deleteMany()
     await tx.accountLinkToken.deleteMany()
     if (!options?.keepFeatureGates) {

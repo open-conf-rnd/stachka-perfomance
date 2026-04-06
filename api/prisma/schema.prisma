@@ -25,8 +25,21 @@ model User {
   votes       Vote[]
   reactionTaps   ReactionTap[]
   hapticTriggers HapticTrigger[]
+  merge2048Stats Merge2048Stats?
   identities  UserIdentity[]
   createdAt   DateTime          @default(now())
+}
+
+/// Агрегированная статистика 2048 для лидерборда (попытки и лучшие результаты).
+model Merge2048Stats {
+  userId      String   @id
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bestMaxTile Int      @default(0)
+  bestScore   Int      @default(0)
+  gamesPlayed Int      @default(0)
+  updatedAt   DateTime @updatedAt
+
+  @@index([bestMaxTile(sort: Desc), bestScore(sort: Desc)])
 }
 
 model UserIdentity {
@@ -133,6 +146,12 @@ model ReactionTap {
   tapTime DateTime      @default(now())
 
   @@unique([roundId, userId])
+}
+
+/// Одна строка с id = 1: открыто ли «окно» тапов (ведущий управляет через админку).
+model TapSessionState {
+  id      Int     @id
+  tapOpen Boolean @default(true)
 }
 
 model FeatureGate {

@@ -15,6 +15,7 @@ import {
   PollHistogramSlides,
   TapTotalSlide,
   ReactionPresentationSlide,
+  Merge2048LeaderboardSlide,
   SlideFrame,
   SlideLogoBottom,
   SlideImageText,
@@ -272,24 +273,8 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideFlow
-            title="QR-сканирование: где используется"
-            subtitle=""
-            revealByClick
-            blockDescFontSize="clamp(1.5rem, 2.6vmin, 40px)"
-            steps={[
-              { label: 'Кнопка', description: 'Пользователь нажимает «Сканировать QR»' },
-              { label: 'Метод', description: 'вызываем showScanQrPopup()' },
-              { label: 'Камера', description: 'Открывается нативный сканер QR-кодов' },
-            ]}
-          />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
           <SlideImageText
-            title="Шарим в сторис"
+            title="QR-сканирование"
             description=""
             imageSrc="/slides/scan.png"
             objectFit="contain"
@@ -406,6 +391,12 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
+          <Merge2048LeaderboardSlide />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
           <SlideImageText title="Локальная разработка" description="" imageSrc="/slides/image.png" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
           </div>
@@ -458,11 +449,10 @@ export function PresentationPage() {
         </SlideLogoBottom>
       </Slide>
 
-      {/* Docker + Nginx + Self-Signed SSL для TMA — та же логика, что и для ngrok */}
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText
-            title="Docker + Nginx + Self-Signed SSL"
+            title="Nginx + Self-Signed SSL"
             description="Локальный HTTPS для Telegram Mini App без облачного туннеля"
             imageSrc="/slides/nginx.png"
           />
@@ -472,18 +462,16 @@ export function PresentationPage() {
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideProsCons
-            title="Docker + Nginx (локальный HTTPS)"
+            title="Nginx (локальный HTTPS)"
             titleFontSize="clamp(2.6rem, 5vmin, 80px)"
             columnTitleFontSize="clamp(2.4rem, 4.8vmin, 72px)"
             itemFontSize="clamp(2.8rem, 4vmin, 64px)"
             revealByClick
             pros={[
               'Всё локально: не зависит от внешних сервисов',
-              'Один docker compose — Nginx + Frontend + API + WS',
             ]}
             cons={[
               'Самоподписанный серт',
-              'Сложнее настройка: SSL, /etc/hosts, Docker',
             ]}
           />
         </SlideLogoBottom>
@@ -537,7 +525,7 @@ export function PresentationPage() {
             style={{
               margin: '1.25rem 0 0',
               paddingLeft: '1.35em',
-              fontSize: 'clamp(1.8rem, 2.3vmin, 48px)',
+              fontSize: 'clamp(2.2rem, 3vmin, 48px)',
               lineHeight: 1.55,
               color: '#333',
               display: 'flex',
@@ -549,18 +537,37 @@ export function PresentationPage() {
               Если смотреть логи только из самого бота — помните о жёсткой привязке к Safari на Mac.
             </li>
             <li className="fragment" data-fragment-index={1}>
-              Приложения могут подстраиваться под разные экраны; в вебе окно можно растянуть и вести себя как
-              десктоп-сайт или приложение.
+              Приложения могут подстраиваться под разные экраны;
             </li>
             <li className="fragment" data-fragment-index={2}>
-              Не забывайте про CORS: мини-приложение может открываться в браузере (например, виджет в
-              Яндекс.Браузере).
+              Не забывайте про CORS: мини-приложение может открываться в виджете
             </li>
-            <li className="fragment" data-fragment-index={3}>
+          </ul>
+        </SlideFrame>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFrame>
+          <h2 style={{ margin: 0, fontSize: 'clamp(2.2rem, 4.5vmin, 72px)', fontWeight: 700, color: '#1a1a1a' }}>
+            Особенности отладки
+          </h2>
+          <ul
+            style={{
+              margin: '1.25rem 0 0',
+              paddingLeft: '1.35em',
+              fontSize: 'clamp(2.2rem, 3vmin, 48px)',
+              lineHeight: 1.55,
+              color: '#333',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'clamp(1.35rem, 3vmin, 48px)',
+            }}
+          >
+            <li className="fragment" data-fragment-index={0}>
               Тестировать можно и в Telegram Desktop.
             </li>
-            <li className="fragment" data-fragment-index={4}>
-              И в веб-версии Telegram — там часто удобнее привычные DevTools Chrome.
+            <li className="fragment" data-fragment-index={1}>
+              В веб-версии Telegram — там часто удобнее привычные DevTools Chrome.
             </li>
           </ul>
         </SlideFrame>
@@ -599,9 +606,20 @@ export function PresentationPage() {
           <h2 style={{ margin: 0, fontSize: 'clamp(2.5rem, 5vmin, 80px)', fontWeight: 700, color: '#1a1a1a' }}>
             Итоги доклада
           </h2>
-          <ul style={{ margin: '1.5rem 0 0', paddingLeft: '1.5em', fontSize: 'clamp(3rem, 2.5vmin, 36px)', lineHeight: 1.5, color: '#333' }}>
+          <ul
+            style={{
+              margin: '1.5rem 0 0',
+              paddingLeft: '1.5em',
+              fontSize: 'clamp(3rem, 2.5vmin, 36px)',
+              lineHeight: 1.5,
+              color: '#333',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 'clamp(2rem, 4vmin, 56px)',
+            }}
+          >
             <li>TMA — один бот, регистрация, навигация, активности, обратная связь</li>
-            <li>Делать мини-приложения под Telegram не сложно и полезно</li>
+            <li>Веб версия Telegram, тот же самый веб как и везде</li>
           </ul>
         </SlideFrame>
       </Slide>

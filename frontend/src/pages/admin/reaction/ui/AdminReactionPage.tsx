@@ -1,7 +1,16 @@
 import { useBehavior } from '../model'
 
 export function AdminReactionPage() {
-  const { loading, result, error, startRound } = useBehavior()
+  const {
+    loading,
+    result,
+    error,
+    startRound,
+    tapSessionLoading,
+    tapSessionError,
+    tapSessionResult,
+    setTapSession,
+  } = useBehavior()
 
   return (
     <div className="admin-section">
@@ -19,6 +28,33 @@ export function AdminReactionPage() {
       </button>
       {result && <p style={{ marginTop: '0.75rem', color: '#22c55e' }}>{result}</p>}
       {error && <p className="page__error">{error}</p>}
+
+      <hr style={{ margin: '1.5rem 0 1rem', border: 0, borderTop: '1px solid rgba(255,255,255,0.12)' }} />
+      <h2 style={{ margin: '0 0 0.75rem', fontSize: '1.1rem' }}>Тапалка: окно тапов</h2>
+      <p style={{ margin: '0 0 1rem', opacity: 0.85, fontSize: '0.9rem' }}>
+        Пока тапы закрыты, нажатие засчитывается как фальстарт и снимает один тап с личного счёта
+        участника (если он уже тапал).
+      </p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <button
+          type="button"
+          className="btn btn--primary"
+          disabled={tapSessionLoading}
+          onClick={() => void setTapSession(true)}
+        >
+          {tapSessionLoading ? '…' : 'Открыть тапы'}
+        </button>
+        <button
+          type="button"
+          className="btn"
+          disabled={tapSessionLoading}
+          onClick={() => void setTapSession(false)}
+        >
+          {tapSessionLoading ? '…' : 'Закрыть тапы'}
+        </button>
+      </div>
+      {tapSessionResult && <p style={{ marginTop: '0.75rem', color: '#22c55e' }}>{tapSessionResult}</p>}
+      {tapSessionError && <p className="page__error">{tapSessionError}</p>}
     </div>
   )
 }

@@ -100,25 +100,30 @@ export function gridMaxTile(grid: Grid): number {
   return m
 }
 
-export function addRandomTile(grid: Grid): Grid {
+export function addRandomTile(grid: Grid): { grid: Grid; spawnedAt: { r: number; c: number } | null } {
   const empties: Array<{ r: number; c: number }> = []
   for (let r = 0; r < SIZE; r++) {
     for (let c = 0; c < SIZE; c++) {
       if (grid[r][c] === null) empties.push({ r, c })
     }
   }
-  if (empties.length === 0) return grid
+  if (empties.length === 0) return { grid, spawnedAt: null }
   const { r, c } = empties[Math.floor(Math.random() * empties.length)]
   const copy = grid.map((row) => [...row])
   copy[r][c] = Math.random() < 0.9 ? 2 : 4
-  return copy
+  return { grid: copy, spawnedAt: { r, c } }
 }
 
-export function createStartingGrid(): Grid {
+export function createStartingGrid(): { grid: Grid; spawnCells: Array<{ r: number; c: number }> } {
   let g = emptyGrid()
-  g = addRandomTile(g)
-  g = addRandomTile(g)
-  return g
+  const spawnCells: Array<{ r: number; c: number }> = []
+  const first = addRandomTile(g)
+  g = first.grid
+  if (first.spawnedAt) spawnCells.push(first.spawnedAt)
+  const second = addRandomTile(g)
+  g = second.grid
+  if (second.spawnedAt) spawnCells.push(second.spawnedAt)
+  return { grid: g, spawnCells }
 }
 
 export function canMove(grid: Grid): boolean {

@@ -6,6 +6,33 @@
   gap: 0.75rem;
 }
 
+.tap-page__false-start {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fef2f2;
+  background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+  box-shadow: 0 2px 10px rgba(127, 29, 29, 0.35);
+}
+
+.tap-page__session-hint {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #422006;
+  background: rgba(251, 191, 36, 0.35);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+}
+
+.tap-dino-button--session-closed {
+  filter: saturate(0.85) brightness(0.92);
+}
+
 .tap-page__footer {
   flex-shrink: 0;
   display: flex;

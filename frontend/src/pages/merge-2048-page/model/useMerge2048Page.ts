@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useReducer, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { apiRequestWithNotifications } from '@/shared/lib/api'
+import { postMerge2048Session } from './postMerge2048Session'
 import {
   addRandomTile,
   canMove,
@@ -11,7 +12,6 @@ import {
 } from './merge2048Game'
 import {
   clearMerge2048PersistedState,
-  createInitialMerge2048State,
   loadMerge2048PersistedState,
   saveMerge2048PersistedState,
 } from './merge2048Persistence'
@@ -22,37 +22,98 @@ interface GameState {
   grid: Grid
   score: number
   gameOver: boolean
+  moveCount: number
+  spawnCells: Array<{ r: number; c: number }>
 }
 
 type GameAction =
   | { type: 'move'; dir: Direction }
   | { type: 'reset' }
+  | { type: 'clearSpawn' }
 
 function gameReducer(state: GameState, action: GameAction): GameState {
+  if (action.type === 'clearSpawn') {
+    if (state.spawnCells.length === 0) return state
+    return { ...state, spawnCells: [] }
+  }
   if (action.type === 'reset') {
+    const { grid, spawnCells } = createStartingGrid()
     return {
-      grid: createStartingGrid(),
+      grid,
       score: 0,
       gameOver: false,
+      moveCount: 0,
+      spawnCells,
     }
   }
   const { grid: next, changed, scoreDelta } = moveGrid(state.grid, action.dir)
   if (!changed) return state
-  const withTile = addRandomTile(next)
+  const { grid: withTile, spawnedAt } = addRandomTile(next)
   return {
     grid: withTile,
     score: state.score + scoreDelta,
     gameOver: !canMove(withTile),
+    moveCount: state.moveCount + 1,
+    spawnCells: spawnedAt ? [spawnedAt] : [],
   }
+}
+
+function findMergedCells(prev: Grid, next: Grid): Array<{ r: number; c: number }> {
+  const out: Array<{ r: number; c: number }> = []
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 4; c++) {
+      const a = prev[r][c]
+      const b = next[r][c]
+      if (a !== null && b !== null && b === a * 2) {
+        out.push({ r, c })
+      }
+    }
+  }
+  return out
 }
 
 export function useMerge2048Page() {
   const [state, dispatch] = useReducer(gameReducer, undefined, () => {
     const restored = loadMerge2048PersistedState()
-    if (restored) return restored
-    return createInitialMerge2048State()
+    if (restored) return { ...restored, spawnCells: [] }
+    const { grid, spawnCells } = createStartingGrid()
+    return { grid, score: 0, gameOver: false, moveCount: 0, spawnCells }
   })
+  const stateRef = useRef(state)
+  stateRef.current = state
   const bingoAttemptedRef = useRef(false)
+  const gameOverSessionPostedRef = useRef(false)
+
+  const [mergeCells, setMergeCells] = useState<Array<{ r: number; c: number }>>([])
+  const prevGridRef = useRef(state.grid)
+  const skipMergeAfterResetRef = useRef(false)
+
+  useLayoutEffect(() => {
+    const next = state.grid
+    if (skipMergeAfterResetRef.current) {
+      skipMergeAfterResetRef.current = false
+      prevGridRef.current = next
+      return
+    }
+    const prev = prevGridRef.current
+    prevGridRef.current = next
+    const merges = findMergedCells(prev, next)
+    if (merges.length > 0) setMergeCells(merges)
+  }, [state.grid])
+
+  useEffect(() => {
+    if (mergeCells.length === 0) return
+    const t = window.setTimeout(() => setMergeCells([]), 280)
+    return () => window.clearTimeout(t)
+  }, [mergeCells])
+
+  useEffect(() => {
+    if (state.spawnCells.length === 0) return
+    const t = window.setTimeout(() => {
+      dispatch({ type: 'clearSpawn' })
+    }, 340)
+    return () => window.clearTimeout(t)
+  }, [state.spawnCells])
 
   const maxTile = gridMaxTile(state.grid)
 
@@ -85,16 +146,36 @@ export function useMerge2048Page() {
   }, [maxTile, tryReportBingo])
 
   useEffect(() => {
-    saveMerge2048PersistedState(state)
-  }, [state])
+    saveMerge2048PersistedState({
+      grid: state.grid,
+      score: state.score,
+      gameOver: state.gameOver,
+      moveCount: state.moveCount,
+    })
+  }, [state.grid, state.score, state.gameOver, state.moveCount])
+
+  useEffect(() => {
+    if (!state.gameOver) {
+      gameOverSessionPostedRef.current = false
+      return
+    }
+    if (gameOverSessionPostedRef.current) return
+    gameOverSessionPostedRef.current = true
+    void postMerge2048Session(gridMaxTile(state.grid), state.score)
+  }, [state.gameOver, state.grid, state.score])
 
   const applyMove = useCallback((dir: Direction) => {
     dispatch({ type: 'move', dir })
   }, [])
 
   const reset = useCallback(() => {
+    const s = stateRef.current
+    if (!s.gameOver && s.moveCount > 0) {
+      void postMerge2048Session(gridMaxTile(s.grid), s.score)
+    }
     bingoAttemptedRef.current = false
     clearMerge2048PersistedState()
+    skipMergeAfterResetRef.current = true
     dispatch({ type: 'reset' })
   }, [])
 
@@ -149,6 +230,8 @@ export function useMerge2048Page() {
     maxTile,
     gameOver: state.gameOver,
     bingoMinTile: BINGO_MIN_TILE,
+    spawnCells: state.spawnCells,
+    mergeCells,
     reset,
     onTouchStart,
     onTouchEnd,

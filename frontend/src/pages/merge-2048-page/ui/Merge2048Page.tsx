@@ -2,10 +2,21 @@ import { useTelegramBackButton } from '@/shared/ui/PageLayout/useTelegramBackBut
 import { useMerge2048Page } from '../model/useMerge2048Page'
 import './Merge2048Page.css'
 
-function tileClass(v: number | null): string {
+function tileClass(
+  v: number | null,
+  ri: number,
+  ci: number,
+  spawnCells: Array<{ r: number; c: number }>,
+  mergeCells: Array<{ r: number; c: number }>
+): string {
   if (v === null) return 'merge2048__cell merge2048__cell--empty'
   const capped = v >= 2048 ? 2048 : v
-  return `merge2048__cell merge2048__cell--${capped}`
+  const isSpawn = spawnCells.some((s) => s.r === ri && s.c === ci)
+  const isMerge = mergeCells.some((m) => m.r === ri && m.c === ci)
+  let cls = `merge2048__cell merge2048__cell--${capped}`
+  if (isSpawn) cls += ' merge2048__cell--spawn'
+  if (isMerge) cls += ' merge2048__cell--merge'
+  return cls
 }
 
 export function Merge2048Page() {
@@ -17,6 +28,8 @@ export function Merge2048Page() {
     maxTile,
     gameOver,
     bingoMinTile,
+    spawnCells,
+    mergeCells,
     reset,
     onTouchStart,
     onTouchEnd,
@@ -57,8 +70,8 @@ export function Merge2048Page() {
             {grid.map((row, ri) => (
               <div key={ri} className="merge2048__row">
                 {row.map((cell, ci) => (
-                  <div key={ci} className={tileClass(cell)}>
-                    {cell !== null ? cell : ''}
+                  <div key={ci} className={tileClass(cell, ri, ci, spawnCells, mergeCells)}>
+                    {cell !== null ? <span className="merge2048__cell-face">{cell}</span> : null}
                   </div>
                 ))}
               </div>

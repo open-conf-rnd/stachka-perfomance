@@ -44,3 +44,32 @@ export async function fetchTapAggregate(): Promise<TapAggregate> {
   if (!res.ok) throw new Error('Не удалось загрузить счётчик тапов')
   return res.json() as Promise<TapAggregate>
 }
+
+export interface Merge2048LeaderboardUser {
+  firstName: string
+  username: string | null
+}
+
+export interface Merge2048LeaderboardItem {
+  place: number
+  userId: string
+  user: Merge2048LeaderboardUser
+  bestMaxTile: number
+  bestScore: number
+  gamesPlayed: number
+}
+
+export interface Merge2048LeaderboardResponse {
+  items: Merge2048LeaderboardItem[]
+}
+
+/** Топ 2048 для слайда презентации (публично, без авторизации). */
+export async function fetchMerge2048Leaderboard(limit = 10): Promise<Merge2048LeaderboardResponse> {
+  const base = apiBase || ''
+  const url = `${base}/api/merge2048/leaderboard?limit=${limit}`
+  const res = await fetch(url)
+  if (!res.ok) {
+    throw new Error(`Не удалось загрузить рейтинг 2048 (HTTP ${res.status}). URL: ${url || '/api/merge2048/leaderboard'}`)
+  }
+  return res.json() as Promise<Merge2048LeaderboardResponse>
+}
