@@ -10,6 +10,8 @@
     "seed:bingo": "tsx src/scripts/seed-bingo-tasks.ts",
     "seed:bingo:prod": "node dist/scripts/seed-bingo-tasks.js",
     "clear-users": "tsx src/scripts/clear-users.ts",
+    "wipe-database": "tsx src/scripts/wipe-database.ts",
+    "wipe-database:prod": "node dist/scripts/wipe-database.js",
     "test:smoke": "TG_ADMIN_USER_IDS= POSTGRES_USER=${POSTGRES_USER:-stachka} POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-stachka} POSTGRES_HOST=${POSTGRES_HOST:-localhost} POSTGRES_PORT=${POSTGRES_PORT:-5432} POSTGRES_DB=${POSTGRES_DB:-stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest run test/smoke.test.ts",
     "test:smoke:watch": "POSTGRES_USER=${POSTGRES_USER:-stachka} POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-stachka} POSTGRES_HOST=${POSTGRES_HOST:-localhost} POSTGRES_PORT=${POSTGRES_PORT:-5432} POSTGRES_DB=${POSTGRES_DB:-stachka} REACTION_COUNTDOWN_SECONDS=0 REACTION_LEADERBOARD_DELAY_SECONDS=0 vitest test/smoke.test.ts"
   },

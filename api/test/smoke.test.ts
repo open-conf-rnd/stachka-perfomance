@@ -2,6 +2,7 @@ import { config } from 'dotenv'
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { createApp } from '../src/app.js'
 import { prisma } from '../src/lib/prisma.js'
+import { wipeApplicationDatabase } from '../src/lib/wipe-database.js'
 import crypto from 'node:crypto'
 
 config({ path: new URL('../../.env', import.meta.url).pathname })
@@ -43,16 +44,7 @@ describe('API smoke', () => {
   })
 
   beforeEach(async () => {
-    await prisma.reactionTap.deleteMany()
-    await prisma.reactionRound.deleteMany()
-    await prisma.vote.deleteMany()
-    await prisma.option.deleteMany()
-    await prisma.poll.deleteMany()
-    await prisma.qrCode.deleteMany()
-    await prisma.bingoCompletion.deleteMany()
-    await prisma.bingoTask.deleteMany()
-    await prisma.hapticTrigger.deleteMany()
-    await prisma.user.deleteMany()
+    await wipeApplicationDatabase(prisma, { keepFeatureGates: true })
   })
 
   afterAll(async () => {

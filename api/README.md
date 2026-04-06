@@ -39,6 +39,33 @@ npm run test:smoke:watch
   (используются `POSTGRES_*` из `.env`)
 - Проверить статус миграций: `npx prisma migrate status`
 
+## Полная очистка данных приложения
+
+Удаляются пользователи, опросы и голоса, раунды реакций, задания бинго (и QR, и отметки), haptic, токены привязки аккаунтов, записи `FeatureGate` (если не указано иначе). Схема БД и миграции не меняются.
+
+Реализация: функция `wipeApplicationDatabase` в `src/lib/wipe-database.ts`.
+
+```bash
+# из папки api, обязательно подтверждение
+WIPE_DATABASE_CONFIRM=YES npm run wipe-database
+```
+
+Оставить флаги доступа к страницам (`FeatureGate`), чтобы не включать их заново в админке:
+
+```bash
+WIPE_DATABASE_CONFIRM=YES WIPE_KEEP_FEATURE_GATES=1 npm run wipe-database
+```
+
+После очистки заданий бинго в БД не будет — выполните `npm run seed:bingo` (и при необходимости обновите `BINGO_*_TASK_ID` в `.env`).
+
+Прод (собранный образ `api`):
+
+```bash
+docker compose -f docker/docker-compose.prod.yml exec -e WIPE_DATABASE_CONFIRM=YES api sh -c 'cd /app && node dist/scripts/wipe-database.js'
+```
+
+Отдельно: `npm run clear-users` — только пользователи и связанные с ними строки (голоса, бинго-отметки, реакции, haptic, токены); **опросы и задания бинго не удаляет**.
+
 ## Бинго (задания в БД)
 
 Стабильные id заданий совпадают с переменными `BINGO_*_TASK_ID` в `.env` / `.env.example`.
