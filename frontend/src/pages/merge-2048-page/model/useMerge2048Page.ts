@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react'
 import { apiRequestWithNotifications } from '@/shared/lib/api'
+import { postMerge2048Progress } from './postMerge2048Progress'
 import { postMerge2048Session } from './postMerge2048Session'
 import {
   addRandomTile,
@@ -153,6 +154,11 @@ export function useMerge2048Page() {
       moveCount: state.moveCount,
     })
   }, [state.grid, state.score, state.gameOver, state.moveCount])
+
+  useEffect(() => {
+    if (state.moveCount === 0) return
+    void postMerge2048Progress(gridMaxTile(state.grid), state.score)
+  }, [state.moveCount, state.grid, state.score])
 
   useEffect(() => {
     if (!state.gameOver) {

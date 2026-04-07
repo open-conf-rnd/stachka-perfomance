@@ -395,6 +395,10 @@ export function PresentationPage() {
       </Slide>
 
       <Slide className="slide-fullsize" data-align="topleft">
+        <SlideFullImage objectFit="contain" imageSrc="/slides/carbon_8.png" />
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
           <SlideImageText title="Локальная разработка" description="" imageSrc="/slides/image.png" />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>

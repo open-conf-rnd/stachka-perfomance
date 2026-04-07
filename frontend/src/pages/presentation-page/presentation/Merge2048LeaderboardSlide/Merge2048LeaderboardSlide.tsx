@@ -46,7 +46,7 @@ export function Merge2048LeaderboardSlide() {
       {loading && !error ? <p className="merge2048-pres-slide__status">Загрузка…</p> : null}
 
       {!loading && !error && items.length === 0 ? (
-        <p className="merge2048-pres-slide__status">Пока никто не отправил результат — играйте в мини‑приложении.</p>
+        <p className="merge2048-pres-slide__status">Пока нет результатов — играйте в мини‑приложении.</p>
       ) : null}
 
       {!loading && !error && items.length > 0 ? (

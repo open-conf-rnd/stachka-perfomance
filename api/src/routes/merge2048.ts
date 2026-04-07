@@ -61,6 +61,49 @@ export async function merge2048Routes(app: FastifyInstance) {
     return { ok: true }
   })
 
+  /**
+   * Прогресс после каждого хода: только max(bestMaxTile), max(bestScore), без увеличения gamesPlayed.
+   */
+  app.post<{
+    Body: { maxTile?: unknown; score?: unknown }
+  }>('/api/merge2048/progress', async (req, reply) => {
+    const auth = await getUserFromPrimaryAuthHeader(req.headers)
+    if (!replyIfUserAuthMissing(reply, auth)) {
+      return
+    }
+    const userId = auth.user.id
+    const parsed = parseSessionBody(req.body ?? {})
+    if (!parsed) {
+      return reply.status(400).send({ error: 'maxTile (power of 2 ≥ 2) and score (int ≥ 0) required' })
+    }
+    const { maxTile, score } = parsed
+    const existing = await prisma.merge2048Stats.findUnique({ where: { userId } })
+    if (!existing) {
+      await prisma.merge2048Stats.create({
+        data: {
+          userId,
+          bestMaxTile: maxTile,
+          bestScore: score,
+          gamesPlayed: 0,
+        },
+      })
+    } else {
+      const nextTile = Math.max(existing.bestMaxTile, maxTile)
+      const nextScore = Math.max(existing.bestScore, score)
+      if (nextTile === existing.bestMaxTile && nextScore === existing.bestScore) {
+        return { ok: true }
+      }
+      await prisma.merge2048Stats.update({
+        where: { userId },
+        data: {
+          bestMaxTile: nextTile,
+          bestScore: nextScore,
+        },
+      })
+    }
+    return { ok: true }
+  })
+
   /** Топ игроков для слайда презентации (без авторизации). */
   app.get<{
     Querystring: { limit?: string }
@@ -69,7 +112,9 @@ export async function merge2048Routes(app: FastifyInstance) {
     const n = raw === undefined ? 10 : Number(raw)
     const limit = Number.isInteger(n) ? Math.min(50, Math.max(1, n)) : 10
     const rows = await prisma.merge2048Stats.findMany({
-      where: { gamesPlayed: { gt: 0 } },
+      where: {
+        OR: [{ gamesPlayed: { gt: 0 } }, { bestMaxTile: { gte: 2 } }],
+      },
       orderBy: [{ bestMaxTile: 'desc' }, { bestScore: 'desc' }],
       take: limit,
       include: {
