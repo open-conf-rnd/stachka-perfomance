@@ -51,6 +51,10 @@ declare global {
             callback: (error: string | null, value?: string) => void
           ) => unknown
         }
+        /** Bot API 7.7+ — свайп вниз сворачивает мини‑апп; для игр со свайпами отключать на экране */
+        isVerticalSwipesEnabled?: boolean
+        disableVerticalSwipes?: () => void
+        enableVerticalSwipes?: () => void
       }
     }
   }

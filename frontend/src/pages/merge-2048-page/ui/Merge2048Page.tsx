@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useTelegramBackButton } from '@/shared/ui/PageLayout/useTelegramBackButton'
 import { useMerge2048Page } from '../model/useMerge2048Page'
 import './Merge2048Page.css'
@@ -21,6 +22,15 @@ function tileClass(
 
 export function Merge2048Page() {
   useTelegramBackButton(true)
+
+  useEffect(() => {
+    const wa = window.Telegram?.WebApp
+    if (!wa?.disableVerticalSwipes) return
+    wa.disableVerticalSwipes()
+    return () => {
+      wa.enableVerticalSwipes?.()
+    }
+  }, [])
 
   const {
     grid,
