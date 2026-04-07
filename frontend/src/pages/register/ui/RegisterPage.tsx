@@ -69,13 +69,13 @@ export function RegisterPage() {
             setFeedback={setFeedback}
             personalDataConsentAccepted={personalDataConsent}
           />
-          <RegisterAlreadyHaveAccountButton
+          {/* <RegisterAlreadyHaveAccountButton
             activity={activity}
             platform={platform}
             setActivity={setActivity}
             setFeedback={setFeedback}
             setAccountLink={setAccountLink}
-          />
+          /> */}
         </div>
       )}
     </PageLayout>
