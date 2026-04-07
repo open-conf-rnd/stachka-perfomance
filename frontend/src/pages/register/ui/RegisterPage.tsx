@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { Confetti } from '@neoconfetti/react'
 import { PageLayout } from '@/shared/ui/PageLayout'
 import {
-  RegisterAlreadyHaveAccountButton,
+  // RegisterAlreadyHaveAccountButton,
   RegisterSubmitButton,
   // RegisterTelegramToVkLinkPanel,
   // RegisterVkToTelegramLinkPanel,
@@ -14,13 +14,13 @@ import './RegisterPage.css'
 export function RegisterPage() {
   const [personalDataConsent, setPersonalDataConsent] = useState(false)
   const {
-    platform,
+    // platform,
     activity,
     setActivity,
     feedback,
     setFeedback,
     // accountLink,
-    setAccountLink,
+    // setAccountLink,
     // linkPanelsPage,
   } = useBehavior()
 
