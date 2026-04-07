@@ -1,1 +1,1 @@
-export { SlideFrame } from './SlideFrame'
+export { SlideFrame, type SlideFrameProps } from './SlideFrame'

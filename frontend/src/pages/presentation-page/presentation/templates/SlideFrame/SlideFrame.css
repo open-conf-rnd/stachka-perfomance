@@ -32,3 +32,17 @@
   padding: 3rem 0;
   box-sizing: border-box;
 }
+
+.slide-frame--title .slide-frame__content {
+  width: min(82%, calc(100% - 96px));
+  min-width: 0;
+}
+
+.slide-frame__bottom-left {
+  position: absolute;
+  left: 48px;
+  bottom: 40px;
+  z-index: 1;
+  max-width: min(50%, 640px);
+  box-sizing: border-box;
+}

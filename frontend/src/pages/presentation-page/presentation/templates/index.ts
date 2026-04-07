@@ -1,4 +1,4 @@
-export { SlideFrame } from './SlideFrame'
+export { SlideFrame, type SlideFrameProps } from './SlideFrame'
 export { SlideFrameBottom } from './SlideFrameBottom'
 export { SlideLogoBottom } from './SlideLogoBottom'
 export { SlideImageText } from './SlideImageText'

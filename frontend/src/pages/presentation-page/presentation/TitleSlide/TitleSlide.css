@@ -1,3 +1,58 @@
+.title-slide {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  min-height: 0;
+}
+
+.title-slide__top {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.title-slide__aside {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+  text-align: right;
+  max-width: 100%;
+}
+
+.title-slide__meta {
+  margin: 0;
+  font-size: clamp(4rem, 1.6vmin, 22px);
+  font-weight: 500;
+  line-height: 1.35;
+  color: #444;
+  text-align: left;
+}
+
+.title-slide__track {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem 1rem;
+}
+
+.title-slide__track-logo {
+  margin: 0;
+  width: clamp(160px, 18vmin, 280px);
+  height: auto;
+  object-fit: contain;
+  object-position: right center;
+}
+
+.title-slide__track-label {
+  font-size: clamp(1.1rem, 1.8vmin, 26px);
+  font-weight: 600;
+  line-height: 1.2;
+  color: #1a1a1a;
+}
+
 .title-slide__title {
   margin: 0;
   font-size: clamp(1.8rem, 2.8vmin, 52px);

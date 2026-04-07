@@ -10,7 +10,7 @@ const ROUTE_STOPS = [
 ] as const
 
 export function SlideLogisticsRoute() {
-  const apiKey = import.meta.env.VITE_YANDEX_MAPS_API_KEY?.trim()
+  const apiKey = "17fa530a-24c5-438c-a3ef-aff4f61969c4"
   const shellRef = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
