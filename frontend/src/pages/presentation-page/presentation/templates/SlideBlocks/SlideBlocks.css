@@ -7,6 +7,10 @@
   min-height: 0;
 }
 
+.thanks .slide-blocks__block-description {
+  text-align: center !important;
+}
+
 .slide-blocks__title {
   margin: 0;
   font-size: clamp(4rem, 7vmin, 110px);

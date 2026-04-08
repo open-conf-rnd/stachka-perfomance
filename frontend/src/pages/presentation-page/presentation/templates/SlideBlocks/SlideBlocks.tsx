@@ -7,6 +7,7 @@ interface SlideBlocksProps {
   blockHeight?: string | number
   revealByClick?: boolean
   descriptionScale?: number
+  className?: string
 }
 
 function toBlockHeightStyle(value: string | number): string {
@@ -22,6 +23,7 @@ export function SlideBlocks({
   blockHeight = 'auto',
   revealByClick = false,
   descriptionScale = 1,
+  className,
 }: SlideBlocksProps) {
   const blockHeightStyle = toBlockHeightStyle(blockHeight)
   const rootStyle: CSSProperties = {
@@ -29,7 +31,7 @@ export function SlideBlocks({
   }
 
   return (
-    <div className="slide-blocks" style={rootStyle}>
+    <div className={`slide-blocks ${className}`} style={rootStyle}>
       <h2 className="slide-blocks__title">{title}</h2>
       <div className="slide-blocks__row">
         {blocks.map((block, index) => (

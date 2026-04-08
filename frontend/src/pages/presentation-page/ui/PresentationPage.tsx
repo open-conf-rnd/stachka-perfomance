@@ -303,15 +303,6 @@ export function PresentationPage() {
 
       <Slide className="slide-fullsize" data-align="topleft">
         <SlideLogoBottom>
-          <SlideBlocks descriptionScale={1.9} title="Навигация и уведомления" blockHeight={200} blocks={[
-            { imageSrc: "/slides/notification1.png", description: 'Уведомления о начале доклада' },
-            { imageSrc: "/slides/notification-2.png", description: 'Уведомления о начале активности' },
-          ]} />
-        </SlideLogoBottom>
-      </Slide>
-
-      <Slide className="slide-fullsize" data-align="topleft">
-        <SlideLogoBottom>
           <SlideImageText
             title="Как собрать обратную связь"
             description="Мы хотим, чтобы все могли оставить обратную связь"
@@ -634,6 +625,15 @@ export function PresentationPage() {
             description="мини ап как быстрый доступ к веб приложению с встроенной авторизацией"
             imageSrc="/slides/mind.png"
           />
+        </SlideLogoBottom>
+      </Slide>
+
+      <Slide className="slide-fullsize" data-align="topleft">
+        <SlideLogoBottom>
+          <SlideBlocks className="thanks" descriptionScale={1.9} title="Спасибо за подготовку" blockHeight={200} blocks={[
+            { imageSrc: "/slides/vasiliy.jpg", description: 'Василий Корянов' },
+            { imageSrc: "/slides/petr.jpg", description: 'Пётр Белобородов' },
+          ]} />
         </SlideLogoBottom>
       </Slide>
 

@@ -9,6 +9,7 @@
     "ws"
   ],
   "scripts": {
+    "export:presentation-pdf": "node scripts/export-presentation-pdf.mjs",
     "dev:frontend": "npm run dev --workspace=frontend",
     "dev:api": "npm run dev --workspace=api",
     "dev:ws": "npm run dev --workspace=ws",
@@ -18,5 +19,9 @@
     "build:ws": "npm run build --workspace=ws",
     "test:smoke": "npm run test:smoke --workspace=api",
     "test:smoke:watch": "npm run test:smoke:watch --workspace=api"
+  },
+  "devDependencies": {
+    "pdf-lib": "^1.17.1",
+    "playwright": "^1.51.0"
   }
 }
