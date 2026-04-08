@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { apiRequest, apiRequestWithNotifications, type MeResponse } from '@/shared/lib/api'
-import { wsUrl } from '@/config'
+import { subscribePresentationWs } from '@/shared/lib/presentationWs'
 import { notifyTelegramResult } from '@/shared/lib/telegramNotifications'
 import type {
   ReactionCurrentRoundResponse,
@@ -25,6 +25,11 @@ export function useReactionPageBehavior() {
     () => status === 'ACTIVE' && !alreadyTapped && !submitting,
     [status, alreadyTapped, submitting]
   )
+
+  const currentUserIdRef = useRef<string | null>(null)
+  useEffect(() => {
+    currentUserIdRef.current = currentUserId
+  }, [currentUserId])
 
   useEffect(() => {
     let active = true
@@ -55,36 +60,38 @@ export function useReactionPageBehavior() {
       }
     })()
 
-    const ws = new WebSocket(wsUrl)
-    ws.onmessage = (event) => {
-      try {
-        const msg = JSON.parse(event.data) as
-          | { type: 'reaction:countdown'; payload?: { roundId: string; roundNumber?: number; seconds: number } }
-          | { type: 'reaction:go'; payload?: { roundId: string; roundNumber?: number } }
-          | { type: 'reaction:podium'; payload?: { roundId: string; place: number; user: ReactionLeaderboardUser } }
-          | {
-              type: 'reaction:leaderboard'
-              payload?: { roundId: string; roundNumber?: number; results: ReactionLeaderboardItem[] }
-            }
+    return () => {
+      active = false
+    }
+  }, [])
 
-        if (msg.type === 'reaction:countdown' && msg.payload) {
-          setRoundNumber(msg.payload.roundNumber ?? null)
+  useEffect(() => {
+    const unsubscribe = subscribePresentationWs((msg) => {
+      try {
+        if (msg.type === 'reaction:countdown' && msg.payload && typeof msg.payload === 'object') {
+          const payload = msg.payload as {
+            roundId: string
+            roundNumber?: number
+            seconds: number
+          }
+          setRoundNumber(payload.roundNumber ?? null)
           setStatus('PENDING')
-          setCountdown(msg.payload.seconds)
+          setCountdown(payload.seconds)
           setPodium([])
           setLeaderboard([])
           setAlreadyTapped(false)
         }
 
-        if (msg.type === 'reaction:go' && msg.payload) {
-          setRoundNumber(msg.payload.roundNumber ?? null)
+        if (msg.type === 'reaction:go' && msg.payload && typeof msg.payload === 'object') {
+          const payload = msg.payload as { roundId: string; roundNumber?: number }
+          setRoundNumber(payload.roundNumber ?? null)
           setStatus('ACTIVE')
           setCountdown(null)
         }
 
-        if (msg.type === 'reaction:podium' && msg.payload) {
-          const payload = msg.payload
-          if (payload.user.id === currentUserId) {
+        if (msg.type === 'reaction:podium' && msg.payload && typeof msg.payload === 'object') {
+          const payload = msg.payload as { roundId: string; place: number; user: ReactionLeaderboardUser }
+          if (payload.user.id === currentUserIdRef.current) {
             notifyTelegramResult('success', 'Ты в топ-3 реакции, бинго-задание засчитано', 'Бинго')
           }
           setPodium((prev) => {
@@ -98,22 +105,24 @@ export function useReactionPageBehavior() {
           })
         }
 
-        if (msg.type === 'reaction:leaderboard' && msg.payload) {
+        if (msg.type === 'reaction:leaderboard' && msg.payload && typeof msg.payload === 'object') {
+          const payload = msg.payload as {
+            roundId: string
+            roundNumber?: number
+            results: ReactionLeaderboardItem[]
+          }
           setStatus('FINISHED')
-          setRoundNumber(msg.payload.roundNumber ?? null)
-          setLeaderboard(msg.payload.results)
+          setRoundNumber(payload.roundNumber ?? null)
+          setLeaderboard(payload.results)
           setCountdown(null)
         }
       } catch {
         // ignore malformed ws messages
       }
-    }
+    })
 
-    return () => {
-      active = false
-      ws.close()
-    }
-  }, [currentUserId])
+    return unsubscribe
+  }, [])
 
   useEffect(() => {
     if (countdown === null || countdown <= 0) return
